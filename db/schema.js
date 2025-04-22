@@ -1,0 +1,63 @@
+export const schema = `
+CREATE TABLE IF NOT EXIST authors (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  name VARCHAR(120),
+  bio VARCHAR(1000),
+  url VARCHAR(120)
+);
+
+CREATE TABLE IF NOT EXIST editorials (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  name VARCHAR(120),
+  url VARCHAR(120)
+);
+
+CREATE TABLE IF NOT EXIST categories (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  category VARCHAR(120)
+);
+
+CREATE TABLE IF NOT EXIST books (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  title VARCHAR(120),
+  author_id INTEGER REFERENCES authors(id),
+  editorial_id INTEGER REFERENCES editorials(id),
+  year SMALLINT,
+  category_id INTEGER REFERENCES categories(id),
+  sinopsys VARCHAR(1000),
+  url VARCHAR(120),
+  image VARCHAR(120)
+);
+
+CREATE TABLE IF NOT EXIST users (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  name VARCHAR(120),
+  email VARCHAR(120)
+);
+
+CREATE TABLE IF NOT EXIST library (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  name VARCHAR(120),
+  owner_id INTEGER REFERENCES users(id)
+);
+
+CREATE TABLE IF NOT EXIST lends (
+  book_id INTEGER NOT NULL REFERENCES books(id),
+  from_id INTEGER NOT NULL REFERENCES library(id),
+  to_id INTEGER NOT NULL REFERENCES users(id),
+  date_taken TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  date_returned TIMESTAMP WITH TIME ZONE,
+  status VARCHAR(20) DEFAULT 'active' CHECK(status IN('active', 'returned'))
+);
+
+CREATE TABLE IF NOT EXIST book_library (
+  book_id INTEGER NOT NULL REFERENCES books(id),
+  library_id INTEGER NOT NULL REFERENCES library(id),
+  PRIMARY KEY (book_id, library_id)
+);
+
+CREATE TABLE IF NOT EXIST user_library (
+  user_id INTEGER REFERENCES users(id),
+  library_id INTEGER REFERENCES library(id),
+  PRIMARY KEY (user_id, library_id)
+);`;
