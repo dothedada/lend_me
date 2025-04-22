@@ -1,22 +1,24 @@
-CREATE TABLE IF NOT EXIST authors (
+CREATE TABLE IF NOT EXISTS authors (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   name VARCHAR(120),
   bio VARCHAR(1000),
   url VARCHAR(120)
 );
 
-CREATE TABLE IF NOT EXIST editorials (
+CREATE TABLE IF NOT EXISTS editorials (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   name VARCHAR(120),
   url VARCHAR(120)
 );
 
-CREATE TABLE IF NOT EXIST categories (
+CREATE TABLE IF NOT EXISTS categories (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   category VARCHAR(120)
 );
 
-CREATE TABLE IF NOT EXIST books (
+INSERT INTO categories (category) VALUES ('undefined');
+
+CREATE TABLE IF NOT EXISTS books (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   title VARCHAR(120),
   author_id INTEGER REFERENCES authors(id),
@@ -28,19 +30,19 @@ CREATE TABLE IF NOT EXIST books (
   image VARCHAR(120)
 );
 
-CREATE TABLE IF NOT EXIST users (
+CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   name VARCHAR(120),
   email VARCHAR(120)
 );
 
-CREATE TABLE IF NOT EXIST library (
+CREATE TABLE IF NOT EXISTS library (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   name VARCHAR(120),
   owner_id INTEGER REFERENCES users(id)
 );
 
-CREATE TABLE IF NOT EXIST lends (
+CREATE TABLE IF NOT EXISTS lends (
   book_id INTEGER NOT NULL REFERENCES books(id),
   from_id INTEGER NOT NULL REFERENCES library(id),
   to_id INTEGER NOT NULL REFERENCES users(id),
@@ -49,19 +51,19 @@ CREATE TABLE IF NOT EXIST lends (
   status VARCHAR(20) DEFAULT 'active' CHECK(status IN('active', 'returned'))
 );
 
-CREATE TABLE IF NOT EXIST book_library (
+CREATE TABLE IF NOT EXISTS book_library (
   book_id INTEGER NOT NULL REFERENCES books(id),
   library_id INTEGER NOT NULL REFERENCES library(id),
   PRIMARY KEY (book_id, library_id)
 );
 
-CREATE TABLE IF NOT EXIST user_library (
-  user_id INTEGER REFERENCES users(id),
-  library_id INTEGER REFERENCES library(id),
+CREATE TABLE IF NOT EXISTS user_library (
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  library_id INTEGER NOT NULL REFERENCES library(id),
   PRIMARY KEY (user_id, library_id)
 );
 
-CREATE TABLE IF NOT EXIST friends_usera_userb (
+CREATE TABLE IF NOT EXISTS friends_usera_userb (
   usera_id INTEGER NOT NULL REFERENCES users(id),
   userb_id INTEGER NOT NULL REFERENCES users(id),
   PRIMARY KEY (usera_id, userb_id),
