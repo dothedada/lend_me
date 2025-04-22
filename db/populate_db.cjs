@@ -1,8 +1,9 @@
 #! usr/bin/env node
 
 const fs = require('fs/promises');
-const { Client } = require('pg');
 const path = require('path');
+const { Client } = require('pg');
+const { devSQL, prdSQL } = require('./connection');
 
 const parseFile = async (filename) => {
     let data;
@@ -15,10 +16,7 @@ const parseFile = async (filename) => {
 };
 
 async function main() {
-    require('dotenv').config();
-    const client = new Client({
-        connectionString: process.env.CONNECTION_STRING,
-    });
+    const client = new Client(process.env.MODE === 'dev' ? devSQL : prdSQL);
 
     try {
         console.log('Connecting to the server...');
