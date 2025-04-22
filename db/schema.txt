@@ -60,3 +60,10 @@ CREATE TABLE IF NOT EXIST user_library (
   library_id INTEGER REFERENCES library(id),
   PRIMARY KEY (user_id, library_id)
 );
+
+CREATE TABLE IF NOT EXIST friends_usera_userb (
+  usera_id INTEGER NOT NULL REFERENCES users(id),
+  userb_id INTEGER NOT NULL REFERENCES users(id),
+  PRIMARY KEY (usera_id, userb_id),
+  CHECK(usera_id < userb_id)
+)
