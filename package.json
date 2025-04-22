@@ -1,0 +1,26 @@
+{
+  "name": "lend_me",
+  "version": "0.0.0",
+  "description": "Small system to lend books between friends",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dothedada/lend_me.git"
+  },
+  "author": "mmejia",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dothedada/lend_me/issues"
+  },
+  "homepage": "https://github.com/dothedada/lend_me#readme",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "pg": "^8.15.0"
+  }
+}
