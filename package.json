@@ -5,8 +5,9 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-        "seed": "node ./db/populate_db.cjs",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "dev": "MODE=dev node --watch app.js",
+        "start": "node app.js",
+        "seed": "node ./db/populate_db.cjs"
     },
     "prettier": {
         "useTabs": false,
