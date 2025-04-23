@@ -18,6 +18,17 @@ export const getAllBooks_db = async () => {
     return rows;
 };
 
+export const getBookById_db = async (id) => {
+    const query = `${booksQuery} WHERE id = $1`;
+
+    try {
+        const { rows } = await newPool.query(query, [id]);
+        return rows;
+    } catch (err) {
+        throw new Error(`Database query failed: ${err}`);
+    }
+};
+
 export const getBooksBy_db = async (parameter, value) => {
     const validParameters = ['title', 'author', 'editorial', 'year'];
     if (!validParameters.includes(parameter)) {
@@ -26,10 +37,10 @@ export const getBooksBy_db = async (parameter, value) => {
 
     let query = `${booksQuery} WHERE `;
     query += parameter === 'year' ? 'year = $1' : `${parameter} ILIKE $1`;
-    const cleanValue = parameter === 'year' ? value : `%${value}%`;
+    const valueString = parameter === 'year' ? value : `%${value}%`;
 
     try {
-        const { rows } = await newPool.query(query, [cleanValue]);
+        const { rows } = await newPool.query(query, [valueString]);
         return rows;
     } catch (err) {
         throw new Error(`Database query failed: ${err}`);
