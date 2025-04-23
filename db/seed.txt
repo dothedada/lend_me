@@ -56,14 +56,10 @@ INSERT INTO book_library (book_id, library_id) VALUES
 (1, 1), (2, 1), (3, 1), (4, 1), (5, 1),
 (6, 2), (7, 2), (8, 2), (9, 2), (10, 2),
 (11, 3), (12, 3), (13, 3), (14, 3), (15, 3),
+(16, 1), (17, 2), (18, 3), (19, 1), (20, 2),
 (1, 2), (3, 3), (5, 3), (7, 1), (9, 1);
 
-INSERT INTO user_library (user_id, library_id) VALUES
-(1, 1), (2, 1), (3, 1), (4, 1),
-(2, 2), (3, 2),
-(1, 3), (4, 3);
-
-INSERT INTO friends_usera_userb (usera_id, userb_id) VALUES
+INSERT INTO friends (usera_id, userb_id) VALUES
 (1, 2), (1, 3), (2, 4);
 
 INSERT INTO lends (book_id, from_id, to_id, date_taken, date_returned, status) VALUES

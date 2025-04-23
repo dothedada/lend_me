@@ -3,7 +3,7 @@
 const fs = require('fs/promises');
 const path = require('path');
 const { Client } = require('pg');
-const { devSQL, prdSQL } = require('./connection');
+const { devSQL, prdSQL } = require('./connection.cjs');
 
 const parseFile = async (filename) => {
     let data;
