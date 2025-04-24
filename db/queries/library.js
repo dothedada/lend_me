@@ -1,6 +1,7 @@
-import newPool from './pool.cjs';
+import pool from '../pool.cjs';
+import { booksDataQuery } from './books.js';
 
-const inventoryQuery = `
+const libraryDataQuery = `
 SELECT
 	books.title as book,
 	authors.name as author,
@@ -15,11 +16,29 @@ JOIN users ON library.owner_id = users.id
 
 export const getBooksFrom_db = async (libraryOrOwner) => {
     const query = `
-	${inventoryQuery} 
+	${libraryDataQuery} 
 	WHERE library ILIKE $1 OR owner ILIKE $1`;
 
     try {
-        const { rows } = await newPool.query(query, [`${libraryOrOwner}`]);
+        const { rows } = await pool.query(query, [`${libraryOrOwner}`]);
+        return rows;
+    } catch (err) {
+        throw new Error(`Database query failed: ${err}`);
+    }
+};
+
+export const getBooksInLibrary_db = async (notIn = false) => {
+    const inLibrary = notIn ? 'NOT EXISTS ' : 'EXISTS ';
+    const query = `
+	${booksDataQuery}
+	WHERE ${inLibrary}(
+		SELECT 1 
+		FROM book_library
+		WHERE book_library.book_id = books.id
+	)`;
+
+    try {
+        const { rows } = await pool.query(query);
         return rows;
     } catch (err) {
         throw new Error(`Database query failed: ${err}`);
@@ -28,7 +47,7 @@ export const getBooksFrom_db = async (libraryOrOwner) => {
 
 export const removeBooksWithoutLibrary = async () => {
     try {
-        const { rows } = await newPool.query(`
+        const { rows } = await pool.query(`
 			DELETE FROM books
 			WHERE id NOT IN (SELECT book_id FROM book_library)
 			RETURNING *`);

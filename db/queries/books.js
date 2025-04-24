@@ -1,6 +1,6 @@
-import newPool from './pool.cjs';
+import pool from '../pool.cjs';
 
-const booksQuery = `
+export const booksDataQuery = `
 SELECT 
 	books.title AS title, 
 	authors.name AS author,
@@ -8,21 +8,21 @@ SELECT
 	books.year AS year, 
 	books.sinopsys AS sinopsys, 
 	books.image AS photo, 
-	books.url AS url, 
+	books.url AS url
 FROM books 
 JOIN authors ON books.author_id = authors.id 
 JOIN editorials ON books.editorial_id = editorials.id`;
 
 export const getAllBooks_db = async () => {
-    const { rows } = await newPool.query(booksQuery);
+    const { rows } = await pool.query(booksDataQuery);
     return rows;
 };
 
 export const getBookById_db = async (id) => {
-    const query = `${booksQuery} WHERE id = $1`;
+    const query = `${booksDataQuery} WHERE id = $1`;
 
     try {
-        const { rows } = await newPool.query(query, [id]);
+        const { rows } = await pool.query(query, [id]);
         return rows;
     } catch (err) {
         throw new Error(`Database query failed: ${err}`);
@@ -35,12 +35,12 @@ export const getBooksBy_db = async (parameter, value) => {
         throw new Error(`Invalid query parameter '${parameter}'`);
     }
 
-    let query = `${booksQuery} WHERE `;
+    let query = `${booksDataQuery} WHERE `;
     query += parameter === 'year' ? 'year = $1' : `${parameter} ILIKE $1`;
     const valueString = parameter === 'year' ? value : `%${value}%`;
 
     try {
-        const { rows } = await newPool.query(query, [valueString]);
+        const { rows } = await pool.query(query, [valueString]);
         return rows;
     } catch (err) {
         throw new Error(`Database query failed: ${err}`);
@@ -51,10 +51,10 @@ export const getBooksWith_db = async (value) => {
     const fields = ['title', 'author', 'editorial', 'sinopsys']
         .map((field) => `${field} ILIKE $1`)
         .join(' OR ');
-    const query = `${booksQuery} WHERE ${fields}`;
+    const query = `${booksDataQuery} WHERE ${fields}`;
 
     try {
-        const { rows } = await newPool.query(query, [`%${value}%`]);
+        const { rows } = await pool.query(query, [`%${value}%`]);
         return rows;
     } catch (err) {
         throw new Error(`Database query failed: ${err}`);
