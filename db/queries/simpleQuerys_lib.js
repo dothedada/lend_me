@@ -45,6 +45,8 @@ const fieldsFrom = {
     users: ['id', 'name', 'email'],
 };
 
+const SEARCH_LIMIT = 20;
+
 /**
  * Creates a function to retrieve data from a table
  * @param {object} client - PostgreSQL client instance
@@ -95,12 +97,12 @@ const findDataWith_db = (client, table) => {
 
         const comparison = [];
         for (const key of tableValues) {
-            comparison.push(`${key} ILIKE $1`);
+            comparison.push(`${key}::text ILIKE $1`);
         }
         const query = `
 		SELECT * FROM ${table} 
 		WHERE ${comparison.join(' OR ')}
-		LIMIT 20`;
+		LIMIT ${SEARCH_LIMIT}`;
 
         try {
             const { rows } = await client.query(query, [`%${value}%`]);
@@ -241,7 +243,9 @@ const removeDataFrom_db = (client, table) => {
             }
             return rows[0];
         } catch (err) {
-            throw new Error(`Failed to delete author id=${id}: ${err.message}`);
+            throw new Error(
+                `Failed to delete ${table} id=${id}: ${err.message}`,
+            );
         }
     };
 };
