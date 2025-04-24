@@ -1,23 +1,23 @@
 import pool from '../pool.cjs';
 
-const authorsFields = ['id', 'name', 'bio', 'url'];
+const editorialsFields = ['id', 'name', 'url'];
 
-export const getAllAuthors_db = async () => {
+export const getAllEditorials_db = async () => {
     try {
-        const { rows } = await pool.query('SELECT * FROM authors');
+        const { rows } = await pool.query('SELECT * FROM editorials');
         return rows;
     } catch (err) {
         throw new Error(`Database query failed: ${err.message}`);
     }
 };
 
-export const getAuthorBy_db = async (param, value) => {
-    if (!authorsFields.includes(param)) {
+export const getEditorialBy_db = async (param, value) => {
+    if (!editorialsFields.includes(param)) {
         throw new Error(`Invalid query parameter '${param}'.`);
     }
 
     const comparison = param === 'id' ? 'id = $1' : `${param} ILIKE $1`;
-    const query = `SELECT * FROM authors WHERE ${comparison}`;
+    const query = `SELECT * FROM editorials WHERE ${comparison}`;
     try {
         const { rows } = await pool.query(query, [value]);
         return rows;
@@ -26,42 +26,42 @@ export const getAuthorBy_db = async (param, value) => {
     }
 };
 
-export const setAuthor_db = async (name, bio = '', url = '') => {
+export const setEditorial_db = async (name, url = '') => {
     try {
         const { rows } = await pool.query(
             `
-			INSERT INTO authors (name, bio, url)
-			VALUES ($1, $2, $3)
+			INSERT INTO editorials (name, url)
+			VALUES ($1, $2)
 			RETURNING *`,
-            [name, bio, url],
+            [name, url],
         );
         return rows[0];
     } catch (err) {
-        throw new Error(`Cannot insert author: ${err.message}`);
+        throw new Error(`Cannot insert editorial: ${err.message}`);
     }
 };
 
-export const updateAuthor_db = async (authorData) => {
-    const { id } = authorData;
+export const updateEditorial_db = async (editorialData) => {
+    const { id } = editorialData;
     if (!id) {
-        throw new Error('Missing author id');
+        throw new Error('Missing editorial id');
     }
 
     const colsToUpdate = [];
     const values = [];
     let paramIndex = 1;
 
-    for (const key of authorsFields) {
-        if (key === 'id' || authorData[key] === undefined) {
+    for (const key of editorialsFields) {
+        if (key === 'id' || editorialData[key] === undefined) {
             continue;
         }
         colsToUpdate.push(`${key}=$${paramIndex}`);
-        values.push(authorData[key]);
+        values.push(editorialData[key]);
         paramIndex++;
     }
 
     const query = `
-	UPDATE authors 
+	UPDATE editorials 
 	SET ${colsToUpdate.join(', ')}
 	WHERE id = $${paramIndex}
 	RETURNING *`;
@@ -70,21 +70,21 @@ export const updateAuthor_db = async (authorData) => {
         const { rows } = await pool.query(query, [...values, id]);
         return rows[0];
     } catch (err) {
-        throw new Error(`Cannot insert author: ${err.message}`);
+        throw new Error(`Cannot insert editorial: ${err.message}`);
     }
 };
 
-export const removeAuthor_db = async (id) => {
+export const removeEditorial_db = async (id) => {
     try {
         const { rows } = await pool.query(
             `
-			DELETE FROM authors 
+			DELETE FROM editorials
 			WHERE id = $1
 			RETURNING *`,
             [id],
         );
         return rows[0];
     } catch (err) {
-        throw new Error(`Failed to delete author id=${id}: ${err.message}`);
+        throw new Error(`Failed to delete editorial id=${id}: ${err.message}`);
     }
 };
