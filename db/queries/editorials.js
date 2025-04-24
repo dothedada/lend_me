@@ -70,7 +70,7 @@ export const updateEditorial_db = async (editorialData) => {
         const { rows } = await pool.query(query, [...values, id]);
         return rows[0];
     } catch (err) {
-        throw new Error(`Cannot insert editorial: ${err.message}`);
+        throw new Error(`Cannot update editorial: ${err.message}`);
     }
 };
 

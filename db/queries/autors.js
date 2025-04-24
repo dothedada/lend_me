@@ -70,7 +70,7 @@ export const updateAuthor_db = async (authorData) => {
         const { rows } = await pool.query(query, [...values, id]);
         return rows[0];
     } catch (err) {
-        throw new Error(`Cannot insert author: ${err.message}`);
+        throw new Error(`Cannot update author: ${err.message}`);
     }
 };
 
