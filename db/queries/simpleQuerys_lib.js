@@ -1,3 +1,5 @@
+import { SEARCH_LIMIT } from '../query_settings.js';
+
 /**
  * Factory function that creates requested query methods for a table
  * @param {object} client - PostgreSQL client instance
@@ -45,8 +47,6 @@ const fieldsFrom = {
     users: ['id', 'name', 'email'],
 };
 
-const SEARCH_LIMIT = 20;
-
 /**
  * Creates a function to retrieve data from a table
  * @param {object} client - PostgreSQL client instance
@@ -54,22 +54,29 @@ const SEARCH_LIMIT = 20;
  * @returns {function} Async function that gets data
  */
 const getDataFrom_db = (client, table) => {
+    const [idField, primaryField] = fieldsFrom[table];
+
     /**
-     * Gets data from the table
-     * @param {number|string} [id] - Optional ID to get specific record
-     * @returns {Promise<Array<object>>} Array of records (or single record if ID provided)
+     * Retrieves data from the table with flexible lookup
+     * @param {number|string} [idOrPrimaryValue] - Optional value to search for (can be ID or primary field value)
+     * @returns {Promise<object|Array<object>>}
+     *   - When value is provided: Single record object or undefined if not found
+     *   - When no value is provided: Array of all records (empty array if no records)
+     * @throws {Error} If the database query fails
      */
-    return async (id) => {
+    return async (idOrPrimaryField) => {
         let query = `SELECT * FROM ${table}`;
         const values = [];
-        if (id) {
-            query += ` WHERE id = $1`;
-            values.push(id);
+        if (idOrPrimaryField) {
+            query += isNaN(+idOrPrimaryField)
+                ? ` WHERE ${primaryField} ILIKE $1`
+                : ` WHERE ${idField} = $1`;
+            values.push(idOrPrimaryField);
         }
 
         try {
             const { rows } = await client.query(query, values);
-            return rows;
+            return idOrPrimaryField ? rows[0] : rows;
         } catch (err) {
             throw new Error(`Database query failed: ${err.message}`);
         }
@@ -88,7 +95,7 @@ const findDataWith_db = (client, table) => {
     /**
      * Searches records where any column matches the search value
      * @param {string} value - Search term
-     * @returns {Promise<Array<object>>} Array of matching records (max 20)
+     * @returns {Promise<Array<object>>} Array of matching records
      */
     return async (value) => {
         if (!value.trim()) {
@@ -188,7 +195,7 @@ const updateDataFrom_db = (client, table) => {
             if (valuesToUpdate[key] === undefined) {
                 continue;
             }
-            fieldsToUpdate.push(`${key}=$${paramIndex}`);
+            fieldsToUpdate.push(`${key} = $${paramIndex}`);
             values.push(valuesToUpdate[key]);
             paramIndex++;
         }
@@ -227,7 +234,7 @@ const removeDataFrom_db = (client, table) => {
      * @returns {Promise<object>} The deleted record
      */
     return async (id) => {
-        if (!id) {
+        if (id === undefined || isNaN(+id)) {
             throw new Error(`'${id}' is not a valid id`);
         }
 
