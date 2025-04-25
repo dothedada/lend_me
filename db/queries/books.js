@@ -12,7 +12,8 @@ export const books_db = {
 };
 
 export const booksQuery = `
-SELECT 
+SELECT DISTINCT ON (books.id)
+	books.id AS id,
 	books.title AS title, 
 	authors.name AS author,
 	editorials.name AS editorial,

@@ -3,7 +3,7 @@ import { booksQuery } from './books';
 import { elementInTable, alreadyExist } from '../utils';
 
 export const bookUser_db = {
-    getBooks: getBooksFromUser_db,
+    getBooks: getBooksFromUsers_db,
     addBook: addBookToUser_db,
     removeBook: removeBookFromUser_db,
     removeBooks: removeAll_db('book'),
@@ -11,26 +11,27 @@ export const bookUser_db = {
 };
 
 /**
- * Retrieves all books associated with a user
- * @param {number|string} userId - User ID to fetch books for
+ * Retrieves all books associated with multiple users
+ * @param {Array<number|string>} usersIds - Array of user IDs
+ * @param {object} [options] - Configuration options
  * @returns {Promise<Array<object>>} Array of book objects
- * @throws {Error} If userId is invalid or query fails
+ * @throws {Error} If input is invalid or query fails
  */
-const getBooksFromUser_db = async (userId) => {
-    if (userId === undefined) {
+const getBooksFromUsers_db = async (usersIds) => {
+    if (usersIds === undefined || !Array.isArray(usersIds)) {
         throw new Error('Must provide userId to fetch the books');
     }
-    if (!(await elementInTable('users', userId))) {
-        throw new Error(`There is no user with id '${userId}'`);
-    }
+
+    const validIds = elementInTable('users', usersIds);
+    const keysToCheck = validIds.map((_, i) => `$${i + 1}`);
 
     const query = `
 	${booksQuery}
 	JOIN book_user ON books.id = book_user.book_id
-	WHERE book_user.user_id = $1`;
+	WHERE book_user.user_id IN (${keysToCheck.join(', ')})`;
 
     try {
-        const { rows } = await pool.query(query, [userId]);
+        const { rows } = await pool.query(query, validIds);
         return rows;
     } catch (err) {
         throw new Error(`Database query failed: ${err.message}`);
@@ -49,8 +50,8 @@ const addBookToUser_db = async (bookId, userId) => {
         throw new Error('Must provide bookId and userId to add a book');
     }
     const [userExist, bookExist] = await Promise.all([
-        elementInTable('users', userId),
-        elementInTable('books', bookId),
+        elementInTable('users', [userId]),
+        elementInTable('books', [bookId]),
     ]);
 
     if (!userExist) {
@@ -115,7 +116,7 @@ const removeAll_db = (attribute) => async (id) => {
         throw new Error(`attribute '${attribute}' is not valid`);
     }
 
-    if (!(await elementInTable(`${attribute}s`, id))) {
+    if ((await elementInTable(`${attribute}s`, [id])).length === 0) {
         throw new Error(`${attribute} with the id '${id}' does not exist`);
     }
 

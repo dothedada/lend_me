@@ -1,23 +1,47 @@
 import { tables } from './query_settings';
 
 /**
- * Verifies if an element exists in a specified table
+ * Checks if multiple elements exist in a table and returns their IDs
  * @param {string} table - Table name to check
- * @param {number|string} id - Element ID to verify
- * @returns {Promise<boolean>} True if the element exists, false otherwise
- * @throws {Error} If table is invalid or database query fails
+ * @param {Array<string|number>} ids - Array of IDs to verify
+ * @returns {Promise<Array<string|number>>} Array of existing IDs
+ * @throws {Error} If table is invalid, IDs array is empty, or query fails
  */
-export const elementInTable = async (table, id) => {
+export const elementInTable = async (table, ids) => {
     if (!tables.includes(table)) {
         throw new Error(`'${table}' is not a valid table`);
     }
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+        throw new Error(`'${ids}' needs to be a non empty array`);
+    }
+
+    const uniqueIds = [...new Set([...ids.filter((e) => e)])];
+
+    if (uniqueIds.length === 0) {
+        throw new Error('No valid IDs provided');
+    }
+
+    const idsPlaceHolders = uniqueIds.map((_, i) => `$${i + 1}`).join(', ');
+
     const query = `
-	SELECT EXISTS (
-		SELECT 1 FROM ${table} WHERE id = $1
-	) AS element_exists`;
+	SELECT * FROM ${table} 
+	WHERE id IN (${idsPlaceHolders})
+	`;
+
     try {
-        const { rows } = await pool.query(query, [id]);
-        return rows[0].element_exists;
+        const { rows } = await pool.query(query, uniqueIds);
+        const exist = rows.map((row) => row.id);
+        const missing = uniqueIds.filter((id) => !exist.includes(id));
+
+        if (missing.length > 0) {
+            console.warn(
+                `[DB Warning] IDs not found in ${table}:`,
+                missing.join(', '),
+            );
+        }
+
+        return exist;
     } catch (err) {
         throw new Error(`Database query on '${table}' failed: ${err.message}`);
     }
