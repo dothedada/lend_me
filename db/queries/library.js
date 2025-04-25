@@ -1,6 +1,6 @@
 import pool from '../pool.cjs';
 import { booksQuery } from './books';
-import { elementExists, recordExists } from '../utils';
+import { elementExists, recordExists, validateId } from '../utils';
 
 export const bookUser_db = {
     getBooks: getBooksFromUsers_db,
@@ -46,12 +46,12 @@ const getBooksFromUsers_db = async (usersIds) => {
  * @throws {Error} If parameters are invalid or operation fails
  */
 const addBookToUser_db = async (bookId, userId) => {
-    if (userId === undefined || bookId === undefined) {
-        throw new Error('Must provide bookId and userId to add a book');
-    }
+    const cleanBookId = validateId(bookId);
+    const cleanUserId = validateId(userId);
+
     const [userExist, bookExist] = await Promise.all([
-        elementExists('users', [userId]),
-        elementExists('books', [bookId]),
+        elementExists('books', [cleanBookId]),
+        elementExists('users', [cleanUserId]),
     ]);
 
     if (!userExist) {
@@ -60,7 +60,12 @@ const addBookToUser_db = async (bookId, userId) => {
     if (!bookExist) {
         throw new Error(`There is no book with id '${bookId}'`);
     }
-    if (await recordExists('book_user', { book_id: bookId, user_id: userId })) {
+    if (
+        await recordExists('book_user', {
+            book_id: cleanBookId,
+            user_id: cleanUserId,
+        })
+    ) {
         return;
     }
 
@@ -70,7 +75,7 @@ const addBookToUser_db = async (bookId, userId) => {
 	RETURNING *`;
 
     try {
-        const { rows } = await pool.query(query, [bookId, userId]);
+        const { rows } = await pool.query(query, [cleanBookId, cleanUserId]);
         return rows;
     } catch (err) {
         throw new Error(`Database query failed: ${err.message}`);
@@ -85,9 +90,8 @@ const addBookToUser_db = async (bookId, userId) => {
  * @throws {Error} If parameters are invalid or operation fails
  */
 const removeBookFromUser_db = async (bookId, userId) => {
-    if (userId === undefined || bookId === undefined) {
-        throw new Error('Must provide bookId and userId');
-    }
+    const cleanBookId = validateId(bookId);
+    const cleanUserId = validateId(userId);
 
     const query = `
 	DELETE FROM book_user
@@ -95,7 +99,7 @@ const removeBookFromUser_db = async (bookId, userId) => {
 	RETURNING *`;
 
     try {
-        const { rows } = await pool.query(query, [bookId, userId]);
+        const { rows } = await pool.query(query, [cleanBookId, cleanUserId]);
         return rows;
     } catch (err) {
         throw new Error(`Database query failed: ${err.message}`);
@@ -109,6 +113,7 @@ const removeBookFromUser_db = async (bookId, userId) => {
  * @throws {Error} If parameters are invalid or operation fails
  */
 const removeAll_db = (attribute) => async (id) => {
+    const cleanId = validateId(id);
     if (attribute === undefined || id === undefined) {
         throw new Error('Must provide attribute and id');
     }
@@ -116,7 +121,7 @@ const removeAll_db = (attribute) => async (id) => {
         throw new Error(`attribute '${attribute}' is not valid`);
     }
 
-    if ((await elementExists(`${attribute}s`, [id])).length === 0) {
+    if ((await elementExists(`${attribute}s`, [cleanId])).length === 0) {
         throw new Error(`${attribute} with the id '${id}' does not exist`);
     }
 
@@ -126,7 +131,7 @@ const removeAll_db = (attribute) => async (id) => {
 	RETURNING *`;
 
     try {
-        const { rows } = await pool.query(query, [id]);
+        const { rows } = await pool.query(query, [cleanId]);
         return rows;
     } catch (err) {
         throw new Error(`Database query failed: ${err.message}`);

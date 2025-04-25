@@ -1,5 +1,13 @@
 import { tables } from './query_settings';
 
+export const validateId = (id) => {
+    const cleanId = id.trim();
+    if (cleanId === '' || isNaN(cleanId)) {
+        throw new Error(`'${id}' is not a valid user_id`);
+    }
+    return cleanId;
+};
+
 /**
  * Checks if multiple elements exist in a table and returns their IDs
  * @param {string} table - Table name to check

@@ -1,4 +1,5 @@
 import { fieldsFrom, SEARCH_LIMIT } from '../query_settings.js';
+import { validateId } from '../utils.js';
 
 /**
  * Factory function that creates requested query methods for a table
@@ -227,9 +228,7 @@ const removeDataFrom_db = (client, table) => {
      * @returns {Promise<object>} The deleted record
      */
     return async (id) => {
-        if (id === undefined || isNaN(+id)) {
-            throw new Error(`'${id}' is not a valid id`);
-        }
+        const cleanId = validateId(id);
 
         const query = `
 		DELETE FROM ${table}
@@ -237,7 +236,7 @@ const removeDataFrom_db = (client, table) => {
 		RETURNING *`;
 
         try {
-            const { rows } = await client.query(query, [id]);
+            const { rows } = await client.query(query, [cleanId]);
             if (!rows.length) {
                 throw new Error(`The id '${id}' does not exist in '${table}'`);
             }

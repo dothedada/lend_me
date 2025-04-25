@@ -1,11 +1,11 @@
 import pool from '../pool.cjs';
-import { elementExists, recordExists } from '../utils';
+import { elementExists, recordExists, validateId } from '../utils';
 
 export const lends_db = {
-    getAll: getAllLends,
+    getAll: getAllLends_db,
     getBy: getLendsBy_db,
     lend: insertLend_db,
-    return: updateLend,
+    return: updateLend_db,
 };
 
 const lendKeys = [
@@ -49,7 +49,7 @@ JOIN (
  * @returns {Promise<Array<Object>>} Array of lending records with detailed information.
  * @throws {Error} If the database query fails.
  */
-const getAllLends = async () => {
+const getAllLends_db = async () => {
     try {
         const { rows } = await pool.query(lendQuery);
         return rows;
@@ -119,14 +119,16 @@ const getLendsBy_db = async (attribute, value) => {
 const insertLend_db = async (values) => {
     const { book_id, from_id, to_id } = values;
 
-    if (!book_id || !from_id || !to_id) {
-        throw new Error('Some values are missing to make the lend');
-    }
+    const cleanBook_id = validateId(book_id);
+    const cleanFrom_id = validateId(from_id);
+    const cleanTo_id = validateId(to_id);
 
-    const userFromExists = await elementExists('users', [from_id]);
-    const userToExists = await elementExists('users', [to_id]);
-    const bookExists = await elementExists('books', [book_id]);
-    if (!userFromExists || !userToExists || !bookExists) {
+    const elementsExists = await Promise.all([
+        elementExists('users', [cleanFrom_id]),
+        elementExists('users', [cleanTo_id]),
+        elementExists('books', [cleanBook_id]),
+    ]);
+    if (elementsExists.some((e) => !e)) {
         throw new Error('User or book does not exist');
     }
 
@@ -171,12 +173,9 @@ const insertLend_db = async (values) => {
  * - No active lending record exists with the given ID.
  * - The database query fails.
  */
-const updateLend = async (lendId) => {
-    const cleanId = lendId.trim();
+const updateLend_db = async (lendId) => {
+    const cleanId = validateId(lendId);
 
-    if (!cleanId || isNaN(cleanId)) {
-        throw new Error(`'${lendId}' is not a valid id for lends`);
-    }
     const query = `
 	UPDATE lends
 	SET date_returned = CURRENT_DATE, status = 'returned'

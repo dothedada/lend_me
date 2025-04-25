@@ -1,5 +1,6 @@
 import pool from '../pool.cjs';
 import { SEARCH_LIMIT } from '../query_settings.js';
+import { validateId } from '../utils.js';
 import { queryMethods } from './simpleQuerys_lib.js';
 
 export const books_db = {
@@ -263,9 +264,7 @@ const updateBook_db = async (valuesToUpdate) => {
  * @throws {Error} If ID is invalid, book doesn't exist, or deletion fails
  */
 const removeBook_db = async (id) => {
-    if (id === undefined || isNaN(+id)) {
-        throw new Error(`'${id}' is not a valid id`);
-    }
+    const cleanId = validateId(id);
 
     const query = `
 	DELETE FROM books
@@ -273,7 +272,7 @@ const removeBook_db = async (id) => {
 	RETURNING *`;
 
     try {
-        const { rows } = await pool.query(query, [id]);
+        const { rows } = await pool.query(query, [cleanId]);
         if (!rows.length) {
             throw new Error(`The id '${id}' does not exist in books`);
         }
