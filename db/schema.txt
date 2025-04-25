@@ -1,24 +1,22 @@
-CREATE TABLE IF NOT EXISTS authors (
+CREATE TABLE authors (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   name VARCHAR(120),
   bio VARCHAR(1000),
   url VARCHAR(120)
 );
 
-CREATE TABLE IF NOT EXISTS editorials (
+CREATE TABLE editorials (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   name VARCHAR(120),
   url VARCHAR(120)
 );
 
-CREATE TABLE IF NOT EXISTS categories (
+CREATE TABLE categories (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   category VARCHAR(120)
 );
 
-INSERT INTO categories (category) VALUES ('undefined');
-
-CREATE TABLE IF NOT EXISTS books (
+CREATE TABLE books (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   title VARCHAR(120),
   author_id INTEGER REFERENCES authors(id),
@@ -30,36 +28,31 @@ CREATE TABLE IF NOT EXISTS books (
   image VARCHAR(120)
 );
 
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE users (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   name VARCHAR(120),
   email VARCHAR(120)
 );
 
-CREATE TABLE IF NOT EXISTS library (
-  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  name VARCHAR(120),
-  owner_id INTEGER REFERENCES users(id)
-);
-
-CREATE TABLE IF NOT EXISTS lends (
+CREATE TABLE lends (
   book_id INTEGER NOT NULL REFERENCES books(id),
-  from_id INTEGER NOT NULL REFERENCES library(id),
+  from_id INTEGER NOT NULL REFERENCES users(id),
   to_id INTEGER NOT NULL REFERENCES users(id),
   date_taken TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  date_returned TIMESTAMP WITH TIME ZONE,
+  date_returned TIMESTAMP WITH TIME ZONE
+  CHECK (from_id != to_id),
   status VARCHAR(20) DEFAULT 'active' CHECK(status IN('active', 'returned'))
 );
 
-CREATE TABLE IF NOT EXISTS book_library (
+CREATE TABLE book_user (
   book_id INTEGER NOT NULL REFERENCES books(id),
-  library_id INTEGER NOT NULL REFERENCES library(id),
-  PRIMARY KEY (book_id, library_id)
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  PRIMARY KEY (book_id, user_id)
 );
 
-CREATE TABLE IF NOT EXISTS friends (
-  usera_id INTEGER NOT NULL REFERENCES users(id),
-  userb_id INTEGER NOT NULL REFERENCES users(id),
-  PRIMARY KEY (usera_id, userb_id),
-  CHECK(usera_id < userb_id)
+CREATE TABLE friends (
+  user_id INTEGER REFERENCES users(id),
+  friend_id INTEGER REFERENCES users(id),
+  PRIMARY KEY (user_id, friend_id),
+  CHECK (user_id < friend_id)
 )
