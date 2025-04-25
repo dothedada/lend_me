@@ -7,7 +7,7 @@ import { tables } from './query_settings';
  * @returns {Promise<Array<string|number>>} Array of existing IDs
  * @throws {Error} If table is invalid, IDs array is empty, or query fails
  */
-export const elementInTable = async (table, ids) => {
+export const elementExists = async (table, ids) => {
     if (!tables.includes(table)) {
         throw new Error(`'${table}' is not a valid table`);
     }
@@ -48,28 +48,38 @@ export const elementInTable = async (table, ids) => {
 };
 
 /**
- * Checks if a record with the specified key-value pairs already exists
- * @param {string} table - Table name to check
- * @param {string} key1 - First column name
- * @param {any} value1 - First value to match
- * @param {string} key2 - Second column name
- * @param {any} value2 - Second value to match
- * @returns {Promise<boolean>} True if record exists, false otherwise
- * @throws {Error} If table is invalid or database query fails
+ * Checks if records match criteria in a database table.
+ * @param {string} table - Valid table name from allowed list.
+ * @param {Object} valuesObj - Search conditions (key: column, value: search term).
+ * @returns {Promise<boolean>} True if matching records exist.
+ * @throws {Error} If table is invalid or query fails.
  */
-export const alreadyExist = async (table, key1, value1, key2, value2) => {
+export const recordExists = async (table, valuesObj) => {
     if (!tables.includes(table)) {
         throw new Error(`'${table}' is not a valid table`);
     }
 
+    const [keys, values] = Object.entries(valuesObj).reduce(
+        (acc, [key, value], i) => {
+            if (value === null || value === undefined) {
+                return acc;
+            }
+            const comparison = isNaN(value) ? ' ILIKE ' : ' = ';
+            acc[0].push(`${key} ${comparison} $${i + 1}`);
+            acc[1].push(value);
+            return acc;
+        },
+        [[], []],
+    );
+
     const query = `
 	SELECT EXISTS (
-		SELECT 1 FROM ${table} WHERE ${key1} = $1 AND ${key2} = $2
-	) AS already_exist`;
+		SELECT 1 FROM ${table} WHERE ${keys.join(' AND ')}
+	) AS exist`;
 
     try {
-        const { rows } = await pool.query(query, [value1, value2]);
-        return rows[0].already_exist;
+        const { rows } = await pool.query(query, values);
+        return rows[0].exist;
     } catch (err) {
         throw new Error(`Database query on '${table}' failed: ${err.message}`);
     }

@@ -35,11 +35,12 @@ CREATE TABLE users (
 );
 
 CREATE TABLE lends (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   book_id INTEGER NOT NULL REFERENCES books(id),
   from_id INTEGER NOT NULL REFERENCES users(id),
   to_id INTEGER NOT NULL REFERENCES users(id),
-  date_taken TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  date_returned TIMESTAMP WITH TIME ZONE
+  date_taken DATE NOT NULL DEFAULT CURRENT_DATE,
+  date_returned DATE
   CHECK (from_id != to_id),
   status VARCHAR(20) DEFAULT 'active' CHECK(status IN('active', 'returned'))
 );
