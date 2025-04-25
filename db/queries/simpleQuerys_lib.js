@@ -1,4 +1,4 @@
-import { SEARCH_LIMIT } from '../query_settings.js';
+import { fieldsFrom, SEARCH_LIMIT } from '../query_settings.js';
 
 /**
  * Factory function that creates requested query methods for a table
@@ -38,13 +38,6 @@ const availableMethods = {
     add: insertDataTo_db,
     put: updateDataFrom_db,
     remove: removeDataFrom_db,
-};
-
-const fieldsFrom = {
-    authors: ['id', 'name', 'bio', 'url'],
-    editorials: ['id', 'name', 'url'],
-    categories: ['id', 'category'],
-    users: ['id', 'name', 'email'],
 };
 
 /**

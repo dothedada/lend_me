@@ -1,5 +1,5 @@
 import pool from '../pool.cjs';
-import { SEARCH_LIMIT } from '../query_settings.js';
+import { fieldsFrom, SEARCH_LIMIT } from '../query_settings.js';
 import { queryMethods } from './simpleQuerys_lib.js';
 
 export const books_db = {
@@ -11,7 +11,7 @@ export const books_db = {
     remove: removeBook_db,
 };
 
-const booksDataQuery = `
+export const booksQuery = `
 SELECT 
 	books.title AS title, 
 	authors.name AS author,
@@ -26,8 +26,8 @@ JOIN authors ON books.author_id = authors.id
 JOIN editorials ON books.editorial_id = editorials.id
 JOIN categories ON books.category_id = categories.id`;
 
-const searchKeys = ['title', 'author', 'editorial', 'category', 'year'];
-const bookKeys = [...searchKeys, 'sinopsys', 'url', 'image'];
+const [, ...searchKeys] = fieldsFrom.book;
+const [, ...bookKeys] = fieldsFrom.bookExtended;
 
 /**
  * Gets book(s) by ID
@@ -38,7 +38,7 @@ const bookKeys = [...searchKeys, 'sinopsys', 'url', 'image'];
  * @throws {Error} If database query fails
  */
 const getBookId_db = async (id) => {
-    let query = booksDataQuery;
+    let query = booksQuery;
     const values = [];
     if (id) {
         query += ' WHERE id = $1';
@@ -65,7 +65,7 @@ const getBooksBy_db = async (parameter, value) => {
         throw new Error(`Invalid query parameter '${parameter}'`);
     }
 
-    let query = `${booksDataQuery} WHERE ${parameter}::text ILIKE $1`;
+    let query = `${booksQuery} WHERE ${parameter}::text ILIKE $1`;
 
     try {
         const { rows } = await pool.query(query, [`%${value}%`]);
@@ -91,7 +91,7 @@ const findBooksWith_db = async (value) => {
         fields.push(`${key}::text ILIKE $1`);
     }
     let query = `
-	${booksDataQuery} 
+	${booksQuery} 
 	WHERE ${fields.join(' OR ')}
 	LIMIT ${SEARCH_LIMIT}`;
 
