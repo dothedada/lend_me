@@ -1,6 +1,6 @@
 import pool from '../pool.cjs';
 import { booksQuery } from './books';
-import { elementInTable, alreadyExist } from '../utils';
+import { elementExists, recordExists } from '../utils';
 
 export const bookUser_db = {
     getBooks: getBooksFromUsers_db,
@@ -22,7 +22,7 @@ const getBooksFromUsers_db = async (usersIds) => {
         throw new Error('Must provide userId to fetch the books');
     }
 
-    const validIds = elementInTable('users', usersIds);
+    const validIds = elementExists('users', usersIds);
     const keysToCheck = validIds.map((_, i) => `$${i + 1}`);
 
     const query = `
@@ -50,8 +50,8 @@ const addBookToUser_db = async (bookId, userId) => {
         throw new Error('Must provide bookId and userId to add a book');
     }
     const [userExist, bookExist] = await Promise.all([
-        elementInTable('users', [userId]),
-        elementInTable('books', [bookId]),
+        elementExists('users', [userId]),
+        elementExists('books', [bookId]),
     ]);
 
     if (!userExist) {
@@ -60,7 +60,7 @@ const addBookToUser_db = async (bookId, userId) => {
     if (!bookExist) {
         throw new Error(`There is no book with id '${bookId}'`);
     }
-    if (await alreadyExist('book_user', 'book_id', bookId, 'user_id', userId)) {
+    if (await recordExists('book_user', { book_id: bookId, user_id: userId })) {
         return;
     }
 
@@ -116,7 +116,7 @@ const removeAll_db = (attribute) => async (id) => {
         throw new Error(`attribute '${attribute}' is not valid`);
     }
 
-    if ((await elementInTable(`${attribute}s`, [id])).length === 0) {
+    if ((await elementExists(`${attribute}s`, [id])).length === 0) {
         throw new Error(`${attribute} with the id '${id}' does not exist`);
     }
 
