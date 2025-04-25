@@ -1,5 +1,5 @@
 import pool from '../pool.cjs';
-import { fieldsFrom, SEARCH_LIMIT } from '../query_settings.js';
+import { SEARCH_LIMIT } from '../query_settings.js';
 import { queryMethods } from './simpleQuerys_lib.js';
 
 export const books_db = {
@@ -26,8 +26,8 @@ JOIN authors ON books.author_id = authors.id
 JOIN editorials ON books.editorial_id = editorials.id
 JOIN categories ON books.category_id = categories.id`;
 
-const [, ...searchKeys] = fieldsFrom.book;
-const [, ...bookKeys] = fieldsFrom.bookExtended;
+const searchKeys = ['title', 'author', 'editorial', 'category', 'year'];
+const bookKeys = [...searchKeys, 'sinopsys', 'url', 'image'];
 
 /**
  * Gets book(s) by ID
