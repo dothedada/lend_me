@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Welcome to Lend_me</title>
+    </head>
+    <body>
+        <h1>Welcome to Lend_me</h1>
+        <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Maiores,
+            vel. Ad quod dicta blanditiis, alias tempore nesciunt facilis illo
+            asperiores.
+        </p>
+        <h2>log in</h2>
+        <div class="log">
+            <div class="log-tabs">
+                <button type="button" data-tab="1">Log in</button>
+                <button type="button" data-tab="2">Create user</button>
+                <button type="button">Peek like a perv</button>
+            </div>
+            <div class="log-pane" data-pane="1">
+                <form action="/user/log" method="post">
+                    <label>
+                        Name
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="Jane Doe Austin"
+                        />
+                    </label>
+                    <label>
+                        Email
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="jane@example.com"
+                        />
+                    </label>
+                    <button>Log In!!!</button>
+                </form>
+            </div>
+            <div class="log-pane" data-pane="2">
+                <form action="/user/create" method="post">
+                    <label>
+                        Name
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="Jane Doe Austin"
+                        />
+                    </label>
+                    <label>
+                        Email
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="jane@example.com"
+                        />
+                    </label>
+                    <button>create</button>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
