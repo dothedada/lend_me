@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title><%= user %> | Dashboard</title>
+</head>
+<body>
+	<main>
+		<h1>Books Dashboard</h1>
+		<%- include (
+			"snips.bookslist.ejs", 
+			{ 
+				table : { 
+					title : "Available books",
+					borrowed : false,
+					books : availableBooks,
+				}
+			}
+		) %>
+		<%- include (
+			"snips.bookslist.ejs", 
+			{ 
+				table : { 
+					title : "borrowed books",
+					borrowed : true,
+					books : borrowedBooks,
+				}
+			}
+		) %>
+	</main>
+</body>
+</html>
