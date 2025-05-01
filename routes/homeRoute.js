@@ -4,8 +4,7 @@ import { getAllBooks } from '../controllers/books.js';
 const homeRoute = Router();
 
 homeRoute.get('/', getAllBooks, (req, res) => {
-    console.log(res.books);
-    res.send('holi desde el router');
+    res.render('dashboard.ejs', { user: 'test', books: res.books });
 });
 
 export default homeRoute;

@@ -15,11 +15,7 @@
 			<td><%= book.category || "" %></td>
 			<td><%= book.owner %></td>
 			<td>
-				<% if (table.borrowed === true) { %>
-				<form action="/book/<%= i %>/return" method="post">
-				<% } else  { %>
 				<form action="/book/<%= i %>/borrow" method="post">
-				<% } %>
 					<button>Return</button>
 				</form>
 			</td>

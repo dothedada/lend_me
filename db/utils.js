@@ -1,4 +1,4 @@
-import { tables } from './query_settings';
+import { tables } from './query_settings.js';
 
 export const validateId = (id) => {
     const cleanId = id.trim();

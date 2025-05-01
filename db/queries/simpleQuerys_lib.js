@@ -33,14 +33,6 @@ export const queryMethods = (
     return requestedMethods;
 };
 
-const availableMethods = {
-    get: getDataFrom_db,
-    find: findDataWith_db,
-    add: insertDataTo_db,
-    put: updateDataFrom_db,
-    remove: removeDataFrom_db,
-};
-
 /**
  * Creates a function to retrieve data from a table
  * @param {object} client - PostgreSQL client instance
@@ -260,4 +252,12 @@ const checkTableExist = (table) => {
         throw new Error(`Wrong table name '${table}'.`);
     }
     return true;
+};
+
+const availableMethods = {
+    get: getDataFrom_db,
+    find: findDataWith_db,
+    add: insertDataTo_db,
+    put: updateDataFrom_db,
+    remove: removeDataFrom_db,
 };

@@ -3,15 +3,6 @@ import { SEARCH_LIMIT } from '../query_settings.js';
 import { validateId } from '../utils.js';
 import { queryMethods } from './simpleQuerys_lib.js';
 
-export const books_db = {
-    getId: getBookId_db,
-    getBy: getBooksBy_db,
-    find: findBooksWith_db,
-    add: insertBook_db,
-    put: updateBook_db,
-    remove: removeBook_db,
-};
-
 export const booksQuery = `
 SELECT DISTINCT ON (books.id)
 	books.id AS id,
@@ -280,4 +271,13 @@ const removeBook_db = async (id) => {
     } catch (err) {
         throw new Error(`Failed to delete book with id=${id}: ${err.message}`);
     }
+};
+
+export const books_db = {
+    getBooks: getBookId_db,
+    getBy: getBooksBy_db,
+    find: findBooksWith_db,
+    add: insertBook_db,
+    put: updateBook_db,
+    remove: removeBook_db,
 };
