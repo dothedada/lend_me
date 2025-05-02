@@ -1,4 +1,5 @@
 import { tables } from './query_settings.js';
+import pool from './pool.cjs';
 
 export const validateId = (id) => {
     const cleanId = id.trim();
@@ -59,7 +60,7 @@ export const elementExists = async (table, ids) => {
  * Checks if records match criteria in a database table.
  * @param {string} table - Valid table name from allowed list.
  * @param {Object} valuesObj - Search conditions (key: column, value: search term).
- * @returns {Promise<boolean>} True if matching records exist.
+ * @returns {Promise<Object>} - The matching record object if exist, or undefined
  * @throws {Error} If table is invalid or query fails.
  */
 export const recordExists = async (table, valuesObj) => {
@@ -80,14 +81,11 @@ export const recordExists = async (table, valuesObj) => {
         [[], []],
     );
 
-    const query = `
-	SELECT EXISTS (
-		SELECT 1 FROM ${table} WHERE ${keys.join(' AND ')}
-	) AS exist`;
+    const query = `SELECT * FROM ${table} WHERE ${keys.join(' AND ')} LIMIT 1`;
 
     try {
         const { rows } = await pool.query(query, values);
-        return rows[0].exist;
+        return rows.length === 0 ? undefined : rows[0];
     } catch (err) {
         throw new Error(`Database query on '${table}' failed: ${err.message}`);
     }

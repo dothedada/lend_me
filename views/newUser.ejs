@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>New user | Lend_me</title>
+</head>
+<body>
+	<h1>Hi <%= name %>!!!</h1>
+	<p>became a new Lend_me user by clicking the button.</p>
+	<p>No shitty spam nor ads nor meanigless communications, only th thing that you care for</p>
+	<form action="/login/new" method="post">
+		<span>
+			This will be my user name
+			<input type="name" name="name" value="<%= name || '' %>">
+		</span>
+		<span>
+			this will be my mail
+			<input type="email" name="email" value="<%= email || '' %>">
+		</span>
+		<span> Keep me logged in this device forever and ever until i change my mind
+			<input type="checkbox" name="keepLogged"/>
+		</span>
+		<button>Create my user</button>
+	</form>
+</body>
+</html>
