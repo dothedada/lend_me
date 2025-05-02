@@ -6,7 +6,7 @@ export const validateId = (id) => {
     if (cleanId === '' || isNaN(cleanId)) {
         throw new Error(`'${id}' is not a valid user_id`);
     }
-    return cleanId;
+    return +cleanId;
 };
 
 /**

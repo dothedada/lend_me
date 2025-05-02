@@ -26,7 +26,6 @@ export const logUser = async (req, res, next) => {
 
 export const createUser = async (req, res, next) => {
     const { name, email, keepLogged } = req.body;
-    console.log('body create:', req.body);
     const newUser = await users_db.add({ name, email });
 
     res.sessionCookie =

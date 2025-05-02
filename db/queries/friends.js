@@ -1,13 +1,5 @@
 import pool from '../pool.cjs';
-import { elementExists, recordExists, validateId } from '../utils';
-
-export const friends_db = {
-    getFriends: getAllFriends_db,
-    friendship: checkFriendship_db,
-    addFriendship: addFriend_db,
-    removeFriendship: removeFriendship_db,
-    purgeUser: removeUser_db,
-};
+import { elementExists, recordExists, validateId } from '../utils.js';
 
 /**
  * Retrieves all friends of a user.
@@ -23,11 +15,11 @@ const getAllFriends_db = async (userId) => {
         throw new Error(`The user with the id '${cleanId}' does not exist`);
     }
 
-    const query = `SELECT * FROM friends WHERE user_id = $1`;
+    const query = `SELECT friend_id FROM friends WHERE user_id = $1`;
 
     try {
         const { rows } = await pool.query(query, [cleanId]);
-        return rows;
+        return rows.map((e) => e.friend_id);
     } catch (err) {
         throw new Error(`Database query to 'friends' failed: ${err.message}`);
     }
@@ -147,4 +139,12 @@ const removeUser_db = async (userId) => {
     } catch (err) {
         throw new Error(`Database query to 'friends' failed: ${err.message}`);
     }
+};
+
+export const friends_db = {
+    getFriends: getAllFriends_db,
+    friendship: checkFriendship_db,
+    addFriendship: addFriend_db,
+    removeFriendship: removeFriendship_db,
+    purgeUser: removeUser_db,
 };

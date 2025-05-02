@@ -46,6 +46,45 @@ const getBookId_db = async (id) => {
     }
 };
 
+const getBooksOwnedBy_db = async (ids = [], notInIds = []) => {
+    if (ids.length === 0) {
+        return [];
+    }
+
+    const idsSecuence = ids.map((_, i) => `$${i + 1}`).join(', ');
+
+    let query = `
+	${booksQuery}
+	JOIN book_user ON book_user.book_id = books.id
+	WHERE book_user.user_id IN (${idsSecuence})`;
+
+    let queryElements = ids;
+
+    if (notInIds.length > 0) {
+        const baseIndex = ids.length;
+        const excludeBooksOf = notInIds
+            .map((_, i) => `$${i + baseIndex + 1}`)
+            .join(', ');
+
+        query += `
+		AND NOT EXISTS (
+			SELECT 1
+			FROM book_user bu2
+			WHERE bu2.book_id = books.id 
+			AND bu2.user_id IN (${excludeBooksOf}) 
+		)`;
+
+        queryElements = [...queryElements, ...notInIds];
+    }
+
+    try {
+        const { rows } = await pool.query(query, queryElements);
+        return rows;
+    } catch (err) {
+        throw new Error(`Database query to 'books' failed: ${err.message}`);
+    }
+};
+
 /**
  * Gets books by specific field
  * @param {string} parameter - Field to search by (title, author, editorial, category, or year)
@@ -275,6 +314,7 @@ const removeBook_db = async (id) => {
 
 export const books_db = {
     getBooks: getBookId_db,
+    getBooksOwnedBy: getBooksOwnedBy_db,
     getBy: getBooksBy_db,
     find: findBooksWith_db,
     add: insertBook_db,
