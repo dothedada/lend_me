@@ -1,12 +1,17 @@
+// packages and lib middleware
 import express from 'express';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 
-import homeRoute from './routes/homeRoute.js';
+// functionality
 import { checkUserLog } from './controllers/login.js';
+
+// Routes
 import loginRoute from './routes/logginRoute.js';
+import homeRoute from './routes/homeRoute.js';
+import booksRoute from './routes/booksRoute.js';
 
 dotenv.config();
 
@@ -20,11 +25,15 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use('/login', loginRoute, (req, res) => {});
+app.use('/login', loginRoute);
 app.use(checkUserLog);
 app.use('/', homeRoute);
+app.use('/books', booksRoute);
 
 app.use(express.static('public'));
+
+// TODO: err if no user data
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log('Al aire en el puerto', PORT);

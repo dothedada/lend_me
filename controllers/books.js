@@ -10,7 +10,7 @@ export const getAllBooks = async (req, res, next) => {
 };
 
 export const getOwnedBooks = async (req, res, next) => {
-    const userId = req.cookies?.lend_me_usr;
+    const userId = req.user.id;
     const books = await books_db.getBooksOwnedBy([userId]);
     if (!res.books) {
         res.books = {};
@@ -21,7 +21,7 @@ export const getOwnedBooks = async (req, res, next) => {
 };
 
 export const getFriendsBooks = async (req, res, next) => {
-    const userId = req.cookies?.lend_me_usr;
+    const userId = req.user.id;
     const friends = await friends_db.getFriends(userId);
     const books = await books_db.getBooksOwnedBy(friends, [userId]);
     if (!res.books) {
@@ -33,7 +33,7 @@ export const getFriendsBooks = async (req, res, next) => {
 };
 
 export const getBorrowedBooks = async (req, res, next) => {
-    const userId = req.cookies?.lend_me_usr;
+    const userId = req.user.id;
     const borrowed_books = await lends_db.getBy('lends.to_id', userId);
     if (!res.books) {
         res.books = {};
@@ -47,7 +47,7 @@ export const getBorrowedBooks = async (req, res, next) => {
 };
 
 export const getLendedBooks = async (req, res, next) => {
-    const userId = req.cookies?.lend_me_usr;
+    const userId = req.user.id;
     const lended_books = await lends_db.getBy('lends.from_id', userId);
     if (!res.books) {
         res.books = {};

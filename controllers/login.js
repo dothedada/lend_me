@@ -1,12 +1,24 @@
+import jwt from 'jsonwebtoken';
 import { users_db } from '../db/queries/simpleQuerys.js';
 import { recordExists } from '../db/utils.js';
 
-export const checkUserLog = (req, res, next) => {
-    const cookies = req.cookies;
+//import('dotenv').config();
 
-    if (Object.keys(cookies).length === 0 || !cookies['lend_me_usr']) {
+export const checkUserLog = (req, res, next) => {
+    const token = req.cookies.lend_me_usr;
+
+    if (!token) {
         return res.redirect('/login');
     }
+
+    jwt.verify(token, process.env.JWT_STR, (err, decoded) => {
+        if (err) {
+            res.clearCookie('lend_me_usr');
+            res.status(403).redirect('/login');
+        }
+
+        req.user = { ...decoded, id: `${decoded.id}` };
+    });
 
     next();
 };
@@ -14,12 +26,18 @@ export const checkUserLog = (req, res, next) => {
 export const logUser = async (req, res, next) => {
     const { name, email, keepLogged } = req.body;
     const user = await recordExists('users', { name, email });
-    if (user) {
-        res.sessionCookie = { make: true, value: user.id, keepLogged };
-    } else {
+
+    if (!user) {
         res.userFields = { name, email };
         res.sessionCookie = { make: false };
+        return next();
     }
+
+    res.sessionCookie = {
+        make: true,
+        data: user,
+        keepLogged: keepLogged === 'on',
+    };
 
     next();
 };
@@ -30,7 +48,7 @@ export const createUser = async (req, res, next) => {
 
     res.sessionCookie =
         newUser !== undefined
-            ? { make: true, value: newUser.id, keepLogged }
+            ? { make: true, data: newUser, keepLogged }
             : { make: false };
 
     next();
@@ -38,19 +56,26 @@ export const createUser = async (req, res, next) => {
 
 export const createSessionCookie = (_, res, next) => {
     if (!res.sessionCookie?.make) {
-        next();
-        return;
+        return next();
     }
 
-    const { value, keepLogged } = res.sessionCookie;
+    const { data, keepLogged } = res.sessionCookie;
+    const { id, name, email } = data;
 
-    const now = new Date(Date.now());
-    const expires =
-        keepLogged === 'on'
-            ? new Date(now.setMonth(now.getMonth() + 1))
-            : new Date(Date.now() + 60000 * 5);
+    // prettier-ignore
+    const token = jwt.sign(
+    	{ id, name, email },
+    	process.env.JWT_STR,
+    	{ expiresIn: keepLogged ? '30d' : '5m' }, 
+    );
 
-    res.cookie('lend_me_usr', value, { expires });
+    res.cookie('lend_me_usr', token, {
+        maxAge: keepLogged ? 30 * 24 * 3600 * 1000 : 5 * 60 * 1000,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        path: '/',
+    });
 
     next();
 };

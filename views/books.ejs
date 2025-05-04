@@ -6,18 +6,10 @@
 	<title><%= user %> | Dashboard</title>
 </head>
 <body>
-	<%- include("partials/header.ejs", { h1: `${user}'s dashboard ` } ) %>
+	<%- include("partials/header.ejs") %>
 
 	<main>
-		<%- include (
-			"snips/bookslist.ejs", 
-			{ 
-				table : { 
-					title : "Available books",
-					books : friendsBooks,
-				}
-			}
-		) %>
+	pendejeteeee
 	</main>
 
 	<%- include("partials/footer.html") %>

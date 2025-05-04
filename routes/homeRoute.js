@@ -14,8 +14,7 @@ homeRoute.get(
     getBorrowedBooks,
     getOwnedBooks,
     async (req, res) => {
-        const id = req.cookies.lend_me_usr;
-        const userData = await users_db.get(id);
+        const userData = req.user;
 
         res.render('dashboard.ejs', {
             user: userData.name,
