@@ -7,7 +7,9 @@ export const booksQuery = `
 SELECT DISTINCT ON (books.id)
 	books.id AS id,
 	books.title AS title, 
+	books.author_id AS author_id,
 	authors.name AS author,
+	books.editorial_id AS editorial_id,
 	editorials.name AS editorial,
 	categories.category AS category,
 	books.year AS year, 

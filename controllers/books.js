@@ -38,8 +38,24 @@ export const getBorrowedBooks = async (req, res, next) => {
     if (!res.books) {
         res.books = {};
     }
-    res.books.borrowed = borrowed_books;
-    console.log(borrowed_books);
+
+    res.books.borrowed = borrowed_books.filter(
+        (book) => book.status !== 'returned',
+    );
+
+    next();
+};
+
+export const getLendedBooks = async (req, res, next) => {
+    const userId = req.cookies?.lend_me_usr;
+    const lended_books = await lends_db.getBy('lends.from_id', userId);
+    if (!res.books) {
+        res.books = {};
+    }
+
+    res.books.lended = lended_books.filter(
+        (book) => book.status !== 'returned',
+    );
 
     next();
 };

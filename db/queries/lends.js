@@ -20,6 +20,7 @@ SELECT
 	book.id AS "book_id",
 	book.title AS title,
 	book.author AS author,
+	book.author_id AS author_id,
 	from_user.name AS "from_user",
 	to_user.name AS "to_user",
 	lends.to_id AS "to_user_id",
@@ -33,6 +34,7 @@ JOIN (
 	SELECT 
 		books.id AS id,
 		books.title AS title,
+		books.author_id AS author_id,
 		authors.name AS author
 		FROM books
 		JOIN authors ON books.author_id = authors.id
@@ -88,7 +90,6 @@ const getLendsBy_db = async (attribute, value) => {
 
     const query = `${lendQuery} ${whereClause}`;
 
-    console.log(query);
     try {
         const { rows } = await pool.query(query, cleanValue);
         return rows;

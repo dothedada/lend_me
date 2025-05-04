@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title><%= user %> | Dashboard</title>
+</head>
+<body>
+	<%- include("partials/header.ejs", { h1: `${user}'s dashboard ` } ) %>
+
+	<main>
+		<%- include (
+			"snips/bookslist.ejs", 
+			{ 
+				table : { 
+					title : "Available books",
+					books : friendsBooks,
+				}
+			}
+		) %>
+	</main>
+
+	<%- include("partials/footer.html") %>
+</body>
+</html>

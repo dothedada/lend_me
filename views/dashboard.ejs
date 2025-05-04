@@ -9,38 +9,81 @@
 	<%- include("partials/header.ejs", { h1: `${user}'s dashboard ` } ) %>
 
 	<main>
-		<%- include (
-			"snips/bookslist.ejs", 
-			{ 
-				table : { 
-					title : "Available books",
-					books : friendsBooks,
-				}
-			}
-		) %>
+		<section>
+		<h2>Active transactions</h2>
+		<h3>Borrowed</h3>
+		<div>
+			<table>
+				<tr>
+					<th>Title</th>
+					<th>Author</th>
+					<th>Borrowed from</th>
+					<th>action</th>
+				</tr>
+				<% borrowedBooks.forEach((book) => { %>
+				<tr>
+					<td><a href="/book/<%= book.book_id %>/info"><%= book.title %></a></td>
+					<td><a href="/author/<%= book.author_id %>/info"><%= book.author %></a></td>
+					<td><%= book.from_user %></td>
+					<td>
+						<form action="/lends/<%= book.lend_id %>/return" method="post">
+							<button>Return</button>
+						</form>
+					</td>
+				</tr>
+				<% }) %>
+			</table>
+		</div>
 
-		<br />
+		<h3>Lended</h3>
+		<div>
+			<table>
+				<tr>
+					<th>Title</th>
+					<th>Author</th>
+					<th>Lended to</th>
+					<th>action</th>
+				</tr>
+				<% lendedBooks.forEach((book) => { %>
+				<tr>
+					<td><a href="/book/<%= book.book_id %>/info"><%= book.title %></a></td>
+					<td><a href="/author/<%= book.author_id %>/info"><%= book.author %></a></td>
+					<td><%= book.to_user %></td>
+					<td>
+						<form action="/lends/<%= book.lend_id %>/askReturn" method="post">
+							<button>Ask for return</button>
+						</form>
+					</td>
+				</tr>
+				<% }) %>
+			</table>
+		</div>
 
+		</section>
 
-		<%- include (
-			"snips/bookslist.ejs", 
-			{ 
-				table : { 
-					title : "my books",
-					books : userBooks,
-				}
-			}
-		) %>
+		<section>
+			<h2>My books</h2>
+				<div>
+					<table>
+						<tr>
+							<th>Title</th>
+							<th>Author</th>
+							<th>Category</th>
+							<th>Editorial</th>
+						</tr>
+						<% userBooks.forEach((book) => { %>
+						<tr>
+							<td><a href="/book/<%= book.id %>/info"><%= book.title %></a></td>
+							<td><a href="/author/<%= book.author_id %>/info"><%= book.author %></a></td>
+							<td><%= book.category || "" %></td>
+							<td><a href="/author/<%= book.editorial_id %>/info"><%= book.editorial || "" %></a>
+							</td>
+						</tr>
+						<% }) %>
+					</table>
+				</div>
+		</section>
 
-		<%- include (
-			"snips/bookslist.ejs", 
-			{ 
-				table : { 
-					title : "borrowed",
-					books : borrowedBooks,
-				}
-			}
-		) %>
 	</main>
 
 	<%- include("partials/footer.html") %>
