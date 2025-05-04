@@ -31,6 +31,16 @@
 				}
 			}
 		) %>
+
+		<%- include (
+			"snips/bookslist.ejs", 
+			{ 
+				table : { 
+					title : "borrowed",
+					books : borrowedBooks,
+				}
+			}
+		) %>
 	</main>
 
 	<%- include("partials/footer.html") %>

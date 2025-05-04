@@ -1,5 +1,6 @@
 import { books_db } from '../db/queries/books.js';
 import { friends_db } from '../db/queries/friends.js';
+import { lends_db } from '../db/queries/lends.js';
 
 export const getAllBooks = async (req, res, next) => {
     const books = await books_db.getBooks();
@@ -32,5 +33,13 @@ export const getFriendsBooks = async (req, res, next) => {
 };
 
 export const getBorrowedBooks = async (req, res, next) => {
-    console.log('something');
+    const userId = req.cookies?.lend_me_usr;
+    const borrowed_books = await lends_db.getBy('lends.to_id', userId);
+    if (!res.books) {
+        res.books = {};
+    }
+    res.books.borrowed = borrowed_books;
+    console.log(borrowed_books);
+
+    next();
 };

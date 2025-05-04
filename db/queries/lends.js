@@ -1,12 +1,5 @@
 import pool from '../pool.cjs';
-import { elementExists, recordExists, validateId } from '../utils';
-
-export const lends_db = {
-    getAll: getAllLends_db,
-    getBy: getLendsBy_db,
-    lend: insertLend_db,
-    return: updateLend_db,
-};
+import { elementExists, recordExists, validateId } from '../utils.js';
 
 const lendKeys = [
     'lend_id',
@@ -15,6 +8,7 @@ const lendKeys = [
     'author',
     'from_user',
     'to_user',
+    'to_user_id',
     'status',
     'date_taken',
     'date_returned',
@@ -28,6 +22,7 @@ SELECT
 	book.author AS author,
 	from_user.name AS "from_user",
 	to_user.name AS "to_user",
+	lends.to_id AS "to_user_id",
 	lends.status AS status,
 	lends.date_taken AS date_taken,
 	lends.date_returned AS date_returned
@@ -69,12 +64,12 @@ const getAllLends_db = async () => {
  * - The database query fails.
  */
 const getLendsBy_db = async (attribute, value) => {
-    if (!lendKeys.includes(attribute)) {
-        throw new Error(`'${attribute}' is not a valid key in lends table`);
-    }
-    if (!value) {
-        throw new Error(`value = '${value}', is not a valid parameter`);
-    }
+    //if (!lendKeys.includes(attribute)) {
+    //    throw new Error(`'${attribute}' is not a valid key in lends table`);
+    //}
+    //if (!value) {
+    //    throw new Error(`value = '${value}', is not a valid parameter`);
+    //}
 
     const cleanValue = [value.trim()];
     if (cleanValue[0] === '') {
@@ -93,6 +88,7 @@ const getLendsBy_db = async (attribute, value) => {
 
     const query = `${lendQuery} ${whereClause}`;
 
+    console.log(query);
     try {
         const { rows } = await pool.query(query, cleanValue);
         return rows;
@@ -191,4 +187,11 @@ const updateLend_db = async (lendId) => {
     } catch (err) {
         throw new Error(`Database query to 'lends' failed: ${err.message}`);
     }
+};
+
+export const lends_db = {
+    getAll: getAllLends_db,
+    getBy: getLendsBy_db,
+    lend: insertLend_db,
+    return: updateLend_db,
 };
