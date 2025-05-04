@@ -4,7 +4,6 @@ import {
     getLendedBooks,
     getOwnedBooks,
 } from '../controllers/books.js';
-import { users_db } from '../db/queries/simpleQuerys.js';
 
 const homeRoute = Router();
 

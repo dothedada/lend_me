@@ -2,8 +2,6 @@ import jwt from 'jsonwebtoken';
 import { users_db } from '../db/queries/simpleQuerys.js';
 import { recordExists } from '../db/utils.js';
 
-//import('dotenv').config();
-
 export const checkUserLog = (req, res, next) => {
     const token = req.cookies.lend_me_usr;
 

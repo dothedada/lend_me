@@ -54,10 +54,23 @@ const getBooksOwnedBy_db = async (ids = [], notInIds = []) => {
     }
 
     const idsSecuence = ids.map((_, i) => `$${i + 1}`).join(', ');
-
     let query = `
-	${booksQuery}
+	SELECT DISTINCT ON (books.id)
+		books.id AS id,
+		books.title AS title, 
+		books.author_id AS author_id,
+		authors.name AS author,
+		books.editorial_id AS editorial_id,
+		editorials.name AS editorial,
+		categories.category AS category,
+		users.name AS owner,
+		book_user.user_id AS owner_id 
+	FROM books 
+	JOIN authors ON books.author_id = authors.id 
+	JOIN editorials ON books.editorial_id = editorials.id
+	JOIN categories ON books.category_id = categories.id
 	JOIN book_user ON book_user.book_id = books.id
+	JOIN users ON users.id = book_user.user_id
 	WHERE book_user.user_id IN (${idsSecuence})`;
 
     let queryElements = ids;

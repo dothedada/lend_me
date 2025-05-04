@@ -32,6 +32,20 @@ export const getFriendsBooks = async (req, res, next) => {
     next();
 };
 
+export const pickRandomBooks = (books, amount) => {
+    let clearAmount = Math.min(books.length, amount);
+    const availableBooks = [...books];
+    const picks = [];
+
+    while (clearAmount > 0) {
+        const i = Math.floor(Math.random() * availableBooks.length);
+        picks.push(...availableBooks.splice(i, 1));
+        clearAmount--;
+    }
+
+    return picks;
+};
+
 export const getBorrowedBooks = async (req, res, next) => {
     const userId = req.user.id;
     const borrowed_books = await lends_db.getBy('lends.to_id', userId);

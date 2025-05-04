@@ -3,13 +3,93 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title><%= user %> | Dashboard</title>
+	<title><%= user.name %> | Dashboard</title>
 </head>
 <body>
 	<%- include("partials/header.ejs") %>
 
 	<main>
-	pendejeteeee
+		<section>
+			<h2>Random Picks</h2>
+				<table>
+					<tr>
+						<th>Title</th>
+						<th>Author</th>
+						<th>Owned by</th>
+						<th>Category</th>
+						<th>Editorial</th>
+						<th>Action</th>
+					</tr>
+					<% friendsBooks.forEach((book) => { %>
+					<tr>
+						<td><a href="/book/<%= book.id %>/info"><%= book.title %></a></td>
+						<td><a href="/author/<%= book.author_id %>/info"><%= book.author %></a></td>
+						<td><%= book.owner %></td>
+
+						<td><%= book.category || "" %></td>
+						<td><a href="/author/<%= book.editorial_id %>/info"><%= book.editorial || "" %></a>
+						</td>
+
+						<td>
+							<form action="/lends/<%= book.lend_id %>/askReturn" method="post">
+								<button>Borrow</button>
+							</form>
+						</td>
+					</tr>
+					<% }) %>
+				</table>
+		</section>
+
+		<section>
+			<h2>Search</h2>
+
+			<form action="/book/search" method="get">
+				<label>
+					look for...
+					<input type="search" name="q">
+					<button>search</button>
+				</label>
+
+			</form>
+		</section>
+
+		<section>
+			<h2>My books</h2>
+				<table>
+					<tr>
+						<th>Title</th>
+						<th>Author</th>
+						<th>Editorial</th>
+						<th>Action</th>
+					</tr>
+					<% userBooks.forEach((book) => { %>
+					<tr>
+						<td><a href="/book/<%= book.id %>/info"><%= book.title %></a></td>
+						<td><a href="/author/<%= book.author_id %>/info"><%= book.author %></a></td>
+						<td><a href="/editorial/<%= book.editorial_id %>/info"><%= book.editorial || "" %></a>
+						</td>
+					
+
+						<td>
+							<form action="/books/<%= book.id %>/remove" method="post">
+								<button>remove from library</button>
+							</form>
+						</td>
+					</tr>
+					<% }) %>
+				</table>
+		<section>
+
+		<section>
+			<h2>Add a new book to my library...</h2>
+			<form action="/books/add" method="post">
+				<label>
+					Book title
+					<input type="text" name="title" placeholder="The Craftsman">
+				</label>
+				<button>Add</button>
+			</form>
+		</section>
 	</main>
 
 	<%- include("partials/footer.html") %>

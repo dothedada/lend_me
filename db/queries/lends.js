@@ -2,16 +2,17 @@ import pool from '../pool.cjs';
 import { elementExists, recordExists, validateId } from '../utils.js';
 
 const lendKeys = [
-    'lend_id',
-    'book_id',
-    'title',
-    'author',
-    'from_user',
-    'to_user',
-    'to_user_id',
-    'status',
-    'date_taken',
-    'date_returned',
+    'lends.id',
+    'book.id',
+    'book.title',
+    'book.author',
+    'book.author_id',
+    'from_user.name',
+    'to_user.name',
+    'lends.to_id',
+    'lends.status',
+    'lends.date_taken',
+    'lends.date_returned',
 ];
 
 export const lendQuery = `
@@ -66,12 +67,12 @@ const getAllLends_db = async () => {
  * - The database query fails.
  */
 const getLendsBy_db = async (attribute, value) => {
-    //if (!lendKeys.includes(attribute)) {
-    //    throw new Error(`'${attribute}' is not a valid key in lends table`);
-    //}
-    //if (!value) {
-    //    throw new Error(`value = '${value}', is not a valid parameter`);
-    //}
+    if (!lendKeys.includes(attribute)) {
+        throw new Error(`'${attribute}' is not a valid key in lends table`);
+    }
+    if (!value) {
+        throw new Error(`value = '${value}', is not a valid parameter`);
+    }
 
     const cleanValue = [value.trim()];
     if (cleanValue[0] === '') {
