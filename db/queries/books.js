@@ -272,16 +272,23 @@ const updateBook_db = async (valuesToUpdate) => {
                 continue;
             }
 
+            let key_db = key;
             if (key === 'author') {
-                value.push(await getId(valuesToUpdate[key], authorInBook));
+                const auth = await getId(valuesToUpdate[key], authorInBook);
+                key_db = 'author_id';
+                value.push(auth.id);
             } else if (key === 'editorial') {
-                value.push(await getId(valuesToUpdate[key], editorialInBook));
+                const ed = await getId(valuesToUpdate[key], editorialInBook);
+                key_db = 'editorial_id';
+                value.push(ed.id);
             } else if (key === 'category') {
-                value.push(await getId(valuesToUpdate[key], categoryInBook));
+                const cat = await getId(valuesToUpdate[key], categoryInBook);
+                key_db = 'category_id';
+                value.push(cat.id);
             } else {
                 value.push(valuesToUpdate[key]);
             }
-            keyToUpdate.push(`${key} = $${paramIndex}`);
+            keyToUpdate.push(`${key_db} = $${paramIndex}`);
             paramIndex++;
         }
         value.push(id);

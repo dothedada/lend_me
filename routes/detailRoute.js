@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getBookDetail } from '../controllers/books.js';
+import { getBookDetail, updateBookData } from '../controllers/books.js';
 import { getAllAuthors } from '../controllers/authors.js';
 import { getAllCategories } from '../controllers/categories.js';
 import { getAllEditorials } from '../controllers/editorials.js';
@@ -30,5 +30,10 @@ detailsRoute.get(
         });
     },
 );
+
+detailsRoute.post('/:bookId/book/edit', updateBookData, (req, res) => {
+    const { bookId } = req.params;
+    res.redirect(`/detail/${bookId}/book`);
+});
 
 export default detailsRoute;

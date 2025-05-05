@@ -9,13 +9,14 @@
 	<%- include("../partials/header.ejs", { h1: `${title}'s data` } ) %>
 
 	<main>
-		<form action="detail/<%= id %>/book/edit" method="post">
+		<form action="/detail/<%= id %>/book/edit" method="post">
+			<input type="hidden" name="id" value="<%= id %>">
 			<label>Title<input type="text" name="title" value="<%= title %>"></label>
 			<label>Author
 				<input list="authors" type="text" name="author" value="<%= author %>">
 				<datalist id="authors">
 					<% authors.forEach((author) => { %> 
-						<option value="<%= author.id %>">
+						<option>
 							<%= author.name %>
 						</option>
 					<% }) %>
@@ -23,10 +24,10 @@
 			</label>
 			<label>Year<input type="text" name="year" value="<%= year %>"></label>
 			<label>Category
-				<input list="categories" type="text" name="category" value="<%= editorial %>">
+				<input list="categories" type="text" name="category" value="<%= category %>">
 				<datalist id="categories">
 					<% categories.forEach((category) => { %> 
-						<option value="<%= category.id %>">
+						<option>
 							<%= category.category %>
 						</option>
 					<% }) %>
@@ -36,7 +37,7 @@
 				<input list="editorials" name="editorial" type="text" value="<%= editorial %>">
 				<datalist id="editorials">
 					<% editorials.forEach((editorial) => { %> 
-						<option value="<%= editorial.id %>">
+						<option>
 							<%= editorial.name %>
 						</option>
 					<% }) %>
@@ -45,8 +46,10 @@
 			<label>Sinopsys
 				<textarea name="sinopsys"><%= sinopsys %></textarea>
 			</label>
-			<label>Image url<input type="url" name="year" value="<%= photo %>"></label>
+			<label>Image url<input type="url" name="image" value="<%= photo %>"></label>
+			<label>More info url<input type="url" name="url" value="<%= url %>"></label>
 
+			<button>Actualizar</button>
 		</form>
 		<img src="<%= photo %>" alt="<%= title %>'s book cover">
 

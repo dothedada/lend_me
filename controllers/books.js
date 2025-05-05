@@ -81,3 +81,14 @@ export const getLendedBooks = async (req, res, next) => {
 
     next();
 };
+
+export const updateBookData = async (req, res, next) => {
+    const valuesToUpdate = req.body;
+    console.log('casasfcasd', valuesToUpdate);
+
+    const updatedBook = await books_db.put(valuesToUpdate);
+    res.book = updatedBook;
+
+    console.log(updatedBook);
+    next();
+};
