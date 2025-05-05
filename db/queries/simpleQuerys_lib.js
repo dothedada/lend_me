@@ -40,7 +40,7 @@ export const queryMethods = (
  * @returns {function} Async function that gets data
  */
 const getDataFrom_db = (client, table) => {
-    const [idField, primaryField] = fieldsFrom[table];
+    const validFields = fieldsFrom[table];
 
     /**
      * Retrieves data from the table with flexible lookup
@@ -50,19 +50,24 @@ const getDataFrom_db = (client, table) => {
      *   - When no value is provided: Array of all records (empty array if no records)
      * @throws {Error} If the database query fails
      */
-    return async (idOrPrimaryField) => {
+    return async (valueObject) => {
         let query = `SELECT * FROM ${table}`;
+
         const values = [];
-        if (idOrPrimaryField) {
-            query += isNaN(+idOrPrimaryField)
-                ? ` WHERE ${primaryField} ILIKE $1`
-                : ` WHERE ${idField} = $1`;
-            values.push(idOrPrimaryField);
+
+        if (valueObject && Object.keys(valueObject).length > 0) {
+            const [field, value] = Object.entries(valueObject)[0];
+
+            query += isNaN(value)
+                ? ` WHERE ${field} ILIKE $1`
+                : ` WHERE ${field} = $1`;
+
+            values.push(value);
         }
 
         try {
             const { rows } = await client.query(query, values);
-            return idOrPrimaryField ? rows[0] : rows;
+            return valueObject ? rows[0] : rows;
         } catch (err) {
             throw new Error(`Database query failed: ${err.message}`);
         }
@@ -122,24 +127,28 @@ const insertDataTo_db = (client, table) => {
      * @returns {Promise<object>} The inserted record
      */
     return async (values) => {
-        for (const key of tableValues) {
-            if (values[key] === undefined) {
-                throw new Error(`Missing '${key}' in values object.`);
-            }
-        }
-
+        const presentValues = [];
         const queryValues = [];
         const cleanValues = [];
         let queryCounter = 1;
 
-        for (const key of tableValues) {
+        for (const [key, value] of Object.entries(values)) {
+            if (!tableValues.includes(key)) {
+                continue;
+            }
+
+            presentValues.push(key);
             queryValues.push(`$${queryCounter}`);
-            cleanValues.push(values[key]);
+            cleanValues.push(value);
             queryCounter++;
         }
 
+        if (!tableValues.length) {
+            throw new Error(`no value to update inside '${values}'`);
+        }
+
         const query = `
-		INSERT INTO ${table} (${tableValues.join(', ')})
+		INSERT INTO ${table} (${presentValues.join(', ')})
 		VALUES (${queryValues.join(', ')})
 		RETURNING *`;
 

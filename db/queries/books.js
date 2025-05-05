@@ -24,14 +24,6 @@ JOIN categories ON books.category_id = categories.id`;
 const searchKeys = ['title', 'author', 'editorial', 'category', 'year'];
 const bookKeys = [...searchKeys, 'sinopsys', 'url', 'image'];
 
-/**
- * Gets book(s) by ID
- * @param {number|string} [id] - Optional book ID
- * @returns {Promise<object|Array<object>>}
- *   - Single book object when ID is provided (undefined if not found)
- *   - Array of all books when no ID is provided
- * @throws {Error} If database query fails
- */
 const getBookId_db = async (id) => {
     let query = booksQuery;
     const values = [];
@@ -150,41 +142,14 @@ const findBooksWith_db = async (value) => {
     }
 };
 
-/**
- * Gets or creates an ID for a related entity (author/editorial/category)
- * @param {string} value - Name/value to search for
- * @param {object} queryMethod - Query methods object with get/add functions
- * @returns {Promise<number>} ID of the found or created entity
- * @throws {Error} If value is empty or operation fails
- * @private
- */
 const getId = async (value, queryMethod) => {
-    const cleanValue = value.trim();
-    if (cleanValue === '') {
-        throw new Error('Value cannot be an empty string');
-    }
-
-    let id = await queryMethod.get(cleanValue);
+    let id = await queryMethod.get(value);
     if (id === undefined) {
-        id = await queryMethod.add(cleanValue);
+        id = await queryMethod.add(value);
     }
     return id;
 };
 
-/**
- * Inserts a new book with related entities
- * @param {object} values - Book data including:
- *   @param {string} values.title - Book title
- *   @param {string} values.author - Author name
- *   @param {string} values.editorial - Editorial name
- *   @param {number} values.year - Publication year
- *   @param {string} values.category - Category name
- *   @param {string} values.sinopsys - Book synopsis
- *   @param {string} values.url - Book URL
- *   @param {string} values.image - Image URL
- * @returns {Promise<void>}
- * @throws {Error} If insertion fails or transaction fails
- */
 const insertBook_db = async (values) => {
     const client = await pool.connect();
 
@@ -205,9 +170,9 @@ const insertBook_db = async (values) => {
             image,
         } = values;
 
-        const authorId = await getId(author, authorInBook);
-        const editorialId = await getId(editorial, editorialInBook);
-        const categoryId = await getId(category, categoryInBook);
+        const authorId = await getId({ name: author }, authorInBook);
+        const editorialId = await getId({ name: editorial }, editorialInBook);
+        const categoryId = await getId({ category }, categoryInBook);
 
         const query = `
 		INSERT INTO books 
@@ -233,21 +198,6 @@ const insertBook_db = async (values) => {
     }
 };
 
-/**
- * Updates an existing book
- * @param {object} valuesToUpdate - Book data to update including:
- *   @param {number} valuesToUpdate.id - Required book ID
- *   @param {string} [valuesToUpdate.title] - Updated title
- *   @param {string} [valuesToUpdate.author] - Updated author
- *   @param {string} [valuesToUpdate.editorial] - Updated editorial
- *   @param {number} [valuesToUpdate.year] - Updated year
- *   @param {string} [valuesToUpdate.category] - Updated category
- *   @param {string} [valuesToUpdate.sinopsys] - Updated synopsis
- *   @param {string} [valuesToUpdate.url] - Updated URL
- *   @param {string} [valuesToUpdate.image] - Updated image URL
- * @returns {Promise<void>}
- * @throws {Error} If update fails, ID is missing, or transaction fails
- */
 const updateBook_db = async (valuesToUpdate) => {
     const { id } = valuesToUpdate;
     if (id === undefined) {
@@ -274,15 +224,24 @@ const updateBook_db = async (valuesToUpdate) => {
 
             let key_db = key;
             if (key === 'author') {
-                const auth = await getId(valuesToUpdate[key], authorInBook);
+                const auth = await getId(
+                    { name: valuesToUpdate[key] },
+                    authorInBook,
+                );
                 key_db = 'author_id';
                 value.push(auth.id);
             } else if (key === 'editorial') {
-                const ed = await getId(valuesToUpdate[key], editorialInBook);
+                const ed = await getId(
+                    { name: valuesToUpdate[key] },
+                    editorialInBook,
+                );
                 key_db = 'editorial_id';
                 value.push(ed.id);
             } else if (key === 'category') {
-                const cat = await getId(valuesToUpdate[key], categoryInBook);
+                const cat = await getId(
+                    { category: valuesToUpdate[key] },
+                    categoryInBook,
+                );
                 key_db = 'category_id';
                 value.push(cat.id);
             } else {
@@ -299,8 +258,9 @@ const updateBook_db = async (valuesToUpdate) => {
 		WHERE id = $${paramIndex}
 		RETURNING *`;
 
-        await client.query(query, value);
+        const { rows } = await client.query(query, value);
         await client.query('COMMIT');
+        return rows;
     } catch (err) {
         await client.query('ROLLBACK');
         throw new Error(`Cannot update the book: ${err.message}`);
@@ -309,12 +269,6 @@ const updateBook_db = async (valuesToUpdate) => {
     }
 };
 
-/**
- * Removes a book by ID
- * @param {number} id - Book ID to remove
- * @returns {Promise<object>} The deleted book record
- * @throws {Error} If ID is invalid, book doesn't exist, or deletion fails
- */
 const removeBook_db = async (id) => {
     const cleanId = validateId(id);
 
