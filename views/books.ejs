@@ -22,12 +22,12 @@
 					</tr>
 					<% friendsBooks.forEach((book) => { %>
 					<tr>
-						<td><a href="/book/<%= book.id %>/info"><%= book.title %></a></td>
-						<td><a href="/author/<%= book.author_id %>/info"><%= book.author %></a></td>
+						<td><a href="/detail/<%= book.id %>/book"><%= book.title %></a></td>
+						<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
 						<td><%= book.owner %></td>
 
 						<td><%= book.category || "" %></td>
-						<td><a href="/author/<%= book.editorial_id %>/info"><%= book.editorial || "" %></a>
+						<td><a href="/detail/<%= book.editorial_id %>/editorial"><%= book.editorial || "" %></a>
 						</td>
 
 						<td>
@@ -64,9 +64,9 @@
 					</tr>
 					<% userBooks.forEach((book) => { %>
 					<tr>
-						<td><a href="/book/<%= book.id %>/info"><%= book.title %></a></td>
-						<td><a href="/author/<%= book.author_id %>/info"><%= book.author %></a></td>
-						<td><a href="/editorial/<%= book.editorial_id %>/info"><%= book.editorial || "" %></a>
+						<td><a href="/detail/<%= book.id %>/book"><%= book.title %></a></td>
+						<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
+						<td><a href="/detail/<%= book.editorial_id %>/editorial"><%= book.editorial || "" %></a>
 						</td>
 					
 

@@ -22,8 +22,8 @@
 				</tr>
 				<% borrowedBooks.forEach((book) => { %>
 				<tr>
-					<td><a href="/book/<%= book.book_id %>/info"><%= book.title %></a></td>
-					<td><a href="/author/<%= book.author_id %>/info"><%= book.author %></a></td>
+					<td><a href="/detail/<%= book.book_id %>/book"><%= book.title %></a></td>
+					<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
 					<td><%= book.from_user %></td>
 					<td>
 						<form action="/lends/<%= book.lend_id %>/return" method="post">
@@ -46,8 +46,8 @@
 				</tr>
 				<% lendedBooks.forEach((book) => { %>
 				<tr>
-					<td><a href="/book/<%= book.book_id %>/info"><%= book.title %></a></td>
-					<td><a href="/author/<%= book.author_id %>/info"><%= book.author %></a></td>
+					<td><a href="/detail/<%= book.book_id %>/book"><%= book.title %></a></td>
+					<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
 					<td><%= book.to_user %></td>
 					<td>
 						<form action="/lends/<%= book.lend_id %>/askReturn" method="post">
@@ -73,10 +73,10 @@
 						</tr>
 						<% userBooks.forEach((book) => { %>
 						<tr>
-							<td><a href="/book/<%= book.id %>/info"><%= book.title %></a></td>
-							<td><a href="/author/<%= book.author_id %>/info"><%= book.author %></a></td>
+							<td><a href="/detail/<%= book.id %>/book/"><%= book.title %></a></td>
+							<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
 							<td><%= book.category || "" %></td>
-							<td><a href="/author/<%= book.editorial_id %>/info"><%= book.editorial || "" %></a>
+							<td><a href="/detail/<%= book.editorial_id %>/editorial"><%= book.editorial || "" %></a>
 							</td>
 						</tr>
 						<% }) %>

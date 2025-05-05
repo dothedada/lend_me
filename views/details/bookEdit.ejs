@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title><%= title %> | EDIT</title>
+</head>
+<body>
+	<%- include("../partials/header.ejs", { h1: `${title}'s data` } ) %>
+
+	<main>
+		<form action="detail/<%= id %>/book/edit" method="post">
+			<label>Title<input type="text" name="title" value="<%= title %>"></label>
+			<label>Author
+				<input list="authors" type="text" name="author" value="<%= author %>">
+				<datalist id="authors">
+					<% authors.forEach((author) => { %> 
+						<option value="<%= author.id %>">
+							<%= author.name %>
+						</option>
+					<% }) %>
+				</datalist>
+			</label>
+			<label>Year<input type="text" name="year" value="<%= year %>"></label>
+			<label>Category
+				<input list="categories" type="text" name="category" value="<%= editorial %>">
+				<datalist id="categories">
+					<% categories.forEach((category) => { %> 
+						<option value="<%= category.id %>">
+							<%= category.category %>
+						</option>
+					<% }) %>
+				</datalist>
+			</label>
+			<label>Editorial
+				<input list="editorials" name="editorial" type="text" value="<%= editorial %>">
+				<datalist id="editorials">
+					<% editorials.forEach((editorial) => { %> 
+						<option value="<%= editorial.id %>">
+							<%= editorial.name %>
+						</option>
+					<% }) %>
+				</datalist>
+			</label>
+			<label>Sinopsys
+				<textarea name="sinopsys"><%= sinopsys %></textarea>
+			</label>
+			<label>Image url<input type="url" name="year" value="<%= photo %>"></label>
+
+		</form>
+		<img src="<%= photo %>" alt="<%= title %>'s book cover">
+
+	</main>
+
+	<%- include("../partials/footer.html") %>
+</body>
+</html>
