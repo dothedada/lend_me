@@ -10,6 +10,7 @@ const lendKeys = [
     'from_user.name',
     'to_user.name',
     'lends.to_id',
+    'lends.from_id',
     'lends.status',
     'lends.date_taken',
     'lends.date_returned',

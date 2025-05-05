@@ -12,6 +12,7 @@ import { checkUserLog } from './controllers/login.js';
 import loginRoute from './routes/logginRoute.js';
 import homeRoute from './routes/homeRoute.js';
 import booksRoute from './routes/booksRoute.js';
+import detailsRoute from './routes/detailRoute.js';
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use('/login', loginRoute);
 app.use(checkUserLog);
 app.use('/', homeRoute);
 app.use('/books', booksRoute);
+app.use('/detail', detailsRoute);
 
 app.use(express.static('public'));
 

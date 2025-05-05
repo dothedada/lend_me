@@ -9,6 +9,14 @@ export const getAllBooks = async (req, res, next) => {
     next();
 };
 
+export const getBookDetail = async (req, res, next) => {
+    const { bookId } = req.params;
+    const book = await books_db.getBooks(bookId);
+    res.book = book;
+
+    next();
+};
+
 export const getOwnedBooks = async (req, res, next) => {
     const userId = req.user.id;
     const books = await books_db.getBooksOwnedBy([userId]);

@@ -20,7 +20,7 @@ booksRoute.get('/', getOwnedBooks, getFriendsBooks, async (req, res) => {
     });
 });
 
-booksRoute.get('/search', async (req, res) => {
+booksRoute.get('/search', getFriendsBooks, async (req, res) => {
     const userData = req.user;
 });
 

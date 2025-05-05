@@ -36,7 +36,7 @@ const getBookId_db = async (id) => {
     let query = booksQuery;
     const values = [];
     if (id) {
-        query += ' WHERE id = $1';
+        query += ' WHERE books.id = $1';
         values.push(id);
     }
 
