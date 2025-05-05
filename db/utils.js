@@ -9,13 +9,6 @@ export const validateId = (id) => {
     return +cleanId;
 };
 
-/**
- * Checks if multiple elements exist in a table and returns their IDs
- * @param {string} table - Table name to check
- * @param {Array<string|number>} ids - Array of IDs to verify
- * @returns {Promise<Array<string|number>>} Array of existing IDs
- * @throws {Error} If table is invalid, IDs array is empty, or query fails
- */
 export const elementExists = async (table, ids) => {
     if (!tables.includes(table)) {
         throw new Error(`'${table}' is not a valid table`);
@@ -56,13 +49,6 @@ export const elementExists = async (table, ids) => {
     }
 };
 
-/**
- * Checks if records match criteria in a database table.
- * @param {string} table - Valid table name from allowed list.
- * @param {Object} valuesObj - Search conditions (key: column, value: search term).
- * @returns {Promise<Object>} - The matching record object if exist, or undefined
- * @throws {Error} If table is invalid or query fails.
- */
 export const recordExists = async (table, valuesObj) => {
     if (!tables.includes(table)) {
         throw new Error(`'${table}' is not a valid table`);

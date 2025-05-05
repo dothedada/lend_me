@@ -1,12 +1,6 @@
 import pool from '../pool.cjs';
 import { elementExists, recordExists, validateId } from '../utils.js';
 
-/**
- * Retrieves all friends of a user.
- * @param {string} userId - Valid user ID.
- * @returns {Promise<Array<Object>>} Array of friend records.
- * @throws {Error} If user doesn't exist or query fails.
- */
 const getAllFriends_db = async (userId) => {
     const cleanId = validateId(userId);
 
@@ -25,12 +19,6 @@ const getAllFriends_db = async (userId) => {
     }
 };
 
-/**
- * Checks if a friendship exists between two users.
- * @param {string} userId - First user ID.
- * @param {string} friendId - Second user ID.
- * @returns {Promise<boolean>} True if friendship exists.
- */
 const checkFriendship_db = async (userId, friendId) => {
     return await recordExists('friends', {
         user_id: userId,
@@ -38,13 +26,6 @@ const checkFriendship_db = async (userId, friendId) => {
     });
 };
 
-/**
- * Creates a friendship between two users.
- * @param {string} userId - First user ID.
- * @param {string} friendId - Second user ID.
- * @returns {Promise<Object>} Created friendship record.
- * @throws {Error} If users don't exist, are the same, or friendship exists.
- */
 const addFriend_db = async (userId, friendId) => {
     const cleanUser = validateId(userId);
     const cleanFriend = validateId(friendId);
@@ -86,13 +67,6 @@ const addFriend_db = async (userId, friendId) => {
     }
 };
 
-/**
- * Removes a friendship between two users.
- * @param {string} userId - First user ID.
- * @param {string} friendId - Second user ID.
- * @returns {Promise<Object>} Deleted friendship record.
- * @throws {Error} If users aren't friends or query fails.
- */
 const removeFriendship_db = async (userId, friendId) => {
     const cleanUser = validateId(userId);
     const cleanFriend = validateId(friendId);
@@ -119,12 +93,6 @@ const removeFriendship_db = async (userId, friendId) => {
     }
 };
 
-/**
- * Removes all friendships of a user.
- * @param {string} userId - User ID to remove.
- * @returns {Promise<Array<Object>>} Deleted friendship records.
- * @throws {Error} If user ID is invalid or query fails.
- */
 const removeUser_db = async (userId) => {
     const cleanUser = validateId(userId);
 

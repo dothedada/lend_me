@@ -10,13 +10,6 @@ export const bookUser_db = {
     removeUser: removeAll_db('user'),
 };
 
-/**
- * Retrieves all books associated with multiple users
- * @param {Array<number|string>} usersIds - Array of user IDs
- * @param {object} [options] - Configuration options
- * @returns {Promise<Array<object>>} Array of book objects
- * @throws {Error} If input is invalid or query fails
- */
 const getBooksFromUsers_db = async (usersIds) => {
     if (usersIds === undefined || !Array.isArray(usersIds)) {
         throw new Error('Must provide userId to fetch the books');
@@ -38,13 +31,6 @@ const getBooksFromUsers_db = async (usersIds) => {
     }
 };
 
-/**
- * Associates a book with a user in the book_user relationship table
- * @param {number|string} bookId - Book ID to associate
- * @param {number|string} userId - User ID to associate
- * @returns {Promise<object>} The created relationship record
- * @throws {Error} If parameters are invalid or operation fails
- */
 const addBookToUser_db = async (bookId, userId) => {
     const cleanBookId = validateId(bookId);
     const cleanUserId = validateId(userId);
@@ -82,13 +68,6 @@ const addBookToUser_db = async (bookId, userId) => {
     }
 };
 
-/**
- * Removes a specific book from a user's collection
- * @param {number|string} bookId - Book ID to remove
- * @param {number|string} userId - User ID from whom to remove the book
- * @returns {Promise<object>} The deleted relationship record
- * @throws {Error} If parameters are invalid or operation fails
- */
 const removeBookFromUser_db = async (bookId, userId) => {
     const cleanBookId = validateId(bookId);
     const cleanUserId = validateId(userId);
@@ -106,12 +85,6 @@ const removeBookFromUser_db = async (bookId, userId) => {
     }
 };
 
-/**
- * Removes all book-user relationships by attribute (user or book)
- * @param {'user'|'book'} attribute - Type of relationship to clear
- * @returns {function} Async function that takes an ID and performs the deletion
- * @throws {Error} If parameters are invalid or operation fails
- */
 const removeAll_db = (attribute) => async (id) => {
     const cleanId = validateId(id);
     if (attribute === undefined || id === undefined) {

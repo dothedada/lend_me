@@ -1,14 +1,6 @@
 import { fieldsFrom, SEARCH_LIMIT } from '../query_settings.js';
 import { validateId } from '../utils.js';
 
-/**
- * Factory function that creates requested query methods for a table
- * @param {object} client - PostgreSQL client instance
- * @param {string} table - Table name (must exist in fieldsFrom)
- * @param {Array<string>} [methods=['get', 'find', 'add', 'put', 'delete']] - Array of methods to create
- * @returns {object} An object with the requested methods
- * @throws {Error} If no valid methods are provided, table doesn't exist, or invalid method names
- */
 export const queryMethods = (
     client,
     table,
@@ -33,23 +25,9 @@ export const queryMethods = (
     return requestedMethods;
 };
 
-/**
- * Creates a function to retrieve data from a table
- * @param {object} client - PostgreSQL client instance
- * @param {string} table - Table name
- * @returns {function} Async function that gets data
- */
 const getDataFrom_db = (client, table) => {
     const validFields = fieldsFrom[table];
 
-    /**
-     * Retrieves data from the table with flexible lookup
-     * @param {number|string} [idOrPrimaryValue] - Optional value to search for (can be ID or primary field value)
-     * @returns {Promise<object|Array<object>>}
-     *   - When value is provided: Single record object or undefined if not found
-     *   - When no value is provided: Array of all records (empty array if no records)
-     * @throws {Error} If the database query fails
-     */
     return async (valueObject) => {
         let query = `SELECT * FROM ${table}`;
 
@@ -57,6 +35,12 @@ const getDataFrom_db = (client, table) => {
 
         if (valueObject && Object.keys(valueObject).length > 0) {
             const [field, value] = Object.entries(valueObject)[0];
+
+            if (!validFields.includes(field)) {
+                throw new Error(
+                    `Table '${table}' does not contain column '${field}'`,
+                );
+            }
 
             query += isNaN(value)
                 ? ` WHERE ${field} ILIKE $1`
@@ -74,20 +58,9 @@ const getDataFrom_db = (client, table) => {
     };
 };
 
-/**
- * Creates a function to search data in a table
- * @param {object} client - PostgreSQL client instance
- * @param {string} table - Table name
- * @returns {function} Async search function
- */
 const findDataWith_db = (client, table) => {
     const [, ...tableValues] = fieldsFrom[table];
 
-    /**
-     * Searches records where any column matches the search value
-     * @param {string} value - Search term
-     * @returns {Promise<Array<object>>} Array of matching records
-     */
     return async (value) => {
         if (!value.trim()) {
             return [];
@@ -111,21 +84,9 @@ const findDataWith_db = (client, table) => {
     };
 };
 
-/**
- * Creates a function to insert data into a table
- * @param {object} client - PostgreSQL client instance
- * @param {string} table - Table name
- * @returns {function} Async insert function
- */
 const insertDataTo_db = (client, table) => {
     const [, ...tableValues] = fieldsFrom[table];
 
-    /**
-     * Inserts a new record into the table
-     * @param {object} values - Object with field values to insert
-     * @throws {Error} If any required field is missing
-     * @returns {Promise<object>} The inserted record
-     */
     return async (values) => {
         const presentValues = [];
         const queryValues = [];
@@ -161,21 +122,9 @@ const insertDataTo_db = (client, table) => {
     };
 };
 
-/**
- * Creates a function to update data in a table
- * @param {object} client - PostgreSQL client instance
- * @param {string} table - Table name
- * @returns {function} Async update function
- */
 const updateDataFrom_db = (client, table) => {
     const [, ...tableValues] = fieldsFrom[table];
 
-    /**
-     * Updates an existing record
-     * @param {object} valuesToUpdate - Object with ID and fields to update
-     * @throws {Error} If ID is missing or record doesn't exist
-     * @returns {Promise<object>} The updated record
-     */
     return async (valuesToUpdate) => {
         const { id } = valuesToUpdate;
         if (!id) {
@@ -215,19 +164,7 @@ const updateDataFrom_db = (client, table) => {
     };
 };
 
-/**
- * Creates a function to delete data from a table
- * @param {object} client - PostgreSQL client instance
- * @param {string} table - Table name
- * @returns {function} Async delete function
- */
 const removeDataFrom_db = (client, table) => {
-    /**
-     * Deletes a record from the table
-     * @param {number|string} id - ID of the record to delete
-     * @throws {Error} If ID is invalid or record doesn't exist
-     * @returns {Promise<object>} The deleted record
-     */
     return async (id) => {
         const cleanId = validateId(id);
 
@@ -250,12 +187,6 @@ const removeDataFrom_db = (client, table) => {
     };
 };
 
-/**
- * Validates that a table exists in the fieldsFrom configuration
- * @param {string} table - Table name to check
- * @throws {Error} If table doesn't exist in configuration
- * @returns {boolean} True if table exists
- */
 const checkTableExist = (table) => {
     if (!Object.keys(fieldsFrom).includes(table)) {
         throw new Error(`Wrong table name '${table}'.`);

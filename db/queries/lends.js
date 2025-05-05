@@ -43,11 +43,6 @@ JOIN (
 	) AS book ON lends.book_id = book.id
 `;
 
-/**
- * Retrieves all lending records from the database.
- * @returns {Promise<Array<Object>>} Array of lending records with detailed information.
- * @throws {Error} If the database query fails.
- */
 const getAllLends_db = async () => {
     try {
         const { rows } = await pool.query(lendQuery);
@@ -57,16 +52,6 @@ const getAllLends_db = async () => {
     }
 };
 
-/**
- * Retrieves lending records filtered by a specific attribute and value.
- * @param {string} attribute - The field to filter by (e.g., 'book_id', 'status', 'date_taken').
- * @param {string} value - The value to match against the attribute.
- * @returns {Promise<Array<Object>>} Array of filtered lending records.
- * @throws {Error} If:
- * - The attribute is invalid.
- * - The value is empty or invalid.
- * - The database query fails.
- */
 const getLendsBy_db = async (attribute, value) => {
     if (!lendKeys.includes(attribute)) {
         throw new Error(`'${attribute}' is not a valid key in lends table`);
@@ -100,21 +85,6 @@ const getLendsBy_db = async (attribute, value) => {
     }
 };
 
-/**
- * Creates a new lending record in the database.
- * Validates book ownership, user existence, and book availability before insertion.
- * @param {Object} values - Lending details.
- * @param {number} values.book_id - The ID of the book being lent.
- * @param {number} values.from_id - The ID of the user lending the book (owner).
- * @param {number} values.to_id - The ID of the user borrowing the book.
- * @returns {Promise<Array<Object>>} The newly created lending record.
- * @throws {Error} If:
- * - Required fields are missing.
- * - The book, owner, or borrower does not exist.
- * - The book is not owned by the lender.
- * - The book is already lent out.
- * - The database query fails.
- */
 const insertLend_db = async (values) => {
     const { book_id, from_id, to_id } = values;
 
@@ -162,16 +132,6 @@ const insertLend_db = async (values) => {
     }
 };
 
-/**
- * Marks a lending record as returned by updating its status and return date.
- * Only updates active lendings.
- * @param {string} lendId - The ID of the lending record to update.
- * @returns {Promise<Array<Object>>} The updated lending record.
- * @throws {Error} If:
- * - The lendId is invalid or not a number.
- * - No active lending record exists with the given ID.
- * - The database query fails.
- */
 const updateLend_db = async (lendId) => {
     const cleanId = validateId(lendId);
 

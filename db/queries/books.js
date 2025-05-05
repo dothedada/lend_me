@@ -92,13 +92,6 @@ const getBooksOwnedBy_db = async (ids = [], notInIds = []) => {
     }
 };
 
-/**
- * Gets books by specific field
- * @param {string} parameter - Field to search by (title, author, editorial, category, or year)
- * @param {string} value - Search value
- * @returns {Promise<Array<object>>} Array of matching books
- * @throws {Error} If invalid parameter is provided or database query fails
- */
 const getBooksBy_db = async (parameter, value) => {
     if (!searchKeys.includes(parameter)) {
         throw new Error(`Invalid query parameter '${parameter}'`);
@@ -114,12 +107,6 @@ const getBooksBy_db = async (parameter, value) => {
     }
 };
 
-/**
- * Searches books across all searchable fields
- * @param {string} value - Search term
- * @returns {Promise<Array<object>>} Array of matching books (limited to SEARCH_LIMIT)
- * @throws {Error} If database query fails
- */
 const findBooksWith_db = async (value) => {
     if (!value.trim()) {
         return [];
