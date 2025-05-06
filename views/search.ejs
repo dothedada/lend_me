@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title><%= search %> | Search</title>
+</head>
+<body>
+	<%- include("partials/header.ejs") %>
+
+	<main>
+		<section>
+			<h2>Search</h2>
+			<form action="/search" method="get">
+				<label>
+					look for...
+					<input type="search" name="q" value="<%= search %>">
+					<button>search</button>
+				</label>
+			</form>
+		</section>
+
+		<section>
+			<h2>Search results for "<%= search %>"</h2>
+				<table>
+					<tr>
+						<th>Title</th>
+						<th>Author</th>
+						<th>year</th>
+						<th>Category</th>
+						<th>editorial</th>
+						<th>Owned by</th>
+						<th>Action</th>
+					</tr>
+					<% foundBooks.forEach((book) => { %>
+					<tr>
+						<td><a href="/detail/<%= book.id %>/book"><%= book.title %></a></td>
+						<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
+
+						<td><%= book.year %></td>
+						<td><%= book.category || "" %></td>
+
+						<td><a href="/detail/<%= book.editorial %>/editorial"><%= book.editorial %></a></td>
+
+						<td><%= book.owner %></td>
+
+						<td>
+							<% if (book.status === "active") { %>
+								unavailable
+							<% } else { %>
+								<form action="/lends/<%= book.lend_id %>/" method="post">
+									<button>Borrow</button>
+								</form>
+							<% } %>
+						</td>
+					</tr>
+					<% }) %>
+				</table>
+		</section>
+
+	<%- include("partials/footer.html") %>
+</body>
+</html>

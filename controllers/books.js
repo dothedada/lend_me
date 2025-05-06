@@ -90,3 +90,18 @@ export const updateBookData = async (req, res, next) => {
 
     next();
 };
+
+export const searchWithinFirends = async (req, res, next) => {
+    const userId = req.user.id;
+    const lookFor = req.query.q;
+    const friends = await friends_db.getFriends(userId);
+
+    const booksFound = await books_db.search(lookFor, friends, userId);
+    if (!res.books) {
+        res.books = {};
+    }
+
+    res.books = booksFound;
+
+    next();
+};

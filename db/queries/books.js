@@ -21,7 +21,13 @@ JOIN authors ON books.author_id = authors.id
 JOIN editorials ON books.editorial_id = editorials.id
 JOIN categories ON books.category_id = categories.id`;
 
-const searchKeys = ['title', 'author', 'editorial', 'category', 'year'];
+const searchKeys = [
+    'books.title',
+    'authors.name',
+    'editorials.name',
+    'categories.category',
+    'books.year',
+];
 const bookKeys = [...searchKeys, 'sinopsys', 'url', 'image'];
 
 const getBookId_db = async (id) => {
@@ -107,6 +113,51 @@ const getBooksBy_db = async (parameter, value) => {
     }
 };
 
+const bookSearchWithinFriends_db = async (lookFor, friendsIds, userId) => {
+    const search = String(lookFor.trim());
+    if (!search || !userId) {
+        throw new Error('Must provide both parameter to do the search');
+    }
+
+    const fields = [];
+    for (const key of searchKeys) {
+        fields.push(`${key}::text ILIKE $1`);
+    }
+
+    const query = `
+	SELECT
+		books.id AS id,
+		books.title AS title,
+		authors.name AS author,
+		categories.category AS category,
+		editorials.name AS editorial,
+		books.year AS year,
+		users.name AS owner, 
+		lends.status AS status
+	FROM books
+	JOIN authors ON books.author_id = authors.id
+	JOIN categories ON books.category_id = categories.id
+	JOIN editorials ON books.editorial_id = editorials.id
+	JOIN book_user ON books.id = book_user.book_id
+	JOIN users ON book_user.user_id = users.id 
+	LEFT JOIN lends ON books.id = lends.book_id AND users.id = lends.from_id
+	WHERE ${fields.join(' OR ')}
+	AND book_user.user_id IN (${friendsIds.join(', ')})
+	AND NOT EXISTS (
+		SELECT 1
+		FROM book_user bu2
+		WHERE bu2.book_id = books.id
+		AND bu2.user_id = ${userId}
+	)`;
+
+    try {
+        const { rows } = await pool.query(query, [`%${search}%`]);
+        return rows;
+    } catch (err) {
+        throw new Error(`Database query to 'books' failed: ${err.message}`);
+    }
+};
+
 const findBooksWith_db = async (value) => {
     if (!value.trim()) {
         return [];
@@ -116,6 +167,7 @@ const findBooksWith_db = async (value) => {
     for (const key of searchKeys) {
         fields.push(`${key}::text ILIKE $1`);
     }
+
     let query = `
 	${booksQuery} 
 	WHERE ${fields.join(' OR ')}
@@ -280,6 +332,7 @@ export const books_db = {
     getBooksOwnedBy: getBooksOwnedBy_db,
     getBy: getBooksBy_db,
     find: findBooksWith_db,
+    search: bookSearchWithinFriends_db,
     add: insertBook_db,
     put: updateBook_db,
     remove: removeBook_db,
