@@ -9,7 +9,7 @@ import {
 import { getAllAuthors } from '../controllers/authors.js';
 import { getAllEditorials } from '../controllers/editorials.js';
 import { getAllCategories } from '../controllers/categories.js';
-import { addToLibrary } from '../controllers/library.js';
+import { addToLibrary, removeFromLibrary } from '../controllers/library.js';
 
 const booksRoute = Router();
 
@@ -59,6 +59,10 @@ booksRoute.post(
 );
 
 booksRoute.post('/:bookId/add', addToLibrary, (req, res) => {
+    res.redirect('/books');
+});
+
+booksRoute.post('/:bookId/remove', removeFromLibrary, (req, res) => {
     res.redirect('/books');
 });
 
