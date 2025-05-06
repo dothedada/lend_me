@@ -6,10 +6,15 @@ import {
     updateAuthorData,
 } from '../controllers/authors.js';
 import { getAllCategories } from '../controllers/categories.js';
-import { getAllEditorials } from '../controllers/editorials.js';
+import {
+    getAllEditorials,
+    getEditorialData,
+    updateEditorialData,
+} from '../controllers/editorials.js';
 
 const detailsRoute = Router();
 
+// book
 detailsRoute.get('/:bookId/book', getBookDetail, (req, res) => {
     const bookData = res.book;
     res.render('details/book.ejs', { ...bookData });
@@ -40,6 +45,7 @@ detailsRoute.post('/:bookId/book/edit', updateBookData, (req, res) => {
     res.redirect(`/detail/${bookId}/book`);
 });
 
+// author
 detailsRoute.get('/:authorId/author', getAuthorData, (req, res) => {
     const authorData = res.author;
 
@@ -56,5 +62,31 @@ detailsRoute.post('/:authorId/author/edit', updateAuthorData, (req, res) => {
     const { authorId } = req.params;
     res.redirect(`/detail/${authorId}/author`);
 });
+
+// editorial
+detailsRoute.get('/:editorialId/editorial', getEditorialData, (req, res) => {
+    const editorialData = res.editorial;
+
+    res.render('details/editorial.ejs', editorialData);
+});
+
+detailsRoute.get(
+    '/:editorialId/editorial/edit',
+    getEditorialData,
+    (req, res) => {
+        const editorialData = res.editorial;
+
+        res.render('details/editorialEdit.ejs', editorialData);
+    },
+);
+
+detailsRoute.post(
+    '/:editorialId/editorial/edit',
+    updateEditorialData,
+    (req, res) => {
+        const { editorialId } = req.params;
+        res.redirect(`/detail/${editorialId}/editorial`);
+    },
+);
 
 export default detailsRoute;

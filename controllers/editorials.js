@@ -6,3 +6,22 @@ export const getAllEditorials = async (req, res, next) => {
 
     next();
 };
+
+export const getEditorialData = async (req, res, next) => {
+    const { editorialId } = req.params;
+    if (!editorialId) {
+        throw new Error('No editorial id on the params');
+    }
+    const editorialData = await editorials_db.get({ id: editorialId });
+    res.editorial = editorialData;
+
+    next();
+};
+
+export const updateEditorialData = async (req, res, next) => {
+    const editorialUpdateData = req.body;
+    const updatedData = await editorials_db.put(editorialUpdateData);
+    res.editorial = updatedData;
+
+    next();
+};

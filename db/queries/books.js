@@ -145,8 +145,10 @@ const bookSearchWithinFriends_db = async (lookFor, friendsIds, userId) => {
 		books.id AS id,
 		books.title AS title,
 		authors.name AS author,
+		books.author_id AS author_id,
 		categories.category AS category,
 		editorials.name AS editorial,
+		books.editorial_id AS editorial_id,
 		books.year AS year,
 		users.name AS owner, 
 		lends.status AS status
