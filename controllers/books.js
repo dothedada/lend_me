@@ -105,3 +105,12 @@ export const searchWithinFirends = async (req, res, next) => {
 
     next();
 };
+
+export const getBookByTitle = async (req, res, next) => {
+    const { title } = req.body;
+    const books = await books_db.getBy('books.title', title);
+
+    res.book = books.length > 0 ? books : false;
+
+    next();
+};

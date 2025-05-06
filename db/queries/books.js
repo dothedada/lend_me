@@ -21,6 +21,21 @@ JOIN authors ON books.author_id = authors.id
 JOIN editorials ON books.editorial_id = editorials.id
 JOIN categories ON books.category_id = categories.id`;
 
+const searchParams = {
+    title: 'books.title',
+    author: 'authors.name',
+    editorial: 'editorials.name',
+    category: 'categories.category',
+    year: 'books.year',
+};
+
+const extendedParams = {
+    ...searchParams,
+    sinopsys: 'books.sinopsys',
+    url: 'books.url',
+    image: 'books.image',
+};
+
 const searchKeys = [
     'books.title',
     'authors.name',
@@ -28,7 +43,8 @@ const searchKeys = [
     'categories.category',
     'books.year',
 ];
-const bookKeys = [...searchKeys, 'sinopsys', 'url', 'image'];
+
+const bookKeys = [...searchKeys, 'books.sinopsys', 'books.url', 'books.image'];
 
 const getBookId_db = async (id) => {
     let query = booksQuery;

@@ -7,4 +7,12 @@ export const fieldsFrom = {
     users: ['id', 'name', 'email'],
 };
 
-export const tables = ['authors', 'editorials', 'categories', 'users', 'lends'];
+export const tables = [
+    'books',
+    'book_user',
+    'authors',
+    'editorials',
+    'categories',
+    'users',
+    'lends',
+];

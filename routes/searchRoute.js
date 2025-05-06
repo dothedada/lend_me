@@ -7,7 +7,11 @@ searchRoute.get('/', searchWithinFirends, (req, res) => {
     const search = req.query.q;
     const foundBooks = res.books;
 
-    res.render('search.ejs', { search, foundBooks, h1: 'seses e' });
+    res.render('search.ejs', {
+        search,
+        foundBooks,
+        h1: 'search results in your circle',
+    });
 });
 
 export default searchRoute;

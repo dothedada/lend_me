@@ -82,10 +82,17 @@
 
 		<section>
 			<h2>Add a new book to my library...</h2>
-			<form action="/books/add" method="post">
+			<form action="/books/add" method="post" autocomplete="off">
 				<label>
 					Book title
-					<input type="text" name="title" placeholder="The Craftsman">
+					<input type="text" list="titles" name="title" placeholder="The Craftsman">
+					<datalist id="titles">
+						<% titles.forEach((title) => { %> 
+							<option>
+								<%= title %>
+							</option>
+						<% }) %>
+					</datalist>
 				</label>
 				<button>Add</button>
 			</form>

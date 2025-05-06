@@ -1,14 +1,6 @@
 import pool from '../pool.cjs';
-import { booksQuery } from './books';
-import { elementExists, recordExists, validateId } from '../utils';
-
-export const bookUser_db = {
-    getBooks: getBooksFromUsers_db,
-    addBook: addBookToUser_db,
-    removeBook: removeBookFromUser_db,
-    removeBooks: removeAll_db('book'),
-    removeUser: removeAll_db('user'),
-};
+import { booksQuery } from './books.js';
+import { elementExists, recordExists, validateId } from '../utils.js';
 
 const getBooksFromUsers_db = async (usersIds) => {
     if (usersIds === undefined || !Array.isArray(usersIds)) {
@@ -109,4 +101,12 @@ const removeAll_db = (attribute) => async (id) => {
     } catch (err) {
         throw new Error(`Database query failed: ${err.message}`);
     }
+};
+
+export const bookUser_db = {
+    getBooks: getBooksFromUsers_db,
+    addBook: addBookToUser_db,
+    removeBook: removeBookFromUser_db,
+    removeBooks: removeAll_db('book'),
+    removeUser: removeAll_db('user'),
 };
