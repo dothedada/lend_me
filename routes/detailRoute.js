@@ -1,6 +1,10 @@
 import { Router } from 'express';
 import { getBookDetail, updateBookData } from '../controllers/books.js';
-import { getAllAuthors } from '../controllers/authors.js';
+import {
+    getAllAuthors,
+    getAuthorData,
+    updateAuthorData,
+} from '../controllers/authors.js';
 import { getAllCategories } from '../controllers/categories.js';
 import { getAllEditorials } from '../controllers/editorials.js';
 
@@ -34,6 +38,23 @@ detailsRoute.get(
 detailsRoute.post('/:bookId/book/edit', updateBookData, (req, res) => {
     const { bookId } = req.params;
     res.redirect(`/detail/${bookId}/book`);
+});
+
+detailsRoute.get('/:authorId/author', getAuthorData, (req, res) => {
+    const authorData = res.author;
+
+    res.render('details/author.ejs', authorData);
+});
+
+detailsRoute.get('/:authorId/author/edit', getAuthorData, (req, res) => {
+    const authorData = res.author;
+
+    res.render('details/authorEdit.ejs', authorData);
+});
+
+detailsRoute.post('/:authorId/author/edit', updateAuthorData, (req, res) => {
+    const { authorId } = req.params;
+    res.redirect(`/detail/${authorId}/author`);
 });
 
 export default detailsRoute;
