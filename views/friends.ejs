@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title><%= user %> | Friends</title>
+</head>
+<body>
+	<%- include("partials/header.ejs", { h1: `${user}'s friends` } ) %>
+
+	<main>
+		<section>
+		<div>
+			<table>
+				<tr>
+					<th>Friend</th>
+					<th>action</th>
+				</tr>
+				<% friends.forEach((friend) => { %>
+				<tr>
+					<td><a href="/friends/<%= friend.id %>/info"><%= friend.name %></a></td>
+					<td>
+						<form action="/friends/<%= friend.id %>/remove" method="post">
+							<button>Remove friendship</button>
+						</form>
+					</td>
+				</tr>
+				<% }) %>
+			</table>
+		</div>
+		</section>
+
+		<section>
+		<h2>Make friends</h2>
+
+		<% if (friendRequests.length > 0) {%>
+
+			<h3>Manage requets</h3>
+			<% friendRequests.forEach((request) => { %>
+			<div>
+				<p>From: <%= request.from %></p>
+				<p><%= request.email %></p>
+				<p><%= request.message %></p>
+				<form action="/friends/:friendId/accept" method="post">
+					<input type="hidden" value="<%= request.id %>">
+					<button>Accept</button>
+				</form>
+				<form action="/friends/:friendId/cancel" method="post">
+					<input type="hidden" value="<%= request.id %>">
+					<button>Deny</button>
+				</form>
+			</div>
+			<% }) %>
+
+		<% } %>
+
+		<% if (activeRequests.length > 0) { %>
+			
+			<h3>Sended requests</h3>
+			<% sendedRequests.forEach((request) => { %>
+			<div>
+				<p>to: <%= request.to %></p>
+				<p><%= request.message %></p>
+				<form action="/friends/:friendId/cancel" method="post">
+					<input type="hidden" value="<%= request.id %>">
+					<button>Cancel request</button>
+				</form>
+			</div>
+			<% }) %>
+
+		<% } %>
+
+		<h3>Add friend</h3>
+			<form action="/friends/add" method="post">
+				<label>Name
+					<input type="text" name="name">
+				</label>
+				<label>Email
+					<input type="email" name="email">
+				</label>
+				<textarea name="message"></textarea>
+				<button>Send request</button>
+			</form>
+		</section>
+
+	</main>
+
+	<%- include("partials/footer.html") %>
+</body>
+</html>
