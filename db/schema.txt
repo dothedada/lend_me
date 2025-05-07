@@ -31,7 +31,7 @@ CREATE TABLE books (
 CREATE TABLE users (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   name VARCHAR(120),
-  email VARCHAR(120)
+  email VARCHAR(120) UNIQUE
 );
 
 CREATE TABLE lends (
@@ -46,17 +46,17 @@ CREATE TABLE lends (
 );
 
 CREATE TABLE book_user (
-  book_id INTEGER NOT NULL REFERENCES books(id),
-  user_id INTEGER NOT NULL REFERENCES users(id),
+  book_id INTEGER REFERENCES books(id),
+  user_id INTEGER REFERENCES users(id),
   PRIMARY KEY (book_id, user_id)
 );
 
 CREATE TABLE friends (
-  user_id INTEGER REFERENCES users(id),
-  friend_id INTEGER REFERENCES users(id),
-  PRIMARY KEY (user_id, friend_id),
-  CHECK (user_id < friend_id)
-)
+  user_a INTEGER REFERENCES users(id),
+  user_b INTEGER REFERENCES users(id),
+  PRIMARY KEY (user_a, user_b),
+  CHECK (user_a != user_b)
+);
 
 CREATE TABLE friend_request (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
@@ -65,4 +65,48 @@ CREATE TABLE friend_request (
   message VARCHAR(300) NOT NULL,
   CHECK (from_id != to_id),
   UNIQUE(from_id, to_id)
-)
+);
+
+CREATE OR REPLACE FUNCTION 
+	add_friend(
+		new_user_a INTEGER,
+		new_user_b INTEGER
+	)
+RETURNS VOID AS $$
+BEGIN
+	INSERT INTO friends (user_a, user_b)
+	VALUES (new_user_a, new_user_b)
+	ON CONFLICT DO NOTHING;
+	INSERT INTO friends (user_a, user_b)
+	VALUES (new_user_b, new_user_a)
+	ON CONFLICT DO NOTHING;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION 
+	remove_friend(
+		del_user_a INTEGER,
+		del_user_b INTEGER
+	)
+RETURNS VOID AS $$
+BEGIN
+	DELETE FROM friends 
+	WHERE user_a = del_user_a 
+	AND user_b = del_user_b;
+	DELETE FROM friends 
+	WHERE user_a = del_user_b
+	AND user_b = del_user_a;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION
+	mark_returned(id_done INTEGER)
+RETURNS VOID AS $$
+BEGIN
+	UPDATE lends 
+	SET 
+		status = 'returned',
+		date_returned = CURRENT_DATE
+	WHERE id = id_done;
+END;
+$$ LANGUAGE plpgsql;
