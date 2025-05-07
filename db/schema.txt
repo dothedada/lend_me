@@ -57,3 +57,12 @@ CREATE TABLE friends (
   PRIMARY KEY (user_id, friend_id),
   CHECK (user_id < friend_id)
 )
+
+CREATE TABLE friend_request (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  from_id INTEGER NOT NULL REFERENCES users(id),
+  to_id INTEGER NOT NULL REFERENCES users(id),
+  message VARCHAR(300) NOT NULL,
+  CHECK (from_id != to_id),
+  UNIQUE(from_id, to_id)
+)
