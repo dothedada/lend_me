@@ -14,6 +14,7 @@ import homeRoute from './routes/homeRoute.js';
 import booksRoute from './routes/booksRoute.js';
 import detailsRoute from './routes/detailRoute.js';
 import searchRoute from './routes/searchRoute.js';
+import friendsRoute from './routes/friendsRoute.js';
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.use('/', homeRoute);
 app.use('/books', booksRoute);
 app.use('/search', searchRoute);
 app.use('/detail', detailsRoute);
+app.use('/friends', friendsRoute);
 
 app.use(express.static('public'));
 

@@ -10,10 +10,8 @@
 
 	<main>
 		<p><%= name %></p>
-		<p>Editorial link <%= url %>,
-			<a href="<%= url %>" target="_blank">open it</a>
-		</p>
-		<a href="/detail/<%= id %>/editorial/edit">edit editorial data</a>
+		<p>go to <a href="<%= url %>" target="_blank"><%= url %></a></p>
+		<a href="/detail/<%= id %>/editorial/edit">edit editorial</a>
 	</main>
 
 	<%- include("../partials/footer.html") %>
