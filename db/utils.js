@@ -2,19 +2,11 @@ import { tables } from './query_settings.js';
 import pool from './pool.cjs';
 
 /**
- * Creates a new object with only the specified properties picked from the source object.
- * @param {Object} obj - The source object from which to pick properties.
- * @param {Array<string>} keys - An array of property names to pick from the source object.
+ * Checks and validates a string to pass as an id
+ * @param {string} id - The string that is needed to validate and clean
+ * @returns {number} - the id number
+ * @throws {Error} If no valid id input
  */
-export const pick = (obj, keys) =>
-    keys.reduce((acc, current) => {
-        if (!obj[current]) {
-            return acc;
-        }
-        acc[current] = obj[current];
-        return acc;
-    }, {});
-
 export const validateId = (id) => {
     const cleanId = id.trim();
     if (cleanId === '' || isNaN(cleanId)) {
@@ -89,4 +81,80 @@ export const recordExists = async (table, valuesObj) => {
     } catch (err) {
         throw new Error(`Database query on '${table}' failed: ${err.message}`);
     }
+};
+
+/**
+ * Creates SQL query parameter references from multiple arrays of values.
+ * Flattens all input arrays, filters out empty values, and generates
+ * parameter references ($1, $2, etc.) for SQL queries.
+ *
+ * @param {...Array} arrays - One or more arrays containing values to be used in SQL queries
+ * @returns {Object} An object containing:
+ *   - references {Array<string>} - Array of parameter references (e.g., ['$1', '$2'])
+ *   - values {Array} - Array of non-empty values from input arrays
+ *   - referenceCounter {number} - The next available parameter index
+ * @throws {Error} If no valid values are found in input arrays
+ */
+export const createQueryArrayReferences = (...arrays) => {
+    const flatArrays = arrays.flat();
+    const values = [];
+    const references = [];
+    let referenceCounter = 1;
+
+    for (const value of flatArrays) {
+        const cleanValue = `${value}`.trim();
+        if (!cleanValue) {
+            continue;
+        }
+
+        values.push(value);
+        references.push(`$${referenceCounter++}`);
+    }
+
+    if (values.length === 0) {
+        throw new Error(
+            "There are no valid values in 'arrays' to create the query refs.",
+        );
+    }
+
+    return { references, values, referenceCounter };
+};
+
+/**
+ * Creates SQL query parameter references from an object's key-value pairs,
+ * filtered by specified keys. Generates parameter references ($1, $2, etc.)
+ * for SQL queries.
+ *
+ * @param {Object} obj - The source object containing key-value pairs
+ * @param {Array<string>} keyRefs - Array of keys to include from the object
+ * @returns {Object} An object containing:
+ *   - references {Array<string>} - Array of parameter references (e.g., ['$1', '$2'])
+ *   - keys {Array<string>} - Array of keys from the object that were included
+ *   - values {Array} - Array of values corresponding to the included keys
+ *   - referenceCounter {number} - The next available parameter index
+ * @throws {Error} If no valid key-value pairs are found
+ */
+export const createQueryKeyValueReferences = (obj, keyRefs) => {
+    const keys = [];
+    const values = [];
+    const references = [];
+    let referenceCounter = 1;
+
+    for (const [key, value] of Object.entries(obj)) {
+        if (!keyRefs.includes(key) || !`${value}`.trim()) {
+            continue;
+        }
+
+        keys.push(key);
+        values.push(value);
+        references.push(`$${referenceCounter++}`);
+    }
+
+    if (values.length === 0 || keys.length === 0) {
+        throw new Error(
+            'There are no valid values in "obj" to create the query refs.',
+        );
+    }
+
+    return { references, keys, values, referenceCounter };
 };

@@ -1,4 +1,4 @@
-import { pick } from './utils.js';
+//import { pick } from './utils.js';
 
 export const SEARCH_LIMIT = 20;
 
@@ -28,6 +28,7 @@ export const tables = {
         'status',
     ],
     book_user: ['book_id', 'user_id'],
+    friend_request: ['id', 'from_id', 'to_id', 'message'],
 };
 
 export const booksInventoryQuery = (uniqueQueryColumn) => `
@@ -69,6 +70,20 @@ export const bookQueryColumns = {
     owner: 'users.name',
     owner_id: 'book_user.user_id',
 };
+
+/**
+ * Creates a new object with only the specified properties picked from the source object.
+ * @param {Object} obj - The source object from which to pick properties.
+ * @param {Array<string>} keys - An array of property names to pick from the source object.
+ */
+export const pick = (obj, keys) =>
+    keys.reduce((acc, current) => {
+        if (!obj[current]) {
+            return acc;
+        }
+        acc[current] = obj[current];
+        return acc;
+    }, {});
 
 export const searchParams = [
     'title',

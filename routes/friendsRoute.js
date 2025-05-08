@@ -1,14 +1,13 @@
 import { Router } from 'express';
+import { getFriends } from '../controllers/friends.js';
 
 const friendsRoute = Router();
 
-friendsRoute.get('/', (req, res) => {
+friendsRoute.get('/', getFriends, (req, res) => {
     const user = req.user;
-    // NOTE: Revisar la estructura de la tabla de friends,
-    // que puede ser problematica (por lo del orden)
     res.render('friends.ejs', {
         user,
-        friends: [],
+        friends: res.friends,
         friendRequests: [],
         activeRequests: [],
     });
