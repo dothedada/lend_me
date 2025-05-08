@@ -1,53 +1,17 @@
 import pool from '../pool.cjs';
-import { SEARCH_LIMIT } from '../query_settings.js';
+import {
+    booksInventoryQuery,
+    SEARCH_LIMIT,
+    searchParams,
+    searchBookParams,
+    bookQueryColumns,
+    tables,
+} from '../query_settings.js';
 import { validateId } from '../utils.js';
 import { queryMethods } from './simpleQuerys_lib.js';
 
-export const booksQuery = `
-SELECT DISTINCT ON (books.id)
-	books.id AS id,
-	books.title AS title, 
-	books.author_id AS author_id,
-	authors.name AS author,
-	books.editorial_id AS editorial_id,
-	editorials.name AS editorial,
-	categories.category AS category,
-	books.year AS year, 
-	books.sinopsys AS sinopsys, 
-	books.image AS photo, 
-	books.url AS url
-FROM books 
-JOIN authors ON books.author_id = authors.id 
-JOIN editorials ON books.editorial_id = editorials.id
-JOIN categories ON books.category_id = categories.id`;
-
-const searchParams = {
-    title: 'books.title',
-    author: 'authors.name',
-    editorial: 'editorials.name',
-    category: 'categories.category',
-    year: 'books.year',
-};
-
-const extendedParams = {
-    ...searchParams,
-    sinopsys: 'books.sinopsys',
-    url: 'books.url',
-    image: 'books.image',
-};
-
-const searchKeys = [
-    'books.title',
-    'authors.name',
-    'editorials.name',
-    'categories.category',
-    'books.year',
-];
-
-const bookKeys = [...searchKeys, 'books.sinopsys', 'books.url', 'books.image'];
-
 const getBookId_db = async (id) => {
-    let query = booksQuery;
+    let query = booksInventoryQuery(bookQueryColumns.id);
     const values = [];
     if (id) {
         query += ' WHERE books.id = $1';
@@ -69,22 +33,7 @@ const getBooksOwnedBy_db = async (ids = [], notInIds = []) => {
 
     const idsSecuence = ids.map((_, i) => `$${i + 1}`).join(', ');
     let query = `
-	SELECT DISTINCT ON (books.id)
-		books.id AS id,
-		books.title AS title, 
-		books.author_id AS author_id,
-		authors.name AS author,
-		books.editorial_id AS editorial_id,
-		editorials.name AS editorial,
-		categories.category AS category,
-		users.name AS owner,
-		book_user.user_id AS owner_id 
-	FROM books 
-	JOIN authors ON books.author_id = authors.id 
-	JOIN editorials ON books.editorial_id = editorials.id
-	JOIN categories ON books.category_id = categories.id
-	JOIN book_user ON book_user.book_id = books.id
-	JOIN users ON users.id = book_user.user_id
+	${booksInventoryQuery()}
 	WHERE book_user.user_id IN (${idsSecuence})`;
 
     let queryElements = ids;
@@ -115,11 +64,13 @@ const getBooksOwnedBy_db = async (ids = [], notInIds = []) => {
 };
 
 const getBooksBy_db = async (parameter, value) => {
-    if (!searchKeys.includes(parameter)) {
+    if (!searchParams.includes(parameter)) {
         throw new Error(`Invalid query parameter '${parameter}'`);
     }
 
-    let query = `${booksQuery} WHERE ${parameter}::text ILIKE $1`;
+    let query = `
+	${booksInventoryQuery(bookQueryColumns.id)} 
+	WHERE ${parameter}::text ILIKE $1`;
 
     try {
         const { rows } = await pool.query(query, [`%${value}%`]);
@@ -136,29 +87,12 @@ const bookSearchWithinFriends_db = async (lookFor, friendsIds, userId) => {
     }
 
     const fields = [];
-    for (const key of searchKeys) {
-        fields.push(`${key}::text ILIKE $1`);
+    for (const key in searchBookParams) {
+        fields.push(`${searchBookParams[key]}::text ILIKE $1`);
     }
 
     const query = `
-	SELECT
-		books.id AS id,
-		books.title AS title,
-		authors.name AS author,
-		books.author_id AS author_id,
-		categories.category AS category,
-		editorials.name AS editorial,
-		books.editorial_id AS editorial_id,
-		books.year AS year,
-		users.name AS owner, 
-		lends.status AS status
-	FROM books
-	JOIN authors ON books.author_id = authors.id
-	JOIN categories ON books.category_id = categories.id
-	JOIN editorials ON books.editorial_id = editorials.id
-	JOIN book_user ON books.id = book_user.book_id
-	JOIN users ON book_user.user_id = users.id 
-	LEFT JOIN lends ON books.id = lends.book_id AND users.id = lends.from_id
+	${booksInventoryQuery(bookQueryColumns.id)}
 	WHERE ${fields.join(' OR ')}
 	AND book_user.user_id IN (${friendsIds.join(', ')})
 	AND NOT EXISTS (
@@ -182,12 +116,12 @@ const findBooksWith_db = async (value) => {
     }
 
     const fields = [];
-    for (const key of searchKeys) {
+    for (const key of searchParams) {
         fields.push(`${key}::text ILIKE $1`);
     }
 
     let query = `
-	${booksQuery} 
+	${booksInventoryQuery(bookQueryColumns.id)} 
 	WHERE ${fields.join(' OR ')}
 	LIMIT ${SEARCH_LIMIT}`;
 
@@ -274,8 +208,8 @@ const updateBook_db = async (valuesToUpdate) => {
         const value = [];
         let paramIndex = 1;
 
-        for (const key of bookKeys) {
-            if (valuesToUpdate[key] === undefined) {
+        for (const key of tables.books) {
+            if (valuesToUpdate[key] === undefined || key === 'id') {
                 continue;
             }
 

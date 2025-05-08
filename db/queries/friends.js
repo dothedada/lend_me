@@ -9,11 +9,11 @@ const getAllFriends_db = async (userId) => {
         throw new Error(`The user with the id '${cleanId}' does not exist`);
     }
 
-    const query = `SELECT friend_id FROM friends WHERE user_id = $1`;
+    const query = `SELECT user_b FROM friends WHERE user_a = $1`;
 
     try {
         const { rows } = await pool.query(query, [cleanId]);
-        return rows.map((e) => e.friend_id);
+        return rows.map((e) => e.user_b);
     } catch (err) {
         throw new Error(`Database query to 'friends' failed: ${err.message}`);
     }
@@ -54,39 +54,27 @@ const addFriend_db = async (userId, friendId) => {
         throw new Error('Friendship already exists');
     }
 
-    const query = `
-	INSERT INTO friends (user_id, friend_id)
-	VALUES ($1, $2)
-	RETURNING *`;
+    const query = `SELECT add_friend($1, $2)`;
 
     try {
-        const { rows } = await pool.query(query, values);
-        return rows;
+        await pool.query(query, values);
     } catch (err) {
         throw new Error(`Database query to 'friends' failed: ${err.message}`);
     }
 };
 
-const removeFriendship_db = async (userId, friendId) => {
-    const cleanUser = validateId(userId);
-    const cleanFriend = validateId(friendId);
+const removeFriendship_db = async (userA, userB) => {
+    const userA_clean = validateId(userA);
+    const userB_clean = validateId(userB);
 
-    const values =
-        +cleanUser < +cleanFriend
-            ? [cleanUser, cleanFriend]
-            : [cleanFriend, cleanUser];
-
-    if (!(await checkFriendship_db(values[0], values[1]))) {
+    if (!(await checkFriendship_db(userA_clean, userB_clean))) {
         throw new Error('The users are not friends');
     }
 
     const query = `
-	DELETE FROM friends
-	WHERE user_id = $1 AND friend_id = $2
-	RETURNING *`;
-
+	SELECT remove_friend($1, $2)`;
     try {
-        const { rows } = await pool.query(query, values);
+        const { rows } = await pool.query(query, [userA_clean, userB_clean]);
         return rows;
     } catch (err) {
         throw new Error(`Database query to 'friends' failed: ${err.message}`);

@@ -1,4 +1,4 @@
-import { fieldsFrom, SEARCH_LIMIT } from '../query_settings.js';
+import { tables, SEARCH_LIMIT } from '../query_settings.js';
 import { validateId } from '../utils.js';
 
 export const queryMethods = (
@@ -6,7 +6,10 @@ export const queryMethods = (
     table,
     methods = ['get', 'find', 'add', 'put', 'delete'],
 ) => {
-    checkTableExist(table);
+    if (!Object.keys(tables).includes(table)) {
+        throw new Error(`Wrong table name '${table}'.`);
+    }
+
     if (!Array.isArray(methods)) {
         throw new Error('Methods parameter must be an array');
     }
@@ -25,11 +28,11 @@ export const queryMethods = (
     return requestedMethods;
 };
 
-const getDataFrom_db = (client, table) => {
-    const validFields = fieldsFrom[table];
+const getDataFrom_db = (client, tableName) => {
+    const validFields = tables[tableName];
 
     return async (valueObject) => {
-        let query = `SELECT * FROM ${table}`;
+        let query = `SELECT * FROM ${tableName}`;
 
         const values = [];
 
@@ -38,7 +41,7 @@ const getDataFrom_db = (client, table) => {
 
             if (!validFields.includes(field)) {
                 throw new Error(
-                    `Table '${table}' does not contain column '${field}'`,
+                    `Table '${tableName}' does not contain column '${field}'`,
                 );
             }
 
@@ -58,8 +61,8 @@ const getDataFrom_db = (client, table) => {
     };
 };
 
-const findDataWith_db = (client, table) => {
-    const [, ...tableValues] = fieldsFrom[table];
+const findDataWith_db = (client, tableName) => {
+    const [, ...tableValues] = tables[tableName];
 
     return async (value) => {
         if (!value.trim()) {
@@ -71,7 +74,7 @@ const findDataWith_db = (client, table) => {
             comparison.push(`${key}::text ILIKE $1`);
         }
         const query = `
-		SELECT * FROM ${table} 
+		SELECT * FROM ${tableName} 
 		WHERE ${comparison.join(' OR ')}
 		LIMIT ${SEARCH_LIMIT}`;
 
@@ -84,16 +87,16 @@ const findDataWith_db = (client, table) => {
     };
 };
 
-const insertDataTo_db = (client, table) => {
-    const [, ...tableValues] = fieldsFrom[table];
+const insertDataTo_db = (client, tableName) => {
+    const [, ...tableValues] = tables[tableName];
 
-    return async (values) => {
+    return async (valuesObject) => {
         const presentValues = [];
         const queryValues = [];
         const cleanValues = [];
         let queryCounter = 1;
 
-        for (const [key, value] of Object.entries(values)) {
+        for (const [key, value] of Object.entries(valuesObject)) {
             if (!tableValues.includes(key)) {
                 continue;
             }
@@ -105,11 +108,11 @@ const insertDataTo_db = (client, table) => {
         }
 
         if (!tableValues.length) {
-            throw new Error(`no value to update inside '${values}'`);
+            throw new Error(`no value to update inside '${valuesObject}'`);
         }
 
         const query = `
-		INSERT INTO ${table} (${presentValues.join(', ')})
+		INSERT INTO ${tableName} (${presentValues.join(', ')})
 		VALUES (${queryValues.join(', ')})
 		RETURNING *`;
 
@@ -117,18 +120,18 @@ const insertDataTo_db = (client, table) => {
             const { rows } = await client.query(query, cleanValues);
             return rows[0];
         } catch (err) {
-            throw new Error(`Cannot insert ${table}: ${err.message}`);
+            throw new Error(`Cannot insert ${tableName}: ${err.message}`);
         }
     };
 };
 
-const updateDataFrom_db = (client, table) => {
-    const [, ...tableValues] = fieldsFrom[table];
+const updateDataFrom_db = (client, tableName) => {
+    const [, ...tableValues] = tables[tableName];
 
-    return async (valuesToUpdate) => {
-        const { id } = valuesToUpdate;
+    return async (valuesObject) => {
+        const { id } = valuesObject;
         if (!id) {
-            throw new Error(`Missing ${table} id in values to update`);
+            throw new Error(`Missing ${tableName} id in values to update`);
         }
 
         const fieldsToUpdate = [];
@@ -136,18 +139,18 @@ const updateDataFrom_db = (client, table) => {
         let paramIndex = 1;
 
         for (const key of tableValues) {
-            if (valuesToUpdate[key] === undefined) {
+            if (valuesObject[key] === undefined) {
                 continue;
             }
             fieldsToUpdate.push(`${key} = $${paramIndex}`);
-            values.push(valuesToUpdate[key]);
+            values.push(valuesObject[key]);
             paramIndex++;
         }
 
         values.push(id);
 
         const query = `
-		UPDATE ${table} 
+		UPDATE ${tableName} 
 		SET ${fieldsToUpdate.join(', ')}
 		WHERE id = $${paramIndex}
 		RETURNING *`;
@@ -155,11 +158,13 @@ const updateDataFrom_db = (client, table) => {
         try {
             const { rows } = await client.query(query, values);
             if (!rows.length) {
-                throw new Error(`The id '${id}' does not exist in '${table}'`);
+                throw new Error(
+                    `The id '${id}' does not exist in '${tableName}'`,
+                );
             }
             return rows[0];
         } catch (err) {
-            throw new Error(`Cannot update ${table}: ${err.message}`);
+            throw new Error(`Cannot update ${tableName}: ${err.message}`);
         }
     };
 };
@@ -185,13 +190,6 @@ const removeDataFrom_db = (client, table) => {
             );
         }
     };
-};
-
-const checkTableExist = (table) => {
-    if (!Object.keys(fieldsFrom).includes(table)) {
-        throw new Error(`Wrong table name '${table}'.`);
-    }
-    return true;
 };
 
 const availableMethods = {

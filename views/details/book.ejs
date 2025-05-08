@@ -12,10 +12,10 @@
 		<img src="<%= photo %>" alt="<%= title %>'s book cover">
 		<h2>Technical sheet</h2>
 		<ul>
-			<li><a href="/detail/:author_id/author">Author: <%= author %></a></li>
+			<li><a href="/detail/<%= author_id %>/author">Author: <%= author %></a></li>
 			<li>Year: <%= year %></li>
 			<li>Category: <%= category %></li>
-			<li><a href="/detail/:editorial_id/editorial">Editorial: <%= editorial %></a></li>
+			<li><a href="/detail/<%= editorial_id %>/editorial">Editorial: <%= editorial %></a></li>
 		</ul>
 		<h2>Resume</h2>
 		<p><%= sinopsys %></p>

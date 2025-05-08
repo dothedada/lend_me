@@ -1,5 +1,5 @@
 import pool from '../pool.cjs';
-import { booksQuery } from './books.js';
+import { booksInventoryQuery, bookQueryColumns } from '../query_settings.js';
 import { elementExists, recordExists, validateId } from '../utils.js';
 
 const getBooksFromUsers_db = async (usersIds) => {
@@ -11,8 +11,7 @@ const getBooksFromUsers_db = async (usersIds) => {
     const keysToCheck = validIds.map((_, i) => `$${i + 1}`);
 
     const query = `
-	${booksQuery}
-	JOIN book_user ON books.id = book_user.book_id
+	${booksInventoryQuery()}
 	WHERE book_user.user_id IN (${keysToCheck.join(', ')})`;
 
     try {

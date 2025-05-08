@@ -1,6 +1,20 @@
 import { tables } from './query_settings.js';
 import pool from './pool.cjs';
 
+/**
+ * Creates a new object with only the specified properties picked from the source object.
+ * @param {Object} obj - The source object from which to pick properties.
+ * @param {Array<string>} keys - An array of property names to pick from the source object.
+ */
+export const pick = (obj, keys) =>
+    keys.reduce((acc, current) => {
+        if (!obj[current]) {
+            return acc;
+        }
+        acc[current] = obj[current];
+        return acc;
+    }, {});
+
 export const validateId = (id) => {
     const cleanId = id.trim();
     if (cleanId === '' || isNaN(cleanId)) {
@@ -10,7 +24,7 @@ export const validateId = (id) => {
 };
 
 export const elementExists = async (table, ids) => {
-    if (!tables.includes(table)) {
+    if (!Object.keys(tables).includes(table)) {
         throw new Error(`'${table}' is not a valid table`);
     }
 
@@ -50,7 +64,7 @@ export const elementExists = async (table, ids) => {
 };
 
 export const recordExists = async (table, valuesObj) => {
-    if (!tables.includes(table)) {
+    if (!Object.keys(tables).includes(table)) {
         throw new Error(`'${table}' is not a valid table`);
     }
 
