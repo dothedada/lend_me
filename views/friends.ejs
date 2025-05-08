@@ -33,10 +33,10 @@
 		<section>
 		<h2>Make friends</h2>
 
-		<% if (friendRequests.length > 0) {%>
+		<% if (receivedRequests.length > 0) {%>
 
 			<h3>Manage requets</h3>
-			<% friendRequests.forEach((request) => { %>
+			<% receivedRequests.forEach((request) => { %>
 			<div>
 				<p>From: <%= request.from %></p>
 				<p><%= request.email %></p>
@@ -54,12 +54,12 @@
 
 		<% } %>
 
-		<% if (activeRequests.length > 0) { %>
+		<% if (sendedRequests.length > 0) { %>
 			
 			<h3>Sended requests</h3>
 			<% sendedRequests.forEach((request) => { %>
 			<div>
-				<p>to: <%= request.to %></p>
+				<p>to: <%= request.to_name %></p>
 				<p><%= request.message %></p>
 				<form action="/friends/:friendId/cancel" method="post">
 					<input type="hidden" value="<%= request.id %>">

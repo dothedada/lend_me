@@ -159,7 +159,7 @@ const getFriendRequests_db = async (fromOrTo, id) => {
 	WHERE ${filter} = $1`;
 
     try {
-        const { rows } = pool.query(query, [id]);
+        const { rows } = await pool.query(query, [id]);
         return rows;
     } catch (err) {
         throw new Error(

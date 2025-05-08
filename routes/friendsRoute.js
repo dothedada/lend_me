@@ -1,15 +1,19 @@
 import { Router } from 'express';
-import { friendRequest, getFriends } from '../controllers/friends.js';
+import {
+    friendRequest,
+    getFriends,
+    sendedRequests,
+} from '../controllers/friends.js';
 
 const friendsRoute = Router();
 
-friendsRoute.get('/', getFriends, (req, res) => {
+friendsRoute.get('/', getFriends, sendedRequests, (req, res) => {
     const user = req.user;
     res.render('friends.ejs', {
         user,
         friends: res.friends,
-        friendRequests: [],
-        activeRequests: [],
+        receivedRequests: [],
+        sendedRequests: res.sendedRequests,
     });
 });
 
