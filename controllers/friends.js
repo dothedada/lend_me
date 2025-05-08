@@ -55,8 +55,21 @@ export const receivedRequests = async (req, res, next) => {
 };
 
 export const cancelRequest = async (req, res, next) => {
-    const { requestId } = req.params;
+    const { requestId } = req.body;
     await friends_db.cancelRequest(requestId);
+
+    next();
+};
+
+export const acceptRequest = async (req, res, next) => {
+    const { requestId, fromId, toId } = req.body;
+
+    if (!requestId || !fromId || !toId) {
+        throw new Error('Missing parameters to accept request');
+    }
+
+    await friends_db.cancelRequest(requestId);
+    await friends_db.addFriendship(fromId, toId);
 
     next();
 };

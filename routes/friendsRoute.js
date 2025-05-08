@@ -5,6 +5,7 @@ import {
     getFriends,
     sendedRequests,
     receivedRequests,
+    acceptRequest,
 } from '../controllers/friends.js';
 
 const friendsRoute = Router();
@@ -35,6 +36,10 @@ friendsRoute.post('/add', friendRequest, (req, res) => {
 });
 
 friendsRoute.post('/:requestId/cancel', cancelRequest, (req, res) => {
+    res.redirect('/friends');
+});
+
+friendsRoute.post('/:requestId/accept', acceptRequest, (req, res) => {
     res.redirect('/friends');
 });
 

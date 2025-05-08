@@ -38,15 +38,17 @@
 			<h3>Manage requets</h3>
 			<% receivedRequests.forEach((request) => { %>
 			<div>
-				<p>From: <%= request.from %></p>
+				<p>From: <%= request.from_name %></p>
 				<p><%= request.email %></p>
 				<p><%= request.message %></p>
 				<form action="/friends/<%= request.id %>/accept" method="post">
-					<input type="hidden" value="<%= request.id %>">
+					<input type="hidden" name="requestId" value="<%= request.id %>">
+					<input type="hidden" name="fromId" value="<%= request.from_id %>">
+					<input type="hidden" name="toId" value="<%= request.to_id %>">
 					<button>Accept</button>
 				</form>
 				<form action="/friends/<%= request.id %>/cancel" method="post">
-					<input type="hidden" value="<%= request.id %>">
+					<input type="hidden" name="requestId" value="<%= request.id %>">
 					<button>Deny</button>
 				</form>
 			</div>
@@ -62,7 +64,7 @@
 				<p>to: <%= request.to_name %></p>
 				<p><%= request.message %></p>
 				<form action="/friends/<%= request.id %>/cancel" method="post">
-					<input type="hidden" value="<%= request.id %>">
+					<input type="hidden" name="requestId" value="<%= request.id %>">
 					<button>Cancel request</button>
 				</form>
 			</div>
