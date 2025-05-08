@@ -73,3 +73,12 @@ export const acceptRequest = async (req, res, next) => {
 
     next();
 };
+
+export const removeFriendship = async (req, res, next) => {
+    const userId = req.user.id;
+    const { friendId } = req.body;
+
+    await friends_db.removeFriendship(userId, friendId);
+
+    next();
+};

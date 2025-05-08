@@ -21,6 +21,7 @@
 					<td><a href="/friends/<%= friend.id %>/info"><%= friend.name %></a></td>
 					<td>
 						<form action="/friends/<%= friend.id %>/remove" method="post">
+							<input type="hidden" name="friendId" value="<%= friend.id %>">
 							<button>Remove friendship</button>
 						</form>
 					</td>

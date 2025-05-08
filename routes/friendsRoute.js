@@ -6,6 +6,7 @@ import {
     sendedRequests,
     receivedRequests,
     acceptRequest,
+    removeFriendship,
 } from '../controllers/friends.js';
 
 const friendsRoute = Router();
@@ -40,6 +41,10 @@ friendsRoute.post('/:requestId/cancel', cancelRequest, (req, res) => {
 });
 
 friendsRoute.post('/:requestId/accept', acceptRequest, (req, res) => {
+    res.redirect('/friends');
+});
+
+friendsRoute.post('/:friendId/remove', removeFriendship, (req, res) => {
     res.redirect('/friends');
 });
 
