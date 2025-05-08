@@ -41,11 +41,11 @@
 				<p>From: <%= request.from %></p>
 				<p><%= request.email %></p>
 				<p><%= request.message %></p>
-				<form action="/friends/:friendId/accept" method="post">
+				<form action="/friends/<%= request.id %>/accept" method="post">
 					<input type="hidden" value="<%= request.id %>">
 					<button>Accept</button>
 				</form>
-				<form action="/friends/:friendId/cancel" method="post">
+				<form action="/friends/<%= request.id %>/cancel" method="post">
 					<input type="hidden" value="<%= request.id %>">
 					<button>Deny</button>
 				</form>

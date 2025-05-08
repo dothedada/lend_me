@@ -4,19 +4,26 @@ import {
     friendRequest,
     getFriends,
     sendedRequests,
+    receivedRequests,
 } from '../controllers/friends.js';
 
 const friendsRoute = Router();
 
-friendsRoute.get('/', getFriends, sendedRequests, (req, res) => {
-    const user = req.user;
-    res.render('friends.ejs', {
-        user,
-        friends: res.friends,
-        receivedRequests: [],
-        sendedRequests: res.sendedRequests,
-    });
-});
+friendsRoute.get(
+    '/',
+    getFriends,
+    sendedRequests,
+    receivedRequests,
+    (req, res) => {
+        const user = req.user;
+        res.render('friends.ejs', {
+            user,
+            friends: res.friends,
+            receivedRequests: res.receivedRequests,
+            sendedRequests: res.sendedRequests,
+        });
+    },
+);
 
 friendsRoute.post('/add', friendRequest, (req, res) => {
     const { ok, message } = res.friendRequest;

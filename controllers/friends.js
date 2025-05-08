@@ -46,6 +46,14 @@ export const sendedRequests = async (req, res, next) => {
     next();
 };
 
+export const receivedRequests = async (req, res, next) => {
+    const userId = req.user.id;
+    const requests = await friends_db.getRequests('to', userId);
+    res.receivedRequests = requests;
+
+    next();
+};
+
 export const cancelRequest = async (req, res, next) => {
     const { requestId } = req.params;
     await friends_db.cancelRequest(requestId);
