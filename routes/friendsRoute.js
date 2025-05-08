@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getFriends } from '../controllers/friends.js';
+import { friendRequest, getFriends } from '../controllers/friends.js';
 
 const friendsRoute = Router();
 
@@ -11,6 +11,15 @@ friendsRoute.get('/', getFriends, (req, res) => {
         friendRequests: [],
         activeRequests: [],
     });
+});
+
+friendsRoute.post('/add', friendRequest, (req, res) => {
+    const { ok, message } = res.friendRequest;
+    if (!ok) {
+        res.send(`paila, '${message}'`);
+        return;
+    }
+    res.redirect('/friends');
 });
 
 export default friendsRoute;

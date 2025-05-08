@@ -21,8 +21,8 @@ const getAllFriends_db = async (userId) => {
 
 const checkFriendship_db = async (userId, friendId) => {
     return await recordExists('friends', {
-        user_id: userId,
-        friend_id: friendId,
+        user_a: userId,
+        user_b: friendId,
     });
 };
 

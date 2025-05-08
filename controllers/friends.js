@@ -15,16 +15,25 @@ export const getFriends = async (req, res, next) => {
 export const friendRequest = async (req, res, next) => {
     const userId = req.user.id;
     const { name, email, message } = req.body;
-    const { id: friendId } = recordExists({ name, email });
+    const friend = await recordExists('users', { name, email });
 
-    if (!friendId) {
-        throw new Error(
-            `No record found with user '${name}' and mail '${email}'`,
-        );
+    if (!friend) {
+        res.friendRequest = {
+            ok: false,
+            message: `No record found with user '${name}' and mail '${email}'`,
+        };
+        return next();
     }
-    if (friends_db.friendship(userId, friendId)) {
-        throw new Error(`'${req.user.name}' and '${name}' are already friends`);
+    if (await friends_db.friendship(userId, friend.id)) {
+        res.friendRequest = {
+            ok: false,
+            message: `'${req.user.name}' and '${name}' are already friends`,
+        };
+        return next();
     }
 
-    await friends_db.makeRequest(userId, friendId, message);
+    const response = await friends_db.makeRequest(userId, friend.id, message);
+    res.friendRequest = { ok: true, message: response };
+
+    next();
 };

@@ -29,6 +29,7 @@ export const tables = {
     ],
     book_user: ['book_id', 'user_id'],
     friend_request: ['id', 'from_id', 'to_id', 'message'],
+    friends: ['user_a', 'user_b'],
 };
 
 export const booksInventoryQuery = (uniqueQueryColumn) => `
