@@ -61,7 +61,7 @@
 			<div>
 				<p>to: <%= request.to_name %></p>
 				<p><%= request.message %></p>
-				<form action="/friends/:friendId/cancel" method="post">
+				<form action="/friends/<%= request.id %>/cancel" method="post">
 					<input type="hidden" value="<%= request.id %>">
 					<button>Cancel request</button>
 				</form>

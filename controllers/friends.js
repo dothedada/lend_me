@@ -45,3 +45,10 @@ export const sendedRequests = async (req, res, next) => {
 
     next();
 };
+
+export const cancelRequest = async (req, res, next) => {
+    const { requestId } = req.params;
+    await friends_db.cancelRequest(requestId);
+
+    next();
+};

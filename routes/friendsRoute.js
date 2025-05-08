@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+    cancelRequest,
     friendRequest,
     getFriends,
     sendedRequests,
@@ -23,6 +24,10 @@ friendsRoute.post('/add', friendRequest, (req, res) => {
         res.send(`paila, '${message}'`);
         return;
     }
+    res.redirect('/friends');
+});
+
+friendsRoute.post('/:requestId/cancel', cancelRequest, (req, res) => {
     res.redirect('/friends');
 });
 
