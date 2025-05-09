@@ -4,21 +4,27 @@ export const getUserTransactions = async (req, res, next) => {
     const userId = req.user.id;
     const transactions = await lends_db.getTransactions(userId);
 
-    const userTransactions = transactions.reduce((acc, transaction) => {
+    const transactionStatus = {
+        requested: [],
+        denied: [],
+        active: [],
+        returned: [],
+    };
+
+    transactions.reduce((acc, transaction) => {
         if (!acc[transaction.status]) {
             acc[transaction.status] = [];
         }
         acc[transaction.status].push(transaction);
         return acc;
-    }, {});
+    }, transactionStatus);
 
-    if (userTransactions.denied) {
-        userTransactions.denied = userTransactions.denied.filter(
-            (t) => t.to_user_id === +userId,
-        );
-    }
+    transactionStatus.denied = transactionStatus.denied.filter(
+        (book) => book.to_user_id === +userId,
+    );
 
-    res.transactions = userTransactions;
+    res.transactions = transactionStatus;
+
     next();
 };
 

@@ -9,16 +9,21 @@ homeRoute.get('/', getUserTransactions, getOwnedBooks, async (req, res) => {
 
     const { requested, active, denied } = res.transactions;
 
+    const [borrowed, lended] = active.reduce(
+        (acc, book) => {
+            const insertionInd = book.owner_user_id !== +userData.id ? 0 : 1;
+            acc[insertionInd].push(book);
+            return acc;
+        },
+        [[], []],
+    );
+
     res.render('dashboard.ejs', {
         user: userData,
         requestsBooks: requested ?? [],
         deniedRequest: denied ?? [],
-        borrowedBooks: !active
-            ? []
-            : active.filter((lend) => lend.owner_user_id !== +userData.id),
-        lendedBooks: !active
-            ? []
-            : active.filter((lend) => lend.owner_user_id === +userData.id),
+        borrowedBooks: borrowed,
+        lendedBooks: lended,
         userBooks: res.books.user,
     });
 });

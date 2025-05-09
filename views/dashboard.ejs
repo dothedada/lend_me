@@ -4,139 +4,150 @@
 
 	<main>
 		<section>
+		<% if (
+			requestsBooks.length > 0 
+			|| deniedRequest.length > 0
+			|| borrowedBooks.length > 0
+			|| lendedBooks.length > 0
+		) { %>
 		<h2>Active transactions</h2>
+		<% } %>
+
+		<% if (requestsBooks.length > 0) { %>
 		<h3>Requests</h3>
-			<table>
-				<tr>
-					<th>tansaction</th>
-					<th>Title</th>
-					<th>Author</th>
-					<th>Owned by</th>
-					<th>Action</th>
-				</tr>
-				<% requestsBooks.forEach((book) => { %>
-				<tr>
-					<td>
-					<% if (+book.owner_user_id === +user.id) { %>
-						Lend
-					<% } else { %>
-						Borrow
-					<% } %>
-					</td>
+		<table>
+			<tr>
+				<th>tansaction</th>
+				<th>Title</th>
+				<th>Author</th>
+				<th>Owned by</th>
+				<th>Action</th>
+			</tr>
+			<% requestsBooks.forEach((book) => { %>
+			<tr>
+				<td>
+				<% if (+book.owner_user_id === +user.id) { %>
+					Lend
+				<% } else { %>
+					Borrow
+				<% } %>
+				</td>
 
-					<td><a href="/detail/<%= book.id %>/book"><%= book.title %></a></td>
-					<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
-					<td><%= book.owner_user %></td>
+				<td><a href="/detail/<%= book.id %>/book"><%= book.title %></a></td>
+				<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
+				<td><%= book.owner_user %></td>
 
-					<td>
-					<% if (+book.owner_user_id === +user.id) { %>
-						<form action="/lends/accept" method="post">
-							<input type="hidden" name="lend_id" value="<%= book.lend_id %>">
-							<button>Lend</button>
-						</form>
-						<form action="/lends/deny" method="post">
-							<input type="hidden" name="lend_id" value="<%= book.lend_id %>">
-							<button>Deny</button>
-						</form>
-					<% } else { %>
-						<form action="/lends/cancel" method="post">
-							<input type="hidden" name="lend_id" value="<%= book.lend_id %>">
-							<button>Cancel request</button>
-						</form>
-					<% } %>
-					</td>
-				</tr>
-				<% }) %>
-			</table>
+				<td>
+				<% if (+book.owner_user_id === +user.id) { %>
+					<form action="/lends/accept" method="post">
+						<input type="hidden" name="lend_id" value="<%= book.lend_id %>">
+						<button>Lend</button>
+					</form>
+					<form action="/lends/deny" method="post">
+						<input type="hidden" name="lend_id" value="<%= book.lend_id %>">
+						<button>Deny</button>
+					</form>
+				<% } else { %>
+					<form action="/lends/cancel" method="post">
+						<input type="hidden" name="lend_id" value="<%= book.lend_id %>">
+						<button>Cancel request</button>
+					</form>
+				<% } %>
+				</td>
+			</tr>
+			<% }) %>
+		</table>
+		<% } %>
 
+		<% if (deniedRequest.length > 0) { %>
 		<h3>denied</h3>
-			<table>
-				<tr>
-					<th>Title</th>
-					<th>Owned by</th>
-					<th>Action</th>
-				</tr>
-				<% deniedRequest.forEach((book) => { %>
-				<tr>
-					<td><a href="/detail/<%= book.id %>/book"><%= book.title %></a></td>
-					<td><%= book.owner_user %></td>
-					<td>
-						<form action="/lends/cancel" method="post">
-							<input type="hidden" name="lend_id" value="<%= book.lend_id %>">
-							<button>Acknowledge</button>
-						</form>
-					</td>
-				</tr>
-				<% }) %>
-			</table>
+		<table>
+			<tr>
+				<th>Title</th>
+				<th>Owned by</th>
+				<th>Action</th>
+			</tr>
+			<% deniedRequest.forEach((book) => { %>
+			<tr>
+				<td><a href="/detail/<%= book.id %>/book"><%= book.title %></a></td>
+				<td><%= book.owner_user %></td>
+				<td>
+					<form action="/lends/cancel" method="post">
+						<input type="hidden" name="lend_id" value="<%= book.lend_id %>">
+						<button>Acknowledge</button>
+					</form>
+				</td>
+			</tr>
+			<% }) %>
+		</table>
+		<% } %>
 
-
+		<% if (borrowedBooks.length > 0) { %>
 		<h3>Borrowed</h3>
-		<div>
-			<table>
-				<tr>
-					<th>Title</th>
-					<th>Author</th>
-					<th>Borrowed from</th>
-					<th>action</th>
-				</tr>
-				<% borrowedBooks.forEach((book) => { %>
-				<tr>
-					<td><a href="/detail/<%= book.book_id %>/book"><%= book.title %></a></td>
-					<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
-					<td><%= book.owner_user %></td>
-					<td>
-						<form action="/lends/return" method="post">
-							<input type="hidden" name="lend_id" value="<%= book.lend_id %>">
-							<button>Return</button>
-						</form>
-					</td>
-				</tr>
-				<% }) %>
-			</table>
-		</div>
+		<table>
+			<tr>
+				<th>Title</th>
+				<th>Author</th>
+				<th>Borrowed from</th>
+				<th>action</th>
+			</tr>
+			<% borrowedBooks.forEach((book) => { %>
+			<tr>
+				<td><a href="/detail/<%= book.book_id %>/book"><%= book.title %></a></td>
+				<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
+				<td><%= book.owner_user %></td>
+				<td>
+					<form action="/lends/return" method="post">
+						<input type="hidden" name="lend_id" value="<%= book.lend_id %>">
+						<button>Return</button>
+					</form>
+				</td>
+			</tr>
+			<% }) %>
+		</table>
+		<% } %>
 
+		<% if (lendedBooks.length > 0) { %>
 		<h3>Lended</h3>
-		<div>
-			<table>
-				<tr>
-					<th>Title</th>
-					<th>Author</th>
-					<th>Lended to</th>
-				</tr>
-				<% lendedBooks.forEach((book) => { %>
-				<tr>
-					<td><a href="/detail/<%= book.book_id %>/book"><%= book.title %></a></td>
-					<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
-					<td><%= book.to_user %></td>
-				</tr>
-				<% }) %>
-			</table>
-		</div>
+		<table>
+			<tr>
+				<th>Title</th>
+				<th>Author</th>
+				<th>Lended to</th>
+			</tr>
+			<% lendedBooks.forEach((book) => { %>
+			<tr>
+				<td><a href="/detail/<%= book.book_id %>/book"><%= book.title %></a></td>
+				<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
+				<td><%= book.to_user %></td>
+			</tr>
+			<% }) %>
+		</table>
+		<% } %>
 
 		</section>
 
 		<section>
-			<h2>My books</h2>
-				<div>
-					<table>
-						<tr>
-							<th>Title</th>
-							<th>Author</th>
-							<th>Category</th>
-							<th>Editorial</th>
-						</tr>
-						<% userBooks.forEach((book) => { %>
-						<tr>
-							<td><a href="/detail/<%= book.id %>/book/"><%= book.title %></a></td>
-							<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
-							<td><%= book.category || "" %></td>
-							<td><a href="/detail/<%= book.editorial_id %>/editorial"><%= book.editorial || "" %></a>
-							</td>
-						</tr>
-						<% }) %>
-					</table>
-				</div>
+		<h2>My books</h2>
+		<div>
+			<table>
+				<tr>
+					<th>Title</th>
+					<th>Author</th>
+					<th>Category</th>
+					<th>Editorial</th>
+				</tr>
+				<% userBooks.forEach((book) => { %>
+				<tr>
+					<td><a href="/detail/<%= book.id %>/book/"><%= book.title %></a></td>
+					<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
+					<td><%= book.category || "" %></td>
+					<td><a href="/detail/<%= book.editorial_id %>/editorial"><%= book.editorial || "" %></a>
+					</td>
+				</tr>
+				<% }) %>
+			</table>
+		</div>
 		</section>
 
 	</main>
