@@ -54,6 +54,16 @@
 			<% }) %>
 		</table>
 		</section>
+
+		<section>
+		<h2>Delete my account</h2>
+		<form action="/me/update" method="post">
+			<label>Write your email to confirm
+				<input type="text" name="confirmation">
+			</label>
+			<button>delete</button>
+		</form>
+		</section>
 	</main>
 	<%- include("partials/footer.html") %>
 </body>

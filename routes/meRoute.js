@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getUserTransactions } from '../controllers/lends.js';
-import { updateUser } from '../controllers/login.js';
+import { updateUser, deleteUser } from '../controllers/login.js';
 
 const meRoute = Router();
 
@@ -13,6 +13,10 @@ meRoute.get('/', getUserTransactions, (req, res) => {
 
 meRoute.post('/update', updateUser, (req, res) => {
     res.redirect('/me');
+});
+
+meRoute.post('/delete', deleteUser, (req, res) => {
+    res.redirect('/');
 });
 
 export default meRoute;

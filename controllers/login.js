@@ -101,3 +101,14 @@ export const updateUser = async (req, res, next) => {
 
     next();
 };
+
+export const deleteUser = async (req, res, next) => {
+    const user = req.user;
+    const { confirmation } = req.body;
+
+    if (user.email !== confirmation) {
+        return next();
+    }
+
+    next();
+};

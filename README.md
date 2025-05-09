@@ -11,7 +11,7 @@ A small app to keep track of the books you lend with your friends...
 - ~friends (add, remove friends, accept friend requests)~
 - ~add book~
 - ~lends (requested lends, accept, lends history)~
-- profile (edit profile, remove my account, remove books (users, lends, requests))
+- ~profile (edit profile,~ remove my account, remove books (users, lends, requests))
 - input validations and error handling
 - style the shit up
 - notas de aprendizaje
