@@ -17,6 +17,7 @@ homeRoute.get(
 
         res.render('dashboard.ejs', {
             user: userData.name,
+            requestsBooks: [],
             borrowedBooks: res.books.borrowed,
             lendedBooks: res.books.lended,
             userBooks: res.books.user,

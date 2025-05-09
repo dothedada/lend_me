@@ -42,7 +42,7 @@ CREATE TABLE lends (
   date_taken DATE NOT NULL DEFAULT CURRENT_DATE,
   date_returned DATE
   CHECK (from_id != to_id),
-  status VARCHAR(20) DEFAULT 'active' CHECK(status IN('active', 'returned'))
+  status VARCHAR(20) DEFAULT 'requested' CHECK(status IN('requested', 'denied', 'active', 'returned'))
 );
 
 CREATE TABLE book_user (
@@ -96,17 +96,5 @@ BEGIN
 	DELETE FROM friends 
 	WHERE user_a = del_user_b
 	AND user_b = del_user_a;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION
-	mark_returned(id_done INTEGER)
-RETURNS VOID AS $$
-BEGIN
-	UPDATE lends 
-	SET 
-		status = 'returned',
-		date_returned = CURRENT_DATE
-	WHERE id = id_done;
 END;
 $$ LANGUAGE plpgsql;

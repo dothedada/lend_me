@@ -11,6 +11,43 @@
 	<main>
 		<section>
 		<h2>Active transactions</h2>
+		<h3>Requests</h3>
+			<table>
+				<tr>
+					<th>tansaction</th>
+					<th>Title</th>
+					<th>Author</th>
+					<th>Owned by</th>
+					<th>Action</th>
+				</tr>
+				<% requestsBooks.forEach((book) => { %>
+				<tr>
+					<td>
+					<% if (book.from_id === user.id) { %>
+						Borrow
+					<% } else { %>
+						Lend
+					<% } %>
+					</td>
+
+					<td><a href="/detail/<%= book.id %>/book"><%= book.title %></a></td>
+					<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
+					<td><%= book.owner %></td>
+
+					<td><%= book.category || "" %></td>
+					<td><a href="/detail/<%= book.editorial_id %>/editorial"><%= book.editorial || "" %></a>
+					</td>
+
+					<td>
+						<form action="/lends/<%= book.id %>/borrow" method="post">
+							<button>Borrow</button>
+						</form>
+					</td>
+				</tr>
+				<% }) %>
+			</table>
+
+
 		<h3>Borrowed</h3>
 		<div>
 			<table>
