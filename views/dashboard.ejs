@@ -1,4 +1,4 @@
-<%- include("partials/head.ejs", {headTitle: `${ user.name} | Dashboard` })%>
+<%- include("partials/head.ejs", {headTitle: `${ user.name } | Dashboard` })%>
 <body>
 	<%- include("partials/header.ejs", { h1: `${user}'s dashboard ` } ) %>
 
@@ -17,7 +17,7 @@
 				<% requestsBooks.forEach((book) => { %>
 				<tr>
 					<td>
-					<% if (book.owner_user_id === user.id) { %>
+					<% if (+book.owner_user_id === +user.id) { %>
 						Lend
 					<% } else { %>
 						Borrow
@@ -29,14 +29,37 @@
 					<td><%= book.owner_user %></td>
 
 					<td>
-					<% if (book.owner_user_id === user.id) { %>
-						Lend
+					<% if (+book.owner_user_id === +user.id) { %>
+						<form action="/lends/deny" method="post">
+							<input type="hidden" name="lend_id" value="<%= book.lend_id %>">
+							<button>Deny lend</button>
+						</form>
 					<% } else { %>
 						<form action="/lends/cancel" method="post">
 							<input type="hidden" name="lend_id" value="<%= book.lend_id %>">
 							<button>Cancel request</button>
 						</form>
 					<% } %>
+					</td>
+				</tr>
+				<% }) %>
+			</table>
+		<h3>denied</h3>
+			<table>
+				<tr>
+					<th>Title</th>
+					<th>Owned by</th>
+					<th>Action</th>
+				</tr>
+				<% deniedRequest.forEach((book) => { %>
+				<tr>
+					<td><a href="/detail/<%= book.id %>/book"><%= book.title %></a></td>
+					<td><%= book.owner_user %></td>
+					<td>
+						<form action="/lends/cancel" method="post">
+							<input type="hidden" name="lend_id" value="<%= book.lend_id %>">
+							<button>Acknowledge</button>
+						</form>
 					</td>
 				</tr>
 				<% }) %>

@@ -9,8 +9,9 @@ homeRoute.get('/', getUserTransactions, getOwnedBooks, async (req, res) => {
 
     const { requested, active, denied } = res.transactions;
     res.render('dashboard.ejs', {
-        user: userData.name,
+        user: userData,
         requestsBooks: requested ?? [],
+        deniedRequest: denied ?? [],
         borrowedBooks: !active
             ? []
             : active.filter((lend) => lend.from_id !== userData.id),

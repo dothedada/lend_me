@@ -1,5 +1,9 @@
 import { Router } from 'express';
-import { deleteRequest, requestBook } from '../controllers/lends.js';
+import {
+    deleteRequest,
+    denyRequest,
+    requestBook,
+} from '../controllers/lends.js';
 
 const lendsRoute = Router();
 
@@ -8,6 +12,10 @@ lendsRoute.post('/request', requestBook, (req, res) => {
 });
 
 lendsRoute.post('/cancel', deleteRequest, (req, res) => {
+    res.redirect('/');
+});
+
+lendsRoute.post('/deny', denyRequest, (req, res) => {
     res.redirect('/');
 });
 

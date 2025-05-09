@@ -138,3 +138,5 @@ export const searchParams = [
 ];
 
 export const searchBookParams = pick(bookQueryColumns, searchParams);
+
+export const lendStatus = ['requested', 'denied', 'active', 'returned'];

@@ -1,5 +1,9 @@
 import pool from '../pool.cjs';
-import { lendsQuery, lendsQueryColumns } from '../query_settings.js';
+import {
+    lendsQuery,
+    lendsQueryColumns,
+    lendStatus,
+} from '../query_settings.js';
 import { elementExists, recordExists, validateId } from '../utils.js';
 
 const getAllLends_db = async () => {
@@ -117,17 +121,23 @@ const deleteRequest_db = async (lendId) => {
     }
 };
 
-const updateLend_db = async (lendId) => {
+const updateLend_db = async (lendId, status) => {
+    if (!lendStatus.includes(status)) {
+        throw new Error(`'${status}' is not a valid lend status`);
+    }
     const cleanId = validateId(lendId);
+
+    const date_returned =
+        status === 'returned' ? ', date_returned = CURRENT_DATE' : '';
 
     const query = `
 	UPDATE lends
-	SET date_returned = CURRENT_DATE, status = 'returned'
-	WHERE id = $1 AND status = 'active'
+	SET status = $2 ${date_returned}
+	WHERE id = $1
 	RETURNING *`;
 
     try {
-        const { rows } = await pool.query(query, [cleanId]);
+        const { rows } = await pool.query(query, [cleanId, status]);
         if (rows.length === 0) {
             throw new Error(`there is no lends with id ${lendId}`);
         }
@@ -143,5 +153,5 @@ export const lends_db = {
     deleteRequest: deleteRequest_db,
     getBy: getLendsBy_db,
     lend: requestLend_db,
-    return: updateLend_db,
+    changeStatus: updateLend_db,
 };

@@ -2,9 +2,9 @@ import { lends_db } from '../db/queries/lends.js';
 
 export const getUserTransactions = async (req, res, next) => {
     const userId = req.user.id;
-    const userTransactions = await lends_db.getTransactions(userId);
+    const transactions = await lends_db.getTransactions(userId);
 
-    res.transactions = userTransactions.reduce((acc, transaction) => {
+    const userTransactions = transactions.reduce((acc, transaction) => {
         if (!acc[transaction.status]) {
             acc[transaction.status] = [];
         }
@@ -12,6 +12,13 @@ export const getUserTransactions = async (req, res, next) => {
         return acc;
     }, {});
 
+    if (userTransactions.denied) {
+        userTransactions.denied = userTransactions.denied.filter(
+            (t) => t.to_user_id === +userId,
+        );
+    }
+
+    res.transactions = userTransactions;
     next();
 };
 
@@ -26,6 +33,13 @@ export const requestBook = async (req, res, next) => {
 export const deleteRequest = async (req, res, next) => {
     const { lend_id } = req.body;
     await lends_db.deleteRequest(lend_id);
+
+    next();
+};
+
+export const denyRequest = async (req, res, next) => {
+    const { lend_id } = req.body;
+    await lends_db.changeStatus(lend_id, 'denied');
 
     next();
 };
