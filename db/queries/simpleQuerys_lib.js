@@ -139,7 +139,7 @@ const updateDataFrom_db = (client, tableName) => {
         let paramIndex = 1;
 
         for (const key of tableValues) {
-            if (valuesObject[key] === undefined) {
+            if (valuesObject[key] === undefined || key === 'id') {
                 continue;
             }
             fieldsToUpdate.push(`${key} = $${paramIndex}`);

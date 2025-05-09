@@ -1,0 +1,60 @@
+<%- include("partials/head.ejs", { headTitle: `${user.name} | Friends` })%>
+<body>
+	<%- include("partials/header.ejs", { h1: `${user.name}'s profile` } ) %>
+
+	<main>
+
+		<section>
+		<h2>My information</h2>
+		<form action="/me/update" method="post">
+			<label>Name
+				<input type="text" name="name" value="<%= user.name %>">
+			</label>
+			<label>Email
+				<input type="text" name="email" value="<%= user.email%>">
+			</label>
+			<button>Update</button>
+		</form>
+		</section>
+
+		<section>
+		<h2>My transactions history</h2>
+		<table>
+			<tr>
+				<th>tansaction</th>
+				<th>Title</th>
+				<th>Author</th>
+				<th>with</th>
+				<th>when</th>
+			</tr>
+			<% returnedBooks.forEach((book) => { %>
+			<tr>
+				<td>
+				<% if (+book.owner_user_id === +user.id) { %>
+					Lend
+				<% } else { %>
+					Borrow
+				<% } %>
+				</td>
+
+				<td><a href="/detail/<%= book.book_id %>/book"><%= book.title %></a></td>
+				<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
+				<td>
+				<% if (+book.owner_user_id === +user.id) { %>
+					<%= book.to_user %>
+				<% } else { %>
+					<%= book.owner_user %>
+				<% } %>
+				</td>
+				<td>
+				<%= new Date(book.date_taken).toLocaleDateString("es") %>
+				- 
+				<%= new Date(book.date_returned).toLocaleDateString("es") %>
+			</tr>
+			<% }) %>
+		</table>
+		</section>
+	</main>
+	<%- include("partials/footer.html") %>
+</body>
+</html>

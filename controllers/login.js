@@ -77,3 +77,27 @@ export const createSessionCookie = (_, res, next) => {
 
     next();
 };
+
+export const updateUser = async (req, res, next) => {
+    const id = req.user.id;
+    const { name, email } = req.body;
+
+    users_db.put({ id, name, email });
+
+    // prettier-ignore
+    const token = jwt.sign(
+    	{ id, name, email },
+    	process.env.JWT_STR,
+    	{ expiresIn: '30d' }, 
+    );
+
+    res.cookie('lend_me_usr', token, {
+        maxAge: 30 * 24 * 3600 * 1000,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        path: '/',
+    });
+
+    next();
+};

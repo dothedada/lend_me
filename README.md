@@ -10,9 +10,9 @@ A small app to keep track of the books you lend with your friends...
 - ~detail pages (book, author, editorial, category)~
 - ~friends (add, remove friends, accept friend requests)~
 - ~add book~
-- lends (requested lends, accept, lends history)
+- ~lends (requested lends, accept, lends history)~
 - profile (edit profile, remove my account, remove books (users, lends, requests))
-- input validations and erro handling
+- input validations and error handling
 - style the shit up
 - notas de aprendizaje
 - make documentation and tests?
