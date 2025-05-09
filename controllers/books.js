@@ -1,6 +1,5 @@
 import { books_db } from '../db/queries/books.js';
 import { friends_db } from '../db/queries/friends.js';
-import { lends_db } from '../db/queries/lends.js';
 
 export const getAllBooks = async (req, res, next) => {
     const books = await books_db.getBooks();
@@ -52,49 +51,6 @@ export const pickRandomBooks = (books, amount) => {
     }
 
     return picks;
-};
-
-export const getUserTransactions = async (req, res, next) => {
-    const userId = req.user.id;
-    const userTransactions = await lends_db.getTransactions(userId);
-
-    res.transactions = userTransactions.reduce((acc, transaction) => {
-        if (!acc[transaction.status]) {
-            acc[transaction.status] = [];
-        }
-        acc[transaction.status].push(transaction);
-        return acc;
-    }, {});
-
-    next();
-};
-
-export const getBorrowedBooks = async (req, res, next) => {
-    const userId = req.user.id;
-    const borrowed_books = await lends_db.getBy('to_id', userId);
-    if (!res.books) {
-        res.books = {};
-    }
-
-    res.books.borrowed = borrowed_books.filter(
-        (book) => book.status !== 'returned',
-    );
-
-    next();
-};
-
-export const getLendedBooks = async (req, res, next) => {
-    const userId = req.user.id;
-    const lended_books = await lends_db.getBy('from_id', userId);
-    if (!res.books) {
-        res.books = {};
-    }
-
-    res.books.lended = lended_books.filter(
-        (book) => book.status !== 'returned',
-    );
-
-    next();
 };
 
 export const updateBookData = async (req, res, next) => {
