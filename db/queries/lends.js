@@ -1,84 +1,56 @@
 import pool from '../pool.cjs';
+import { lendsQuery, lendsQueryColumns } from '../query_settings.js';
 import { elementExists, recordExists, validateId } from '../utils.js';
-
-const lendKeys = [
-    'lends.id',
-    'book.id',
-    'book.title',
-    'book.author',
-    'book.author_id',
-    'from_user.name',
-    'to_user.name',
-    'lends.to_id',
-    'lends.from_id',
-    'lends.status',
-    'lends.date_taken',
-    'lends.date_returned',
-];
-
-export const lendQuery = `
-SELECT 
-	lends.id AS "lend_id",
-	book.id AS "book_id",
-	book.title AS title,
-	book.author AS author,
-	book.author_id AS author_id,
-	from_user.name AS "from_user",
-	to_user.name AS "to_user",
-	lends.to_id AS "to_user_id",
-	lends.status AS status,
-	lends.date_taken AS date_taken,
-	lends.date_returned AS date_returned
-FROM lends
-JOIN users AS to_user ON lends.to_id = to_user.id
-JOIN users AS from_user ON lends.from_id = from_user.id
-JOIN (
-	SELECT 
-		books.id AS id,
-		books.title AS title,
-		books.author_id AS author_id,
-		authors.name AS author
-		FROM books
-		JOIN authors ON books.author_id = authors.id
-	) AS book ON lends.book_id = book.id
-`;
 
 const getAllLends_db = async () => {
     try {
-        const { rows } = await pool.query(lendQuery);
+        const { rows } = await pool.query(lendsQuery);
         return rows;
     } catch (err) {
         throw new Error(`Database query to 'lends' failed: ${err.message}`);
     }
 };
 
-const getLendsBy_db = async (attribute, value) => {
-    if (!lendKeys.includes(attribute)) {
-        throw new Error(`'${attribute}' is not a valid key in lends table`);
-    }
-    if (!value) {
-        throw new Error(`value = '${value}', is not a valid parameter`);
-    }
+const getUserTransactions_db = async (userId) => {
+    const id = validateId(userId);
 
-    const cleanValue = [value.trim()];
-    if (cleanValue[0] === '') {
+    const query = `
+	${lendsQuery}
+	WHERE lends.to_id = $1 OR lends.from_id = $1`;
+
+    try {
+        const { rows } = pool.query(query, [id]);
+        return rows;
+    } catch (err) {
+        throw new Error(`Database query to 'lends' failed: ${err.message}`);
+    }
+};
+
+const getLendsBy_db = async (valueObj) => {
+    const [key, rawValue] = Object.entries(valueObj)[0];
+    let value = `${rawValue}`.trim();
+
+    if (!Object.keys(lendsQueryColumns).includes(key)) {
+        throw new Error(`'${key}' is not a valid column for lends query`);
+    }
+    if (value === '') {
         throw new Error(`'${value}' is not a valid value`);
     }
 
     let whereClause = '';
-    if (attribute.startsWith('date_')) {
-        whereClause += `WHERE ${attribute}::DATE = $1::DATE`;
-    } else if (attribute.endsWith('_id')) {
-        whereClause += `WHERE ${attribute} = $1`;
+    if (key.startsWith('date_')) {
+        whereClause += `WHERE ${key}::DATE = $1::DATE`;
+    } else if (key.endsWith('_id')) {
+        whereClause += `WHERE ${key} = $1`;
     } else {
-        whereClause += `WHERE ${attribute} ILIKE $1`;
-        cleanValue[0] = `%${cleanValue}%`;
+        whereClause += `WHERE ${key} ILIKE $1`;
+        value = `%${value}%`;
     }
 
-    const query = `${lendQuery} ${whereClause}`;
+    const query = `${lendsQuery} ${whereClause}`;
 
     try {
-        const { rows } = await pool.query(query, cleanValue);
+        const { rows } = await pool.query(query, [value]);
         return rows;
     } catch (err) {
         throw new Error(`Database query to 'lends' failed: ${err.message}`);
@@ -154,6 +126,7 @@ const updateLend_db = async (lendId) => {
 
 export const lends_db = {
     getAll: getAllLends_db,
+    getTransactions: getUserTransactions_db,
     getBy: getLendsBy_db,
     lend: insertLend_db,
     return: updateLend_db,

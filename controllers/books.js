@@ -54,9 +54,24 @@ export const pickRandomBooks = (books, amount) => {
     return picks;
 };
 
+export const getUserTransactions = async (req, res, next) => {
+    const userId = req.user.id;
+    const userTransactions = await lends_db.getTransactions(userId);
+
+    res.transactions = userTransactions.reduce((acc, transaction) => {
+        if (!acc[transaction.status]) {
+            acc[transaction.status] = [];
+        }
+        acc[transaction.status].push(transaction);
+        return acc;
+    }, {});
+
+    next();
+};
+
 export const getBorrowedBooks = async (req, res, next) => {
     const userId = req.user.id;
-    const borrowed_books = await lends_db.getBy('lends.to_id', userId);
+    const borrowed_books = await lends_db.getBy('to_id', userId);
     if (!res.books) {
         res.books = {};
     }
@@ -70,7 +85,7 @@ export const getBorrowedBooks = async (req, res, next) => {
 
 export const getLendedBooks = async (req, res, next) => {
     const userId = req.user.id;
-    const lended_books = await lends_db.getBy('lends.from_id', userId);
+    const lended_books = await lends_db.getBy('from_id', userId);
     if (!res.books) {
         res.books = {};
     }

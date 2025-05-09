@@ -72,6 +72,46 @@ export const bookQueryColumns = {
     owner_id: 'book_user.user_id',
 };
 
+export const lendsQuery = `
+SELECT 
+	lends.id AS "lend_id",
+	book.id AS "book_id",
+	book.title AS "title",
+	book.author AS "author",
+	book.author_id AS "author_id",
+	from_user.name AS "from_user",
+	to_user.name AS "to_user",
+	lends.to_id AS "to_user_id",
+	lends.status AS "status",
+	lends.date_taken AS "date_taken",
+	lends.date_returned AS "date_returned"
+FROM lends
+JOIN users AS to_user ON lends.to_id = to_user.id
+JOIN users AS from_user ON lends.from_id = from_user.id
+JOIN (
+	SELECT 
+		books.id AS id,
+		books.title AS title,
+		books.author_id AS author_id,
+		authors.name AS author
+		FROM books
+		JOIN authors ON books.author_id = authors.id
+	) AS book ON lends.book_id = book.id`;
+
+export const lendsQueryColumns = {
+    lend_id: 'lends.id',
+    book_id: 'book.id',
+    title: 'book.title',
+    author: 'book.author',
+    author_id: 'book.author_id',
+    from_user: 'from_user.name',
+    to_user: 'to_user.name',
+    to_user_id: 'lends.to_id',
+    status: 'lends.status',
+    date_taken: 'lends.date_taken',
+    date_returned: 'lends.date_returned',
+};
+
 /**
  * Creates a new object with only the specified properties picked from the source object.
  * @param {Object} obj - The source object from which to pick properties.
