@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title><%= user %> | Dashboard</title>
-	<link rel="stylesheet" href="/css/styles.css">
-</head>
+<%- include("partials/head.ejs", {headTitle: `${ user.name} | Dashboard` })%>
 <body>
 	<%- include("partials/header.ejs", { h1: `${user}'s dashboard ` } ) %>
 
