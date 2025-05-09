@@ -31,7 +31,9 @@
 						</td>
 
 						<td>
-							<form action="/lends/<%= book.id %>/borrow" method="post">
+							<form action="/lends/request" method="post">
+								<input type="hidden" name="book_id" value="<%= book.id %>">
+								<input type="hidden" name="owner_id" value="<%= book.owner_id %>">
 								<button>Borrow</button>
 							</form>
 						</td>

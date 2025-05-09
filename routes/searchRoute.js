@@ -6,6 +6,7 @@ const searchRoute = Router();
 searchRoute.get('/', searchWithinFirends, (req, res) => {
     const search = req.query.q;
     const foundBooks = res.books;
+    console.log(foundBooks[0]);
 
     res.render('search.ejs', {
         search,

@@ -20,10 +20,10 @@
 					<th>Owned by</th>
 					<th>Action</th>
 				</tr>
-				<% requestsBooks.forEach((book) => { %>
+				<% requestsBooks.forEach((book) => { console.log(book) %>
 				<tr>
 					<td>
-					<% if (book.from_id === user.id) { %>
+					<% if (book.owner_user_id === user.id) { %>
 						Lend
 					<% } else { %>
 						Borrow
@@ -32,16 +32,16 @@
 
 					<td><a href="/detail/<%= book.id %>/book"><%= book.title %></a></td>
 					<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
-					<td><%= book.owner %></td>
-
-					<td><%= book.category || "" %></td>
-					<td><a href="/detail/<%= book.editorial_id %>/editorial"><%= book.editorial || "" %></a>
-					</td>
+					<td><%= book.owner_user %></td>
 
 					<td>
+					<% if (book.owner_user_id === user.id) { %>
+						Lend
+					<% } else { %>
 						<form action="/lends/<%= book.id %>/borrow" method="post">
-							<button>Borrow</button>
+							<button>Cancel request</button>
 						</form>
+					<% } %>
 					</td>
 				</tr>
 				<% }) %>
@@ -61,7 +61,7 @@
 				<tr>
 					<td><a href="/detail/<%= book.book_id %>/book"><%= book.title %></a></td>
 					<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
-					<td><%= book.from_user %></td>
+					<td><%= book.owner_user %></td>
 					<td>
 						<form action="/lends/<%= book.lend_id %>/return" method="post">
 							<button>Return</button>
