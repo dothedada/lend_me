@@ -75,9 +75,9 @@ SELECT add_friend(4,7);
 SELECT add_friend(5,6);
 SELECT add_friend(6,7);
 
-INSERT INTO lends (book_id, from_id, to_id, date_taken, date_returned, status) VALUES
+INSERT INTO lends (book_id, owner_id, to_id, date_taken, date_returned, status) VALUES
 (1, 1, 2, '2023-01-15', '2023-02-10', 'returned'),
 (3, 2, 1, '2023-03-05', '2023-04-12', 'returned'),
 (5, 3, 4, '2023-05-20', '2023-06-15', 'returned');
-INSERT INTO lends (book_id, from_id, to_id, date_taken, status) VALUES
+INSERT INTO lends (book_id, owner_id, to_id, date_taken, status) VALUES
 (7, 5, 6, '2023-07-01', 'active');

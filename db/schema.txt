@@ -37,12 +37,13 @@ CREATE TABLE users (
 CREATE TABLE lends (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   book_id INTEGER NOT NULL REFERENCES books(id),
-  from_id INTEGER NOT NULL REFERENCES users(id),
+  owner_id INTEGER NOT NULL REFERENCES users(id),
   to_id INTEGER NOT NULL REFERENCES users(id),
+  CHECK (owner_id != to_id),
   date_taken DATE NOT NULL DEFAULT CURRENT_DATE,
-  date_returned DATE
-  CHECK (from_id != to_id),
-  status VARCHAR(20) DEFAULT 'requested' CHECK(status IN('requested', 'denied', 'active', 'returned'))
+  date_returned DATE,
+  status VARCHAR(20) DEFAULT 'requested',
+  CHECK(status IN('requested', 'denied', 'active', 'returned'))
 );
 
 CREATE TABLE book_user (

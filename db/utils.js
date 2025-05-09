@@ -8,7 +8,7 @@ import pool from './pool.cjs';
  * @throws {Error} If no valid id input
  */
 export const validateId = (id) => {
-    const cleanId = id.trim();
+    const cleanId = `${id}`.trim();
     if (cleanId === '' || isNaN(cleanId)) {
         throw new Error(`'${id}' is not a valid user_id`);
     }

@@ -21,7 +21,7 @@ export const tables = {
     lends: [
         'id',
         'book_id',
-        'from_id',
+        'owner_id',
         'to_id',
         'date_taken',
         'date_returned',
@@ -54,7 +54,7 @@ export const booksInventoryQuery = (uniqueQueryColumn) => `
 	JOIN editorials ON books.editorial_id = editorials.id
 	JOIN categories ON books.category_id = categories.id
 	JOIN users ON users.id = book_user.user_id
-	LEFT JOIN lends ON books.id = lends.book_id AND users.id = lends.from_id`;
+	LEFT JOIN lends ON books.id = lends.book_id AND users.id = lends.owner_id`;
 
 export const bookQueryColumns = {
     id: 'books.id',
@@ -79,15 +79,16 @@ SELECT
 	book.title AS "title",
 	book.author AS "author",
 	book.author_id AS "author_id",
-	from_user.name AS "from_user",
+	owner_user.name AS "owner_user",
 	to_user.name AS "to_user",
+	lends.owner_id AS "owner_user_id",
 	lends.to_id AS "to_user_id",
 	lends.status AS "status",
 	lends.date_taken AS "date_taken",
 	lends.date_returned AS "date_returned"
 FROM lends
 JOIN users AS to_user ON lends.to_id = to_user.id
-JOIN users AS from_user ON lends.from_id = from_user.id
+JOIN users AS owner_user ON lends.owner_id = owner_user.id
 JOIN (
 	SELECT 
 		books.id AS id,
@@ -104,8 +105,9 @@ export const lendsQueryColumns = {
     title: 'book.title',
     author: 'book.author',
     author_id: 'book.author_id',
-    from_user: 'from_user.name',
+    owner_user: 'owner_user.name',
     to_user: 'to_user.name',
+    owner_user_id: 'lends.owner_id',
     to_user_id: 'lends.to_id',
     status: 'lends.status',
     date_taken: 'lends.date_taken',

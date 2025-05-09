@@ -16,10 +16,10 @@ const getUserTransactions_db = async (userId) => {
 
     const query = `
 	${lendsQuery}
-	WHERE lends.to_id = $1 OR lends.from_id = $1`;
+	WHERE lends.to_id = $1 OR lends.owner_id = $1`;
 
     try {
-        const { rows } = pool.query(query, [id]);
+        const { rows } = await pool.query(query, [id]);
         return rows;
     } catch (err) {
         throw new Error(`Database query to 'lends' failed: ${err.message}`);
@@ -58,10 +58,10 @@ const getLendsBy_db = async (valueObj) => {
 };
 
 const insertLend_db = async (values) => {
-    const { book_id, from_id, to_id } = values;
+    const { book_id, owner_id, to_id } = values;
 
     const cleanBook_id = validateId(book_id);
-    const cleanFrom_id = validateId(from_id);
+    const cleanFrom_id = validateId(owner_id);
     const cleanTo_id = validateId(to_id);
 
     const elementsExists = await Promise.all([
@@ -75,7 +75,7 @@ const insertLend_db = async (values) => {
 
     const userHasBook = await recordExists('book_user', {
         book_id: book_id,
-        user_id: from_id,
+        user_id: owner_id,
     });
     if (!userHasBook) {
         throw new Error(`the book is not owned by this user`);
@@ -83,7 +83,7 @@ const insertLend_db = async (values) => {
 
     const bookNotAvailable = await recordExists('lends', {
         book_id: book_id,
-        from_id: from_id,
+        owner_id: owner_id,
         status: 'active',
     });
 
@@ -92,12 +92,12 @@ const insertLend_db = async (values) => {
     }
 
     const query = `
-	INSERT INTO lends (book_id, from_id, to_id)
+	INSERT INTO lends (book_id, owner_id, to_id)
 	VALUES ($1, $2, $3)
 	RETURNING *`;
 
     try {
-        const { rows } = await pool.query(query, [book_id, from_id, to_id]);
+        const { rows } = await pool.query(query, [book_id, owner_id, to_id]);
         return rows;
     } catch (err) {
         throw new Error(`Database query to 'lends' failed: ${err.message}`);
