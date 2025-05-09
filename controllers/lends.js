@@ -43,3 +43,17 @@ export const denyRequest = async (req, res, next) => {
 
     next();
 };
+
+export const acceptRequest = async (req, res, next) => {
+    const { lend_id } = req.body;
+    await lends_db.changeStatus(lend_id, 'active');
+
+    next();
+};
+
+export const returnBook = async (req, res, next) => {
+    const { lend_id } = req.body;
+    await lends_db.changeStatus(lend_id, 'returned');
+
+    next();
+};

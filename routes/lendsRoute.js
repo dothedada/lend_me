@@ -3,6 +3,8 @@ import {
     deleteRequest,
     denyRequest,
     requestBook,
+    acceptRequest,
+    returnBook,
 } from '../controllers/lends.js';
 
 const lendsRoute = Router();
@@ -16,6 +18,14 @@ lendsRoute.post('/cancel', deleteRequest, (req, res) => {
 });
 
 lendsRoute.post('/deny', denyRequest, (req, res) => {
+    res.redirect('/');
+});
+
+lendsRoute.post('/accept', acceptRequest, (req, res) => {
+    res.redirect('/');
+});
+
+lendsRoute.post('/return', returnBook, (req, res) => {
     res.redirect('/');
 });
 

@@ -1,6 +1,6 @@
 <%- include("partials/head.ejs", {headTitle: `${ user.name } | Dashboard` })%>
 <body>
-	<%- include("partials/header.ejs", { h1: `${user}'s dashboard ` } ) %>
+	<%- include("partials/header.ejs", { h1: `${user.name}'s dashboard ` } ) %>
 
 	<main>
 		<section>
@@ -30,9 +30,13 @@
 
 					<td>
 					<% if (+book.owner_user_id === +user.id) { %>
+						<form action="/lends/accept" method="post">
+							<input type="hidden" name="lend_id" value="<%= book.lend_id %>">
+							<button>Lend</button>
+						</form>
 						<form action="/lends/deny" method="post">
 							<input type="hidden" name="lend_id" value="<%= book.lend_id %>">
-							<button>Deny lend</button>
+							<button>Deny</button>
 						</form>
 					<% } else { %>
 						<form action="/lends/cancel" method="post">
@@ -44,6 +48,7 @@
 				</tr>
 				<% }) %>
 			</table>
+
 		<h3>denied</h3>
 			<table>
 				<tr>
@@ -81,7 +86,8 @@
 					<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
 					<td><%= book.owner_user %></td>
 					<td>
-						<form action="/lends/<%= book.lend_id %>/return" method="post">
+						<form action="/lends/return" method="post">
+							<input type="hidden" name="lend_id" value="<%= book.lend_id %>">
 							<button>Return</button>
 						</form>
 					</td>
@@ -97,18 +103,12 @@
 					<th>Title</th>
 					<th>Author</th>
 					<th>Lended to</th>
-					<th>action</th>
 				</tr>
 				<% lendedBooks.forEach((book) => { %>
 				<tr>
 					<td><a href="/detail/<%= book.book_id %>/book"><%= book.title %></a></td>
 					<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
 					<td><%= book.to_user %></td>
-					<td>
-						<form action="/lends/<%= book.lend_id %>/askReturn" method="post">
-							<button>Ask for return</button>
-						</form>
-					</td>
 				</tr>
 				<% }) %>
 			</table>
