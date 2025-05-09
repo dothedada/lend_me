@@ -114,3 +114,11 @@ export const getBookByTitle = async (req, res, next) => {
 
     next();
 };
+
+export const addNewBook = async (req, res, next) => {
+    const bookData = req.body;
+    const book = await books_db.add(bookData);
+    res.book = book;
+
+    next();
+};

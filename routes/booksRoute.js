@@ -5,6 +5,7 @@ import {
     getFriendsBooks,
     getOwnedBooks,
     pickRandomBooks,
+    addNewBook,
 } from '../controllers/books.js';
 import { getAllAuthors } from '../controllers/authors.js';
 import { getAllEditorials } from '../controllers/editorials.js';
@@ -59,6 +60,10 @@ booksRoute.post(
 );
 
 booksRoute.post('/:bookId/add', addToLibrary, (req, res) => {
+    res.redirect('/books');
+});
+
+booksRoute.post('/new', addNewBook, addToLibrary, (req, res) => {
     res.redirect('/books');
 });
 

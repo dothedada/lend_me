@@ -134,11 +134,11 @@ const findBooksWith_db = async (value) => {
 };
 
 const getId = async (value, queryMethod) => {
-    let id = await queryMethod.get(value);
-    if (id === undefined) {
-        id = await queryMethod.add(value);
+    let element = await queryMethod.get(value);
+    if (element === undefined) {
+        element = await queryMethod.add(value);
     }
-    return id;
+    return element.id;
 };
 
 const insertBook_db = async (values) => {
@@ -168,9 +168,10 @@ const insertBook_db = async (values) => {
         const query = `
 		INSERT INTO books 
 		(title, author_id, editorial_id, year, category_id, sinopsys, url, image)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+		RETURNING *`;
 
-        await client.query(query, [
+        const { rows } = await client.query(query, [
             title,
             authorId,
             editorialId,
@@ -180,7 +181,10 @@ const insertBook_db = async (values) => {
             url,
             image,
         ]);
+
         await client.query('COMMIT');
+
+        return rows[0];
     } catch (err) {
         await client.query('ROLLBACK');
         throw new Error(`Cannot insert the book: ${err.message}`);
