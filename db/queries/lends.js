@@ -57,7 +57,7 @@ const getLendsBy_db = async (valueObj) => {
     }
 };
 
-const insertLend_db = async (values) => {
+const requestLend_db = async (values) => {
     const { book_id, owner_id, to_id } = values;
 
     const cleanBook_id = validateId(book_id);
@@ -104,6 +104,19 @@ const insertLend_db = async (values) => {
     }
 };
 
+const deleteRequest_db = async (lendId) => {
+    const id = validateId(lendId);
+    const query = `
+	DELETE FROM lends WHERE id = $1`;
+
+    try {
+        const { rows } = await pool.query(query, [id]);
+        return rows;
+    } catch (err) {
+        throw new Error(`Database query to 'lends' failed: ${err.message}`);
+    }
+};
+
 const updateLend_db = async (lendId) => {
     const cleanId = validateId(lendId);
 
@@ -127,7 +140,8 @@ const updateLend_db = async (lendId) => {
 export const lends_db = {
     getAll: getAllLends_db,
     getTransactions: getUserTransactions_db,
+    deleteRequest: deleteRequest_db,
     getBy: getLendsBy_db,
-    lend: insertLend_db,
+    lend: requestLend_db,
     return: updateLend_db,
 };

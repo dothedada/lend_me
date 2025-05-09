@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title><%= user %> | Dashboard</title>
+	<link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 	<%- include("partials/header.ejs", { h1: `${user}'s dashboard ` } ) %>
@@ -20,7 +21,7 @@
 					<th>Owned by</th>
 					<th>Action</th>
 				</tr>
-				<% requestsBooks.forEach((book) => { console.log(book) %>
+				<% requestsBooks.forEach((book) => { %>
 				<tr>
 					<td>
 					<% if (book.owner_user_id === user.id) { %>
@@ -38,7 +39,8 @@
 					<% if (book.owner_user_id === user.id) { %>
 						Lend
 					<% } else { %>
-						<form action="/lends/<%= book.id %>/borrow" method="post">
+						<form action="/lends/cancel" method="post">
+							<input type="hidden" name="lend_id" value="<%= book.lend_id %>">
 							<button>Cancel request</button>
 						</form>
 					<% } %>

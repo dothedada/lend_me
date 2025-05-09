@@ -18,10 +18,14 @@ export const getUserTransactions = async (req, res, next) => {
 export const requestBook = async (req, res, next) => {
     const to_id = req.user.id;
     const { owner_id, book_id } = req.body;
+    await lends_db.lend({ to_id, owner_id, book_id });
 
-    console.log(to_id, owner_id, book_id);
+    next();
+};
 
-    lends_db.lend({ to_id, owner_id, book_id });
+export const deleteRequest = async (req, res, next) => {
+    const { lend_id } = req.body;
+    await lends_db.deleteRequest(lend_id);
 
     next();
 };
