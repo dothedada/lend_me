@@ -4,7 +4,7 @@ import { validateId } from '../utils.js';
 export const queryMethods = (
     client,
     table,
-    methods = ['get', 'find', 'add', 'put', 'delete'],
+    methods = ['get', 'find', 'add', 'put', 'remove'],
 ) => {
     if (!Object.keys(tables).includes(table)) {
         throw new Error(`Wrong table name '${table}'.`);

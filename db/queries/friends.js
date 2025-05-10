@@ -86,7 +86,7 @@ const removeUser_db = async (userId) => {
 
     const query = `
 	DELETE FROM friends
-	WHERE user_id = $1 OR friend_id = $1
+	WHERE user_a = $1 OR user_b = $1
 	RETURNING *`;
 
     try {

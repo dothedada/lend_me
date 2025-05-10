@@ -31,7 +31,9 @@ CREATE TABLE books (
 CREATE TABLE users (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   name VARCHAR(120),
-  email VARCHAR(120) UNIQUE
+  email VARCHAR(120) UNIQUE,
+  status varchar(10) DEFAULT 'alive'
+  CHECK (status IN ('alive', 'dead', 'idle'))
 );
 
 CREATE TABLE lends (

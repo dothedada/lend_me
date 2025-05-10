@@ -147,6 +147,23 @@ const updateLend_db = async (lendId, status) => {
     }
 };
 
+const returnAllLends_db = async (userId) => {
+    const id = validateId(userId);
+
+    const query = `
+	UPDATE lends
+	SET status = 'returned', date_returned = CURRENT_DATE
+	WHERE to_id = $1
+	RETURNING *`;
+
+    try {
+        const { rows } = await pool.query(query, [id]);
+        return rows;
+    } catch (err) {
+        throw new Error(`Database query to 'lends' failed: ${err.message}`);
+    }
+};
+
 export const lends_db = {
     getAll: getAllLends_db,
     getTransactions: getUserTransactions_db,
@@ -154,4 +171,5 @@ export const lends_db = {
     getBy: getLendsBy_db,
     lend: requestLend_db,
     changeStatus: updateLend_db,
+    returnAllLends: returnAllLends_db,
 };
