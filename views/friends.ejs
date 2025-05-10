@@ -3,6 +3,7 @@
 	<%- include("partials/header.ejs", { h1: `${user.name}'s friends` } ) %>
 
 	<main>
+		<% if (friends.length !== 0) { %>
 		<section>
 		<div>
 			<table>
@@ -24,6 +25,9 @@
 			</table>
 		</div>
 		</section>
+		<% } else { %>
+		<h2>You have no friends :(</h2>
+		<% } %>
 
 		<section>
 		<h2>Make friends</h2>

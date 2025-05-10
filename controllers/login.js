@@ -1,6 +1,9 @@
 import jwt from 'jsonwebtoken';
 import { users_db } from '../db/queries/simpleQuerys.js';
 import { recordExists } from '../db/utils.js';
+import { bookUser_db } from '../db/queries/library.js';
+import { lends_db } from '../db/queries/lends.js';
+import { friends_db } from '../db/queries/friends.js';
 
 export const checkUserLog = (req, res, next) => {
     const token = req.cookies.lend_me_usr;
@@ -78,6 +81,17 @@ export const createSessionCookie = (_, res, next) => {
     next();
 };
 
+export const removeSessionCookie = (req, res, next) => {
+    res.clearCookie('lend_me_usr', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        path: '/',
+    });
+
+    next();
+};
+
 export const updateUser = async (req, res, next) => {
     const id = req.user.id;
     const { name, email } = req.body;
@@ -106,9 +120,14 @@ export const deleteUser = async (req, res, next) => {
     const user = req.user;
     const { confirmation } = req.body;
 
-    if (user.email !== confirmation) {
-        return next();
-    }
+    //if (user.email !== confirmation) {
+    //    return next();
+    //}
+
+    await lends_db.returnAllLends(user.id);
+    await bookUser_db.removeUser(user.id);
+    await friends_db.purgeUser(user.id);
+    await users_db.kill(user.id);
 
     next();
 };

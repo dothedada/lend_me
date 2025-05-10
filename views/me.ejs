@@ -6,13 +6,20 @@
 
 		<section>
 		<h2>My information</h2>
-		<form action="/me/update" method="post">
+		<form action="/me/update" method="post" >
 			<label>Name
 				<input type="text" name="name" value="<%= user.name %>">
 			</label>
 			<label>Email
 				<input type="text" name="email" value="<%= user.email%>">
 			</label>
+			<button>Update</button>
+		</form>
+		</section>
+
+		<section>
+		<h2>Logout</h2>
+		<form action="/me/logout" method="get" >
 			<button>Update</button>
 		</form>
 		</section>
@@ -57,7 +64,7 @@
 
 		<section>
 		<h2>Delete my account</h2>
-		<form action="/me/update" method="post">
+		<form action="/me/delete" method="post" autocomplete="off">
 			<label>Write your email to confirm
 				<input type="text" name="confirmation">
 			</label>

@@ -7,6 +7,7 @@ export const getFriends = async (req, res, next) => {
 
     const friendsId = await friends_db.getFriends(userId);
     const friends = await users_db.getUsersData(friendsId);
+
     res.friends = friends;
 
     next();
