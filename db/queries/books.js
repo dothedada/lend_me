@@ -92,8 +92,8 @@ const bookSearchWithinFriends_db = async (lookFor, friendsIds, userId) => {
     }
 
     const query = `
-	${booksInventoryQuery(bookQueryColumns.id)}
-	WHERE ${fields.join(' OR ')}
+	${booksInventoryQuery()}
+	WHERE (${fields.join(' OR ')})
 	AND book_user.user_id IN (${friendsIds.join(', ')})
 	AND NOT EXISTS (
 		SELECT 1

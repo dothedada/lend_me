@@ -41,7 +41,6 @@ app.use('/lends', lendsRoute);
 app.use('/me', meRoute);
 
 app.use(express.static('public'));
-
 // TODO: err if no user data
 
 const PORT = process.env.PORT || 3000;

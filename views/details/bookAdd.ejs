@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title><%= title %> | Add a book</title>
-</head>
+<%- include("../partials/head.ejs", { headTitle: 'Add a book' })%>
 <body>
 	<%- include("../partials/header.ejs", { h1: `add '${title}' to your library` } ) %>
 
