@@ -3,75 +3,51 @@
 	<%- include("partials/header.ejs", { h1: `${user.name}'s friends` } ) %>
 
 	<main>
+		<% if (receivedRequests.length > 0) {%>
+		<section>
+		<h2>Friend requets</h2>
+		<div class="cards_display">
+			<% receivedRequests.forEach((request) => { %>
+			<div class="card">
+				<p>
+					<strong><%= request.from_name %>:</strong><br/>
+					<%= request.message %>
+				</p>
+				<form action="/friends/<%= request.id %>/request" method="post">
+					<input type="hidden" name="requestId" value="<%= request.id %>">
+					<input type="hidden" name="fromId" value="<%= request.from_id %>">
+					<input type="hidden" name="toId" value="<%= request.to_id %>">
+					<button name="action" value="accept">Accept</button>
+					<button name="action" value="deny" class="outline">Deny</button>
+				</form>
+			</div>
+			<% }) %>
+		</div>
+		</section>
+		<% } %>
+
 		<% if (friends.length !== 0) { %>
 		<section>
-		<div>
-			<table>
-				<tr>
-					<th>Friend</th>
-					<th>action</th>
-				</tr>
+			<h2>Your friends</h2>
+			<ul>
 				<% friends.forEach((friend) => { %>
-				<tr>
-					<td><a href="/friends/<%= friend.id %>/info"><%= friend.name %></a></td>
-					<td>
-						<form action="/friends/<%= friend.id %>/remove" method="post">
-							<input type="hidden" name="friendId" value="<%= friend.id %>">
-							<button>Remove friendship</button>
-						</form>
-					</td>
-				</tr>
+				<li>
+					<form action="/friends/<%= friend.id %>/remove" method="post">
+					<%= friend.name %>
+					- 
+						<input type="hidden" name="friendId" value="<%= friend.id %>">
+						<button class="ghost">Remove friendship</button>
+					</form>
+				</li>
 				<% }) %>
-			</table>
-		</div>
+			</ul>
 		</section>
 		<% } else { %>
 		<h2>You have no friends :(</h2>
 		<% } %>
 
 		<section>
-		<h2>Make friends</h2>
-
-		<% if (receivedRequests.length > 0) {%>
-
-			<h3>Manage requets</h3>
-			<% receivedRequests.forEach((request) => { %>
-			<div>
-				<p>From: <%= request.from_name %></p>
-				<p><%= request.email %></p>
-				<p><%= request.message %></p>
-				<form action="/friends/<%= request.id %>/accept" method="post">
-					<input type="hidden" name="requestId" value="<%= request.id %>">
-					<input type="hidden" name="fromId" value="<%= request.from_id %>">
-					<input type="hidden" name="toId" value="<%= request.to_id %>">
-					<button>Accept</button>
-				</form>
-				<form action="/friends/<%= request.id %>/cancel" method="post">
-					<input type="hidden" name="requestId" value="<%= request.id %>">
-					<button>Deny</button>
-				</form>
-			</div>
-			<% }) %>
-
-		<% } %>
-
-		<% if (sendedRequests.length > 0) { %>
-			
-			<h3>Sended requests</h3>
-			<% sendedRequests.forEach((request) => { %>
-			<div>
-				<p>to: <%= request.to_name %></p>
-				<p><%= request.message %></p>
-				<form action="/friends/<%= request.id %>/cancel" method="post">
-					<input type="hidden" name="requestId" value="<%= request.id %>">
-					<button>Cancel request</button>
-				</form>
-			</div>
-			<% }) %>
-
-		<% } %>
-
-		<h3>Add friend</h3>
+		<h2>Add friends</h2>
 			<form action="/friends/add" method="post">
 				<label>Name
 					<input type="text" name="name">
@@ -85,7 +61,23 @@
 				<button>Send request</button>
 			</form>
 		</section>
+		<% if (sendedRequests.length > 0) { %>
+		<section>
+		<h3>Sended requests</h3>
+		<div class="cards_display">
+			<% sendedRequests.forEach((request) => { %>
+			<div class="card">
+				<p><strong><%= request.to_name %></strong>:<br />
+				<%= request.message %></p>
+				<form action="/friends/<%= request.id %>/request" method="post">
+					<input type="hidden" name="requestId" value="<%= request.id %>">
+					<button name="action" value="deny">Deny</button>
+				</form>
+			</div>
+			<% }) %>
 
+		</section>
+		<% } %>
 	</main>
 
 	<%- include("partials/footer.html") %>

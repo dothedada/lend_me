@@ -131,6 +131,7 @@ form {
         flex: 1;
         display: flex;
         gap: 1rem;
+        max-width: 400px;
         flex-direction: column;
         justify-content: space-between;
     }
@@ -266,11 +267,12 @@ button.ghost:hover {
 /* Destructive button */
 button.destructive {
     background-color: transparent;
-    color: hsl(var(--destructive-foreground));
+    color: hsl(var(--destructive));
     border: 1px solid hsl(var(--destructive));
 }
 
 button.destructive:hover {
+    color: hsl(var(--destructive-foreground));
     background-color: hsl(var(--destructive) / 0.9);
 }
 

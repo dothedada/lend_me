@@ -43,16 +43,13 @@ export const deleteRequest = async (req, res, next) => {
     next();
 };
 
-export const denyRequest = async (req, res, next) => {
-    const { lend_id } = req.body;
-    await lends_db.changeStatus(lend_id, 'denied');
-
-    next();
-};
-
-export const acceptRequest = async (req, res, next) => {
-    const { lend_id } = req.body;
-    await lends_db.changeStatus(lend_id, 'active');
+export const responseRequest = async (req, res, next) => {
+    const { lend_id, action } = req.body;
+    if (action === 'accept') {
+        await lends_db.changeStatus(lend_id, 'active');
+    } else if (action === 'deny') {
+        await lends_db.changeStatus(lend_id, 'denied');
+    }
 
     next();
 };

@@ -1,9 +1,8 @@
 import { Router } from 'express';
 import {
     deleteRequest,
-    denyRequest,
+    responseRequest,
     requestBook,
-    acceptRequest,
     returnBook,
 } from '../controllers/lends.js';
 
@@ -17,11 +16,7 @@ lendsRoute.post('/cancel', deleteRequest, (req, res) => {
     res.redirect('/');
 });
 
-lendsRoute.post('/deny', denyRequest, (req, res) => {
-    res.redirect('/');
-});
-
-lendsRoute.post('/accept', acceptRequest, (req, res) => {
+lendsRoute.post('/response', responseRequest, (req, res) => {
     res.redirect('/');
 });
 

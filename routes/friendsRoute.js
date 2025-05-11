@@ -1,12 +1,11 @@
 import { Router } from 'express';
 import {
-    cancelRequest,
     friendRequest,
     getFriends,
     sendedRequests,
     receivedRequests,
-    acceptRequest,
     removeFriendship,
+    processRequest,
 } from '../controllers/friends.js';
 
 const friendsRoute = Router();
@@ -36,11 +35,7 @@ friendsRoute.post('/add', friendRequest, (req, res) => {
     res.redirect('/friends');
 });
 
-friendsRoute.post('/:requestId/cancel', cancelRequest, (req, res) => {
-    res.redirect('/friends');
-});
-
-friendsRoute.post('/:requestId/accept', acceptRequest, (req, res) => {
+friendsRoute.post('/:requestId/request', processRequest, (req, res) => {
     res.redirect('/friends');
 });
 

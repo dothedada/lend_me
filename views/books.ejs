@@ -1,4 +1,4 @@
-<%- include("partials/head.ejs", {headTitle: `${ user.name} | Books` })%>
+<%- include("partials/head.ejs", { headTitle: `${ user.name} | Books` })%>
 <body>
 	<%- include("partials/header.ejs") %>
 
@@ -54,7 +54,7 @@
 
 						<td>
 							<form action="/books/<%= book.id %>/remove" method="post">
-								<button class="destructive">remove from library</button>
+								<button class="outline">remove from library</button>
 							</form>
 						</td>
 					</tr>

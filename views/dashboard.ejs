@@ -44,13 +44,10 @@
 						<button>Acknowledge</button>
 					</form>
 				<% } else if (+book.owner_user_id === +user.id) { %>
-					<form action="/lends/accept" method="post">
+					<form action="/lends/response" method="post">
 						<input type="hidden" name="lend_id" value="<%= book.lend_id %>">
-						<button>Lend</button>
-					</form>
-					<form action="/lends/deny" method="post">
-						<input type="hidden" name="lend_id" value="<%= book.lend_id %>">
-						<button>Deny</button>
+						<button name="action" value="accept">Lend</button>
+						<button name="action" value="deny" class="outline">Deny</button>
 					</form>
 				<% } else { %>
 					<form action="/lends/cancel" method="post">
