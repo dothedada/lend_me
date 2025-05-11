@@ -30,16 +30,12 @@
 					<tr>
 						<td><a href="/detail/<%= book.id %>/book"><%= book.title %></a></td>
 						<td><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></td>
-
 						<td><%= book.year %></td>
 						<td><%= book.category || "" %></td>
-
 						<td><a href="/detail/<%= book.editorial_id %>/editorial"><%= book.editorial %></a></td>
-
 						<td><%= book.owner %></td>
-
 						<td>
-							<% if (book.status === "active") { %>
+							<% if (["active", "requested"].includes(book.status)) { %>
 								unavailable
 							<% } else { %>
 								<form action="/lends/request" method="post">

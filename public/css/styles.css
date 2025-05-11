@@ -118,6 +118,10 @@ footer {
     padding: 1rem;
 }
 
+form {
+    width: max(400px, 50%);
+}
+
 /* Cards */
 .cards_display {
     display: flex;
