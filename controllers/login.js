@@ -12,8 +12,6 @@ const loginValidations = [
         .trim()
         .notEmpty()
         .withMessage(`Name ${errorMsg.empty}.`)
-        .isAlpha()
-        .withMessage(`Name ${errorMsg.alpha}`)
         .isLength({ min: 4, max: 20 })
         .withMessage(`Name ${errorMsg.length(4, 20)}`),
     body('email')
@@ -78,6 +76,9 @@ export const logUser = [
 ];
 
 export const createUser = async (req, res, next) => {
+    if (res.errors !== undefined) {
+        return next();
+    }
     const { name, email, keepLogged } = req.body;
     const newUser = await users_db.add({ name, email });
 
@@ -90,7 +91,7 @@ export const createUser = async (req, res, next) => {
 };
 
 export const createSessionCookie = (_, res, next) => {
-    if (!res.sessionCookie?.make || res.errors.length > 0) {
+    if (res.errors !== undefined || !res.sessionCookie?.make) {
         return next();
     }
 
@@ -154,9 +155,9 @@ export const deleteUser = async (req, res, next) => {
     const user = req.user;
     const { confirmation } = req.body;
 
-    //if (user.email !== confirmation) {
-    //    return next();
-    //}
+    if (user.email !== confirmation) {
+        return next();
+    }
 
     await lends_db.returnAllLends(user.id);
     await bookUser_db.removeUser(user.id);

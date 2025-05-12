@@ -6,11 +6,11 @@
 		<form action="/login" method="POST">
 			<%- include(
 				'partials/input.ejs', 
-				{ name: 'name', placeholder: 'Elsa Nurmy'})
+				{ labelText: 'Name', name: 'name', placeholder: 'Elsa Nurmy'})
 			%>
 			<%- include(
 				'partials/input.ejs', 
-				{ name: 'email', type: 'email', placeholder: 'vampir@example.com'})
+				{ labelText: 'Email', name: 'email', type: 'email', placeholder: 'vampir@example.com'})
 			%>
 			
 			<label><input type="checkbox" name="keepLogged"/>

@@ -4,14 +4,21 @@
 	<h1>Hi <%= name %>!!!</h1>
 	<p>No shitty spam nor ads nor meanigless communications, only th thing that you care for</p>
 	<form action="/login/new" method="post">
-		<label>
-			This will be my user name
-			<input type="name" name="name" value="<%= name || '' %>" placeholder="Elsa Nurmy">
-		</label>
-		<label>
-			this will be my mail
-			<input type="email" name="email" value="<%= email || '' %>" placeholder="vampir@example.com">
-		</label>
+		<%- include("partials/input.ejs", {
+			labelText: "This will be your user name",
+			name: "name",
+			value: name || '',
+			placeholder: 'Elsa Nurmy'
+		})%>
+
+		<%- include(
+			"partials/input.ejs", {
+				labelText: "This will be your email",
+				name: "email",
+				value: email || '',
+				placeholder: 'vampir@example.com'
+			}
+		)%>
 		<label>
 			<input type="checkbox" name="keepLogged"/>
 			Keep me logged in this device

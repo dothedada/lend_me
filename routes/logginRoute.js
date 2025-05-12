@@ -12,7 +12,7 @@ loginRoute.get('/', (req, res) => {
 });
 
 loginRoute.post('/', logUser, createSessionCookie, (req, res) => {
-    if (Object.keys(res.errors).length > 0) {
+    if (res.errors !== undefined) {
         res.status(400).render('login.ejs', { errors: res.errors });
     } else if (res?.sessionCookie.make) {
         res.redirect('/');
@@ -27,8 +27,23 @@ loginRoute.get('/new', (req, res) => {
     res.render('newUser', { name, email });
 });
 
-loginRoute.post('/new', createUser, createSessionCookie, (req, res) => {
-    res.redirect('/');
-});
+loginRoute.post(
+    '/new',
+    logUser,
+    createUser,
+    createSessionCookie,
+    (req, res) => {
+        if (res.errors !== undefined) {
+            const { name, email } = req.body;
+            return res.status(400).render('newUser', {
+                name,
+                email,
+                errors: res.errors,
+            });
+        }
+
+        res.redirect('/');
+    },
+);
 
 export default loginRoute;
