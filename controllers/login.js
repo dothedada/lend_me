@@ -4,6 +4,25 @@ import { recordExists } from '../db/utils.js';
 import { bookUser_db } from '../db/queries/library.js';
 import { lends_db } from '../db/queries/lends.js';
 import { friends_db } from '../db/queries/friends.js';
+import { errorMsg } from './errors.js';
+import { body, validationResult } from 'express-validator';
+
+const loginValidations = [
+    body('name')
+        .trim()
+        .notEmpty()
+        .withMessage(`Name ${errorMsg.empty}.`)
+        .isAlpha()
+        .withMessage(`Name ${errorMsg.alpha}`)
+        .isLength({ min: 4, max: 20 })
+        .withMessage(`Name ${errorMsg.length(4, 20)}`),
+    body('email')
+        .trim()
+        .notEmpty()
+        .withMessage(`Email ${errorMsg.empty}.`)
+        .isEmail()
+        .withMessage(errorMsg.email),
+];
 
 export const checkUserLog = (req, res, next) => {
     const token = req.cookies.lend_me_usr;
@@ -24,24 +43,39 @@ export const checkUserLog = (req, res, next) => {
     next();
 };
 
-export const logUser = async (req, res, next) => {
-    const { name, email, keepLogged } = req.body;
-    const user = await recordExists('users', { name, email });
+export const logUser = [
+    loginValidations,
+    async (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.errors = errors.array().reduce((acc, error) => {
+                if (!acc[error.path]) {
+                    acc[error.path] = [];
+                }
+                acc[error.path].push(error);
+                return acc;
+            }, {});
+            return next();
+        }
 
-    if (!user) {
-        res.userFields = { name, email };
-        res.sessionCookie = { make: false };
-        return next();
-    }
+        const { name, email, keepLogged } = req.body;
+        const user = await recordExists('users', { name, email });
 
-    res.sessionCookie = {
-        make: true,
-        data: user,
-        keepLogged: keepLogged === 'on',
-    };
+        if (!user) {
+            res.userFields = { name, email };
+            res.sessionCookie = { make: false };
+            return next();
+        }
 
-    next();
-};
+        res.sessionCookie = {
+            make: true,
+            data: user,
+            keepLogged: keepLogged === 'on',
+        };
+
+        next();
+    },
+];
 
 export const createUser = async (req, res, next) => {
     const { name, email, keepLogged } = req.body;
@@ -56,7 +90,7 @@ export const createUser = async (req, res, next) => {
 };
 
 export const createSessionCookie = (_, res, next) => {
-    if (!res.sessionCookie?.make) {
+    if (!res.sessionCookie?.make || res.errors.length > 0) {
         return next();
     }
 

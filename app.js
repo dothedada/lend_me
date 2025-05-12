@@ -30,6 +30,7 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.use(express.static('public'));
 app.use('/login', loginRoute);
 app.use(checkUserLog);
 app.use('/', homeRoute);
@@ -40,7 +41,6 @@ app.use('/friends', friendsRoute);
 app.use('/lends', lendsRoute);
 app.use('/me', meRoute);
 
-app.use(express.static('public'));
 // TODO: err if no user data
 
 const PORT = process.env.PORT || 3000;

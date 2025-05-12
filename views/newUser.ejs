@@ -1,21 +1,23 @@
 <%- include("partials/head.ejs", {headTitle: 'New user | Lend_me' })%>
 <body>
+	<main>
 	<h1>Hi <%= name %>!!!</h1>
-	<p>became a new Lend_me user by clicking the button.</p>
 	<p>No shitty spam nor ads nor meanigless communications, only th thing that you care for</p>
 	<form action="/login/new" method="post">
-		<span>
+		<label>
 			This will be my user name
-			<input type="name" name="name" value="<%= name || '' %>">
-		</span>
-		<span>
+			<input type="name" name="name" value="<%= name || '' %>" placeholder="Elsa Nurmy">
+		</label>
+		<label>
 			this will be my mail
-			<input type="email" name="email" value="<%= email || '' %>">
-		</span>
-		<span> Keep me logged in this device forever and ever until i change my mind
+			<input type="email" name="email" value="<%= email || '' %>" placeholder="vampir@example.com">
+		</label>
+		<label>
 			<input type="checkbox" name="keepLogged"/>
-		</span>
+			Keep me logged in this device
+		</label>
 		<button>Create my user</button>
 	</form>
+	</main>
 </body>
 </html>

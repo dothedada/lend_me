@@ -1,0 +1,15 @@
+<label>
+<% if (locals.errors && locals.errors[name]) { %>
+	<ul>
+		<% locals.errors[name].forEach((error) => { %>
+		<li class="input_error"><%= error.msg %></li>
+		<% }) %>
+	</ul>
+<% } %>
+	<input 
+		type="<%= typeof type !== 'undefined' ? type : 'text' %>"
+		name="<%= name %>" 
+		placeholder="<%= typeof placeholder !== 'undefined' ? placeholder : '' %>"
+		value="<%= typeof value !== 'undefined' ? value : '' %>"
+	>
+</label>

@@ -6,23 +6,24 @@
 		<% if (titleExist) { %>
 			<h2>There are already some registers with that title in our database...</h2>
 
+			<div class="cards_display">
 			<% booksData.forEach((book) => { %>
-				<div>
-					<p>Title: <%= book.title %></p>
-					<p>Author: <%= book.author %></p>
-					<p>Year: <%= book.year %></p>
-					<p>Editorial: <%= book.editorial %></p>
-					<p>Sinopsys: <%= book.sinopsys %></p>
+				<div class="card">
+					<p>Title: <strong><%= book.title %></strong><br />
+					Author: <strong><%= book.author %></strong><br />
+					Year: <strong><%= book.year %></strong><br />
+					Editorial: <strong><%= book.editorial %></strong><br />
+					Sinopsys: <strong><%= book.sinopsys %></strong><br /></p>
 					<form action="/books/<%= book.id %>/add" method="post">
 						<input type="hidden" name="book" value="<%= book.id %>">
-						<button>Is this title?</button>
+						<button>Yes is this one</button>
 					</form>
 				</div>
 			<% }) %>
-
+			</div>
 		<% } %>
 
-		<h2>Add new tittle</h2>
+		<h2>New tittle</h2>
 		<form action="/books/new" method="post" autocomplete="off">
 			<label>Title
 				<input type="text" name="title" value="<%= title %>" required>
@@ -59,7 +60,7 @@
 				</datalist>
 			</label>
 			<label>Sinopsys
-				<textarea name="sinopsys"></textarea>
+				<textarea name="sinopsys" rows="5"></textarea>
 			</label>
 			<label>Image url<input type="url" name="image"></label>
 			<label>More info url<input type="url" name="url"></label>

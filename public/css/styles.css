@@ -54,6 +54,7 @@ h6 {
     line-height: 1.2;
     margin-bottom: 1rem;
     color: hsl(var(--foreground));
+    text-wrap: balance;
 }
 
 h1 {
@@ -68,20 +69,10 @@ h3 {
     font-size: 1.5rem;
 }
 
-h4 {
-    font-size: 1.25rem;
-}
-
-h5 {
-    font-size: 1.125rem;
-}
-
-h6 {
-    font-size: 1rem;
-}
-
 p {
     margin-bottom: 1rem;
+    max-width: 65ch;
+    text-wrap: pretty;
     color: hsl(var(--foreground));
 }
 
@@ -119,7 +110,7 @@ footer {
 }
 
 form {
-    width: max(400px, 50%);
+    max-width: 400px;
 }
 
 /* Cards */
@@ -177,6 +168,12 @@ textarea {
     transition: border-color 0.2s ease;
     margin-bottom: 0.5rem;
 }
+input[type='checkbox'] {
+    width: min-content;
+}
+textarea {
+    resize: vertical;
+}
 
 input:focus,
 select:focus,
@@ -190,6 +187,10 @@ label {
     display: block;
     font-size: 0.875rem;
     font-weight: 500;
+}
+
+.input_error {
+    color: hsl(var(--destructive));
 }
 
 /* Buttons */
@@ -281,6 +282,10 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 1rem;
+}
+
+tr:hover {
+    background-color: hsl(var(--card));
 }
 
 th {
@@ -531,4 +536,14 @@ pre {
 pre code {
     background-color: transparent;
     padding: 0;
+}
+
+.sr-only:not(:focus):not(:active) {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
 }

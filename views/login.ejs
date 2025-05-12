@@ -1,18 +1,24 @@
 <%- include("partials/head.ejs", { headTitle: 'Loggin | lend_me' })%>
 <body>
 
-	<form action="/login" method="POST">
-		<label> Name
-			<input type="text" name="name">
-		</label>
-		<label> email
-			<input type="email" name="email">
-		</label>
-		<span> Keep me logged in this device forever and ever until i change my mind
-			<input type="checkbox" name="keepLogged"/>
-		</span>
-		<button>Login</button>
-	</form>
+	<main>
+		<p>If you ar just curious and want to see the funcionality, log using the following data...<br/> name: sample, email: sample@example.com</p>
+		<form action="/login" method="POST">
+			<%- include(
+				'partials/input.ejs', 
+				{ name: 'name', placeholder: 'Elsa Nurmy'})
+			%>
+			<%- include(
+				'partials/input.ejs', 
+				{ name: 'email', type: 'email', placeholder: 'vampir@example.com'})
+			%>
+			
+			<label><input type="checkbox" name="keepLogged"/>
+			Keep you logged on this device
+			</label>
+			<button>Login</button>
+		</form>
+	</main>
 
 	<%- include("partials/footer.html")%>
 	

@@ -12,7 +12,9 @@ loginRoute.get('/', (req, res) => {
 });
 
 loginRoute.post('/', logUser, createSessionCookie, (req, res) => {
-    if (res.sessionCookie.make) {
+    if (Object.keys(res.errors).length > 0) {
+        res.status(400).render('login.ejs', { errors: res.errors });
+    } else if (res?.sessionCookie.make) {
         res.redirect('/');
     } else {
         const { name, email } = res.userFields;

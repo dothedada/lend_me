@@ -4,7 +4,7 @@
 
 	<main>
 		<section>
-			<h2>Random Picks</h2>
+			<h2 class="sr-only">Random Picks</h2>
 			<div class="cards_display">
 				<% friendsBooks.forEach((book) => { %>
 				<div class="card">
@@ -25,7 +25,7 @@
 		</section>
 
 		<section>
-			<h2>Search within your friends books</h2>
+			<h2>Search for a book within your friends</h2>
 			<form action="/search" method="get" autocomplete="off">
 				<label>
 					look for...
@@ -54,7 +54,7 @@
 
 						<td>
 							<form action="/books/<%= book.id %>/remove" method="post">
-								<button class="outline">remove from library</button>
+								<button class="outline">remove from my library</button>
 							</form>
 						</td>
 					</tr>
