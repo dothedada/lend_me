@@ -27,11 +27,13 @@
 		<section>
 			<h2>Search for a book within your friends</h2>
 			<form action="/search" method="get" autocomplete="off">
-				<label>
-					look for...
-					<input type="search" name="q">
-					<button>search</button>
-				</label>
+				<%- include(
+					'partials/input.ejs', { 
+						labelText: 'Look for...', 
+						name: 'q', 
+					})
+				%>
+				<button>search</button>
 			</form>
 		</section>
 

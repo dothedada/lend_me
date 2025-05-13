@@ -1,5 +1,5 @@
 export const makeInputErrorsObject = (errorsArray) =>
-    errorsArray.array().reduce((acc, error) => {
+    errorsArray.reduce((acc, error) => {
         if (!acc[error.path]) {
             acc[error.path] = [];
         }

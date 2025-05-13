@@ -1,5 +1,13 @@
 import { books_db } from '../db/queries/books.js';
 import { friends_db } from '../db/queries/friends.js';
+import { query, validationResult } from 'express-validator';
+import { makeInputErrorsObject } from './utils.js';
+
+const searchInputRules = [
+    query('q')
+        .isLength({ min: 4 })
+        .withMessage('Search param must be at least 4 characters'),
+];
 
 export const getAllBooks = async (req, res, next) => {
     const books = await books_db.getBooks();
@@ -62,16 +70,28 @@ export const updateBookData = async (req, res, next) => {
     next();
 };
 
+export const searchInputValidation = [
+    searchInputRules,
+    (req, res, next) => {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            res.errors = makeInputErrorsObject(errors.array());
+        }
+
+        next();
+    },
+];
+
 export const searchWithinFirends = async (req, res, next) => {
+    if (res.errors) {
+        return next();
+    }
+
     const userId = req.user.id;
     const lookFor = req.query.q;
     const friends = await friends_db.getFriends(userId);
-
     const booksFound = await books_db.search(lookFor, friends, userId);
-    if (!res.books) {
-        res.books = {};
-    }
-
     res.books = booksFound;
 
     next();

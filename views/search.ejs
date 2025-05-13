@@ -6,14 +6,18 @@
 		<section>
 			<h2>Search again</h2>
 			<form action="/search" method="get">
-				<label>
-					look for...
-					<input type="search" name="q" value="<%= search %>">
-					<button>search</button>
-				</label>
+				<%- include(
+					'partials/input.ejs', { 
+						labelText: 'Look for...', 
+						name: 'q',
+						value: search
+					})
+				%>
+				<button>search</button>
 			</form>
 		</section>
 
+		<% if (foundBooks.length > 0) { %>
 		<section>
 			<h2>Results for "<%= search %>":</h2>
 				<table>
@@ -49,6 +53,7 @@
 					<% }) %>
 				</table>
 		</section>
+		<% } %>
 
 	<%- include("partials/footer.html") %>
 </body>
