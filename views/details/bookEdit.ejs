@@ -5,47 +5,79 @@
 	<main>
 		<form action="/detail/<%= id %>/book/edit" method="post" autocomplete="off">
 			<input type="hidden" name="id" value="<%= id %>">
-			<label>Title<input type="text" name="title" value="<%= title %>"></label>
-			<label>Author
-				<input list="authors" type="text" name="author" value="<%= author %>">
-				<datalist id="authors">
-					<% authors.forEach((author) => { %> 
-						<option>
-							<%= author.name %>
-						</option>
-					<% }) %>
-				</datalist>
-			</label>
-			<label>Year<input type="text" name="year" value="<%= year %>"></label>
-			<label>Category
-				<input list="categories" type="text" name="category" value="<%= category %>">
-				<datalist id="categories">
-					<% categories.forEach((category) => { %> 
-						<option>
-							<%= category.category %>
-						</option>
-					<% }) %>
-				</datalist>
-			</label>
-			<label>Editorial
-				<input list="editorials" name="editorial" type="text" value="<%= editorial %>">
-				<datalist id="editorials">
-					<% editorials.forEach((editorial) => { %> 
-						<option>
-							<%= editorial.name %>
-						</option>
-					<% }) %>
-				</datalist>
-			</label>
-			<label>Sinopsys
-				<textarea name="sinopsys"><%= sinopsys %></textarea>
-			</label>
-			<label>Image url<input type="url" name="image" value="<%= photo %>"></label>
-			<label>More info url<input type="url" name="url" value="<%= photo %>"></label>
+			<%- include(
+				'../partials/input.ejs', { 
+					labelText: 'Title', 
+					name: 'title', 
+					value: locals.title,
+				})
+			%>
+
+			<%- include(
+				'../partials/inputDatalist.ejs', { 
+					labelText: 'Author', 
+					name: 'author', 
+					listName: 'authors',
+					list: authors,
+					value: locals.author,
+				})
+			%>
+
+			<%- include(
+				'../partials/input.ejs', { 
+					labelText: 'Year', 
+					name: 'year', 
+					value: locals.year,
+				})
+			%>
+
+			<%- include(
+				'../partials/inputDatalist.ejs', { 
+					labelText: 'Category', 
+					name: 'category', 
+					listName: 'categories',
+					list: categories,
+					value: locals.category,
+				})
+			%>
+
+			<%- include(
+				'../partials/inputDatalist.ejs', { 
+					labelText: 'Editorial', 
+					name: 'editorial', 
+					listName: 'editorials',
+					list: editorials,
+					value: locals.editorial,
+				})
+			%>
+
+			<%- include(
+				'../partials/textarea.ejs', { 
+					labelText: 'Sinopsys', 
+					name: 'sinopsys', 
+					value: locals.sinopsys,
+				})
+			%>
+
+			<%- include(
+				'../partials/input.ejs', { 
+					labelText: 'Image', 
+					name: 'image', 
+					value: locals.image,
+				})
+			%>
+
+			<%- include(
+				'../partials/input.ejs', { 
+					labelText: 'More info url', 
+					name: 'url', 
+					value: locals.url,
+				})
+			%>
 
 			<button>Actualizar</button>
 		</form>
-		<img src="<%= photo %>" alt="<%= title %>'s book cover">
+		<img src="<%= locals.image %>" alt="<%= title %>'s book cover">
 
 	</main>
 

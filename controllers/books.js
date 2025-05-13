@@ -59,8 +59,11 @@ export const pickRandomBooks = (books, amount) => {
 };
 
 export const updateBookData = async (req, res, next) => {
-    const valuesToUpdate = req.body;
+    if (res.errors) {
+        return next();
+    }
 
+    const valuesToUpdate = req.body;
     const updatedBook = await books_db.put(valuesToUpdate);
     res.book = updatedBook;
 

@@ -1,5 +1,9 @@
 import { Router } from 'express';
-import { getBookDetail, updateBookData } from '../controllers/books.js';
+import {
+    addBookValidation,
+    getBookDetail,
+    updateBookData,
+} from '../controllers/books.js';
 import {
     getAllAuthors,
     getAuthorData,
@@ -12,6 +16,7 @@ import {
     updateEditorialData,
 } from '../controllers/editorials.js';
 
+const fetchBookData = [getAllEditorials, getAllAuthors, getAllCategories];
 const detailsRoute = Router();
 
 // book
@@ -22,15 +27,13 @@ detailsRoute.get('/:bookId/book', getBookDetail, (req, res) => {
 
 detailsRoute.get(
     '/:bookId/book/edit',
+    fetchBookData,
     getBookDetail,
-    getAllAuthors,
-    getAllCategories,
-    getAllEditorials,
     (req, res) => {
         const bookData = res.book;
-        const authors = res.authors;
-        const categories = res.categories;
-        const editorials = res.editorials;
+        const authors = res.authors.map((author) => author.name);
+        const categories = res.categories.map((name) => name.category);
+        const editorials = res.editorials.map((ed) => ed.name);
         res.render('details/bookEdit.ejs', {
             ...bookData,
             authors,
@@ -40,10 +43,29 @@ detailsRoute.get(
     },
 );
 
-detailsRoute.post('/:bookId/book/edit', updateBookData, (req, res) => {
-    const { bookId } = req.params;
-    res.redirect(`/detail/${bookId}/book`);
-});
+detailsRoute.post(
+    '/:bookId/book/edit',
+    addBookValidation,
+    updateBookData,
+    fetchBookData,
+    (req, res) => {
+        if (res.errors !== undefined) {
+            const bookData = req.body;
+            const authors = res.authors.map((author) => author.name);
+            const categories = res.categories.map((name) => name.category);
+            const editorials = res.editorials.map((ed) => ed.name);
+            return res.render('details/bookEdit.ejs', {
+                ...bookData,
+                authors,
+                editorials,
+                categories,
+                errors: res.errors,
+            });
+        }
+        const { bookId } = req.params;
+        res.redirect(`/detail/${bookId}/book`);
+    },
+);
 
 // author
 detailsRoute.get('/:authorId/author', getAuthorData, (req, res) => {
