@@ -1,8 +1,7 @@
-import { validationResult } from 'express-validator';
+import { validationResult, matchedData } from 'express-validator';
 
 export const setValidationResult = (req, res, next) => {
     const errors = validationResult(req);
-
     if (!errors.isEmpty()) {
         res.errors = errors.array().reduce((acc, error) => {
             if (!acc[error.path]) {
@@ -13,6 +12,8 @@ export const setValidationResult = (req, res, next) => {
             return acc;
         }, {});
     }
+
+    res.cleanData = matchedData(req);
 
     next();
 };

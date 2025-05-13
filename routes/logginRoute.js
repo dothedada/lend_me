@@ -17,8 +17,8 @@ loginRoute.post(
     inputValidation,
     logType,
     createSessionCookie,
-    (_, res) => {
-        const { name, email } = res.cookieData.data;
+    (req, res) => {
+        const { name, email } = req.body;
         if (res.errors !== undefined) {
             const { name: nameErr, email: emailErr } = res.errors;
             res.locals.name = nameErr;
@@ -47,9 +47,9 @@ loginRoute.post(
     logType,
     createUser,
     createSessionCookie,
-    (_, res) => {
+    (req, res) => {
         if (res.errors !== undefined) {
-            const { name, email } = res.cookieData.data;
+            const { name, email } = req.body;
 
             return res.status(400).render('newUser', {
                 name,

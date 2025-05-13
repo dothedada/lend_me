@@ -21,6 +21,7 @@ const inputRules = [
         .withMessage(`Email ${errorMsg.empty}.`)
         .isEmail()
         .withMessage(errorMsg.email),
+    body('keepLogged'),
 ];
 
 export const inputValidation = [inputRules, setValidationResult];
@@ -45,7 +46,11 @@ export const checkUserLog = (req, res, next) => {
 };
 
 export const logType = async (req, res, next) => {
-    const { name, email, keepLogged } = req.body;
+    if (res.errors !== undefined) {
+        return next();
+    }
+
+    const { name, email, keepLogged } = res.cleanData;
     const user = await recordExists('users', { name, email });
 
     res.cookieData = {
@@ -62,7 +67,7 @@ export const createUser = async (_, res, next) => {
         return next();
     }
 
-    const { name, email } = res.cookieData.data;
+    const { name, email } = res.cleanData;
 
     if (await recordExists('users', { email })) {
         res.errors = res.errors || {};
