@@ -6,8 +6,9 @@ import { lends_db } from '../db/queries/lends.js';
 import { friends_db } from '../db/queries/friends.js';
 import { errorMsg } from './errors.js';
 import { body, validationResult } from 'express-validator';
+import { makeInputErrorsObject } from './utils.js';
 
-const loginValidations = [
+const inputRules = [
     body('name')
         .trim()
         .notEmpty()
@@ -41,61 +42,59 @@ export const checkUserLog = (req, res, next) => {
     next();
 };
 
-export const logUser = [
-    loginValidations,
+export const inputValidation = [
+    inputRules,
     async (req, res, next) => {
         const errors = validationResult(req);
+
         if (!errors.isEmpty()) {
-            res.errors = errors.array().reduce((acc, error) => {
-                if (!acc[error.path]) {
-                    acc[error.path] = [];
-                }
-                acc[error.path].push(error);
-                return acc;
-            }, {});
-            return next();
+            res.errors = makeInputErrorsObject(errors.array());
         }
-
-        const { name, email, keepLogged } = req.body;
-        const user = await recordExists('users', { name, email });
-
-        if (!user) {
-            res.userFields = { name, email };
-            res.sessionCookie = { make: false };
-            return next();
-        }
-
-        res.sessionCookie = {
-            make: true,
-            data: user,
-            keepLogged: keepLogged === 'on',
-        };
 
         next();
     },
 ];
 
-export const createUser = async (req, res, next) => {
-    if (res.errors !== undefined) {
+export const logType = async (req, res, next) => {
+    const { name, email, keepLogged } = req.body;
+    const user = await recordExists('users', { name, email });
+
+    res.cookieData = {
+        make: user !== undefined,
+        data: user !== undefined ? user : { name, email },
+        keepLogged: keepLogged === 'on',
+    };
+
+    next();
+};
+
+export const createUser = async (_, res, next) => {
+    if (res.errors !== undefined || res.cookieData?.make) {
         return next();
     }
-    const { name, email, keepLogged } = req.body;
-    const newUser = await users_db.add({ name, email });
 
-    res.sessionCookie =
-        newUser !== undefined
-            ? { make: true, data: newUser, keepLogged }
-            : { make: false };
+    const { name, email } = res.cookieData.data;
+
+    if (await recordExists('users', { email })) {
+        res.errors = res.errors || {};
+        res.errors.email = res.errors.email || [];
+        res.errors.email.push({ msg: errorMsg.emailTaken });
+        return next();
+    }
+
+    const newUser = await users_db.add({ name, email });
+    res.cookieData.make = true;
+    res.cookieData.data = newUser;
 
     next();
 };
 
 export const createSessionCookie = (_, res, next) => {
-    if (res.errors !== undefined || !res.sessionCookie?.make) {
+    if (res.errors !== undefined || !res.cookieData?.make) {
         return next();
     }
 
-    const { data, keepLogged } = res.sessionCookie;
+    const { data, keepLogged } = res.cookieData;
     const { id, name, email } = data;
 
     // prettier-ignore
@@ -116,7 +115,7 @@ export const createSessionCookie = (_, res, next) => {
     next();
 };
 
-export const removeSessionCookie = (req, res, next) => {
+export const removeSessionCookie = (_, res, next) => {
     res.clearCookie('lend_me_usr', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
@@ -127,6 +126,7 @@ export const removeSessionCookie = (req, res, next) => {
     next();
 };
 
+// modify user
 export const updateUser = async (req, res, next) => {
     const id = req.user.id;
     const { name, email } = req.body;
@@ -151,7 +151,7 @@ export const updateUser = async (req, res, next) => {
     next();
 };
 
-export const deleteUser = async (req, res, next) => {
+export const deleteUser = async (req, _, next) => {
     const user = req.user;
     const { confirmation } = req.body;
 

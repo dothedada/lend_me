@@ -2,7 +2,11 @@
 <body>
 	<main>
 	<h1>Hi <%= name %>!!!</h1>
-	<p>No shitty spam nor ads nor meanigless communications, only th thing that you care for</p>
+
+	<p>We cannot iddentify you as a user, if you are one, check that the name and email fields perfectly match with the ones that you gave when you registered.
+	</p>
+	<p>
+	If you are a new user, <strong>welcome!!!</strong> In order to create your account we need a name and email (this one cannot be from an existing or former user) that will only be used for loggin and friends requests, no shitty spam nor ads nor meanigless communications, only th thing that you care for</p>
 	<form action="/login/new" method="post">
 		<%- include("partials/input.ejs", {
 			labelText: "This will be your user name",

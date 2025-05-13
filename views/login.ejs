@@ -5,12 +5,21 @@
 		<p>If you ar just curious and want to see the funcionality, log using the following data...<br/> name: sample, email: sample@example.com</p>
 		<form action="/login" method="POST">
 			<%- include(
-				'partials/input.ejs', 
-				{ labelText: 'Name', name: 'name', placeholder: 'Elsa Nurmy'})
+				'partials/input.ejs', { 
+					labelText: 'Name', 
+					name: 'name', 
+					placeholder: 'Elsa Nurmy', 
+					value: locals.name,
+				})
 			%>
 			<%- include(
-				'partials/input.ejs', 
-				{ labelText: 'Email', name: 'email', type: 'email', placeholder: 'vampir@example.com'})
+				'partials/input.ejs', { 
+					labelText: 'Email', 
+					name: 'email', 
+					type: 'email', 
+					placeholder: 'vampir@example.com',
+					value: locals.email,
+				})
 			%>
 			
 			<label><input type="checkbox" name="keepLogged"/>

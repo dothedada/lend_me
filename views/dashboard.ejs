@@ -108,6 +108,7 @@
 
 		<section>
 		<h2>My books</h2>
+		<% if (userBooks.length > 0) {%>
 		<div>
 			<table>
 				<tr>
@@ -127,6 +128,9 @@
 				<% }) %>
 			</table>
 		</div>
+		<% } else { %>
+		<p>You don't have any books to share, add some in <a href="/books">Books.</a></p>
+		<% } %>
 		</section>
 
 	</main>
