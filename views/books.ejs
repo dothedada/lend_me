@@ -31,6 +31,7 @@
 					'partials/input.ejs', { 
 						labelText: 'Look for...', 
 						name: 'q', 
+						type: 'search',
 					})
 				%>
 				<button>search</button>
@@ -67,17 +68,15 @@
 		<section>
 			<h2>Add a new book to my library...</h2>
 			<form action="/books/add" method="post" autocomplete="off">
-				<label>
-					Book title
-					<input type="text" list="titles" name="title" placeholder="The Craftsman">
-					<datalist id="titles">
-						<% titles.forEach((title) => { %> 
-							<option>
-								<%= title %>
-							</option>
-						<% }) %>
-					</datalist>
-				</label>
+				<%- include(
+					'partials/inputDatalist.ejs', { 
+						labelText: 'Book title', 
+						name: 'title', 
+						placeholder: 'The Craftsman',
+						listName: 'titles',
+						list: titles,
+					})
+				%>
 				<button>Add</button>
 			</form>
 		</section>

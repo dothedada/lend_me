@@ -5,8 +5,8 @@ import { bookUser_db } from '../db/queries/library.js';
 import { lends_db } from '../db/queries/lends.js';
 import { friends_db } from '../db/queries/friends.js';
 import { errorMsg } from './errors.js';
-import { body, validationResult } from 'express-validator';
-import { makeInputErrorsObject } from './utils.js';
+import { body } from 'express-validator';
+import { setValidationResult } from './middleware.js';
 
 const inputRules = [
     body('name')
@@ -22,6 +22,8 @@ const inputRules = [
         .isEmail()
         .withMessage(errorMsg.email),
 ];
+
+export const inputValidation = [inputRules, setValidationResult];
 
 export const checkUserLog = (req, res, next) => {
     const token = req.cookies.lend_me_usr;
@@ -41,19 +43,6 @@ export const checkUserLog = (req, res, next) => {
 
     next();
 };
-
-export const inputValidation = [
-    inputRules,
-    async (req, res, next) => {
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            res.errors = makeInputErrorsObject(errors.array());
-        }
-
-        next();
-    },
-];
 
 export const logType = async (req, res, next) => {
     const { name, email, keepLogged } = req.body;
