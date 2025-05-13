@@ -1,6 +1,10 @@
 import { bookUser_db } from '../db/queries/library.js';
 
 export const addToLibrary = async (req, res, next) => {
+    if (res.errors !== undefined) {
+        return next();
+    }
+
     const userData = req.user;
     const bookId = req.params.bookId ?? res.book.id;
 
@@ -8,11 +12,7 @@ export const addToLibrary = async (req, res, next) => {
         throw new Error('No book data to add into the library');
     }
 
-    const register = bookUser_db.addBook(String(bookId), userData.id);
-
-    if (!register) {
-        console.log('ya existe');
-    }
+    await bookUser_db.addBook(String(bookId), userData.id);
 
     next();
 };
@@ -20,11 +20,8 @@ export const addToLibrary = async (req, res, next) => {
 export const removeFromLibrary = async (req, res, next) => {
     const userData = req.user;
     const { bookId } = req.params;
-    const register = bookUser_db.removeBook(bookId, userData.id);
 
-    if (!register) {
-        console.log('no existe');
-    }
+    await bookUser_db.removeBook(bookId, userData.id);
 
     next();
 };

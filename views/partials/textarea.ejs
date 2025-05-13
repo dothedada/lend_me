@@ -1,0 +1,17 @@
+<label>
+	<%= labelText %>
+	<% if (locals.errors && locals.errors[name]) { %>
+	<ul>
+		<% locals.errors[name].forEach((error) => { %>
+		<li class="input_error"><%= error.msg %></li>
+		<% }) %>
+	</ul>
+	<% } %>
+	<textarea 
+		name="<%= name %>" 
+		placeholder="<%= typeof placeholder !== 'undefined' ? placeholder : '' %>"
+		rows="5"
+	>
+		<%= typeof value !== 'undefined' ? value : '' %>
+	</textarea>
+</label>

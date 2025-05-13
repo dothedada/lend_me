@@ -1,15 +1,10 @@
 import { books_db } from '../db/queries/books.js';
 import { friends_db } from '../db/queries/friends.js';
-import { query } from 'express-validator';
 import { setValidationResult } from './middleware.js';
-
-const searchInputRules = [
-    query('q')
-        .isLength({ min: 4 })
-        .withMessage('Search param must be at least 4 characters'),
-];
+import { searchInputRules, newBookRules } from './errors.js';
 
 export const searchInputValidation = [searchInputRules, setValidationResult];
+export const addBookValidation = [newBookRules, setValidationResult];
 
 export const getAllBooks = async (req, res, next) => {
     const books = await books_db.getBooks();
@@ -88,7 +83,10 @@ export const searchWithinFirends = async (req, res, next) => {
 
 export const getBookByTitle = async (req, res, next) => {
     const { title } = req.body;
-    const books = await books_db.getBy('title', title);
+    let books = [];
+    if (title !== '') {
+        books = await books_db.getBy('title', title);
+    }
 
     res.book = books.length > 0 ? books : false;
 
@@ -96,7 +94,10 @@ export const getBookByTitle = async (req, res, next) => {
 };
 
 export const addNewBook = async (req, res, next) => {
-    const bookData = req.body;
+    if (res.errors !== undefined || res.cleanData === undefined) {
+        return next();
+    }
+    const bookData = res.cleanData;
     const book = await books_db.add(bookData);
     res.book = book;
 
