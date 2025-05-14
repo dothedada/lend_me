@@ -10,6 +10,22 @@ export const errorMsg = {
     url: 'must be a valid URL',
 };
 
+export const loginRules = [
+    body('name')
+        .trim()
+        .notEmpty()
+        .withMessage(`Name ${errorMsg.empty}.`)
+        .isLength({ min: 4, max: 20 })
+        .withMessage(`Name ${errorMsg.length(4, 20)}`),
+    body('email')
+        .trim()
+        .notEmpty()
+        .withMessage(`Email ${errorMsg.empty}.`)
+        .isEmail()
+        .withMessage(errorMsg.email),
+    body('keepLogged'),
+];
+
 export const searchInputRules = [
     query('q')
         .isLength({ min: 4 })
@@ -106,4 +122,27 @@ export const editorialRules = [
         .trim()
         .isURL()
         .withMessage(`Url ${errorMsg.url}`),
+];
+
+export const friendRequestRules = [
+    body('name')
+        .trim()
+        .notEmpty()
+        .withMessage(`Name ${errorMsg.empty}`)
+        .isLength({ min: 1, max: 120 })
+        .withMessage(`Name ${errorMsg.length(1, 120)}`)
+        .escape(),
+    body('email')
+        .trim()
+        .notEmpty()
+        .withMessage(`Email ${errorMsg.empty}.`)
+        .isEmail()
+        .withMessage(errorMsg.email),
+    body('message')
+        .trim()
+        .notEmpty()
+        .withMessage(`Email ${errorMsg.empty}.`)
+        .isLength({ min: 120, max: 500 })
+        .withMessage(`Name ${errorMsg.length(120, 500)}`)
+        .escape(),
 ];

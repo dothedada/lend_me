@@ -12,6 +12,7 @@ import {
 } from '../controllers/authors.js';
 import { getAllCategories } from '../controllers/categories.js';
 import {
+    editorialValidation,
     getAllEditorials,
     getEditorialData,
     updateEditorialData,
@@ -51,12 +52,12 @@ detailsRoute.post(
     fetchBookData,
     (req, res) => {
         if (res.errors !== undefined) {
-            const bookData = req.body;
+            const userInput = req.body;
             const authors = res.authors.map((author) => author.name);
             const categories = res.categories.map((name) => name.category);
             const editorials = res.editorials.map((ed) => ed.name);
             return res.render('details/bookEdit.ejs', {
-                ...bookData,
+                ...userInput,
                 authors,
                 editorials,
                 categories,
@@ -71,13 +72,11 @@ detailsRoute.post(
 // author
 detailsRoute.get('/:authorId/author', getAuthorData, (req, res) => {
     const authorData = res.author;
-
     res.render('details/author.ejs', authorData);
 });
 
 detailsRoute.get('/:authorId/author/edit', getAuthorData, (req, res) => {
     const authorData = res.author;
-
     res.render('details/authorEdit.ejs', authorData);
 });
 
@@ -101,7 +100,6 @@ detailsRoute.post(
 // editorial
 detailsRoute.get('/:editorialId/editorial', getEditorialData, (req, res) => {
     const editorialData = res.editorial;
-
     res.render('details/editorial.ejs', editorialData);
 });
 
@@ -110,15 +108,23 @@ detailsRoute.get(
     getEditorialData,
     (req, res) => {
         const editorialData = res.editorial;
-
         res.render('details/editorialEdit.ejs', editorialData);
     },
 );
 
 detailsRoute.post(
     '/:editorialId/editorial/edit',
+    editorialValidation,
     updateEditorialData,
     (req, res) => {
+        if (res.errors !== undefined) {
+            const userInput = req.body;
+            return res.render('details/editorialEdit.ejs', {
+                ...userInput,
+                errors: res.errors,
+            });
+        }
+
         const { editorialId } = req.params;
         res.redirect(`/detail/${editorialId}/editorial`);
     },

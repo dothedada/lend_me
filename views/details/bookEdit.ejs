@@ -18,7 +18,7 @@
 					labelText: 'Author', 
 					name: 'author', 
 					listName: 'authors',
-					list: authors,
+					list: locals.authors ?? [],
 					value: locals.author,
 				})
 			%>
@@ -36,7 +36,7 @@
 					labelText: 'Category', 
 					name: 'category', 
 					listName: 'categories',
-					list: categories,
+					list: locals.categories ?? [],
 					value: locals.category,
 				})
 			%>
@@ -46,7 +46,7 @@
 					labelText: 'Editorial', 
 					name: 'editorial', 
 					listName: 'editorials',
-					list: editorials,
+					list: locals.editorials ?? [],
 					value: locals.editorial,
 				})
 			%>

@@ -8,18 +8,21 @@
 			<%- include("../partials/input.ejs", {
 				labelText: "Name",
 				name: "name",
-				value: name
+				value: locals.name,
 			})%>
+
 			<%- include("../partials/textarea.ejs", {
 				labelText: "Bio",
 				name: "bio",
-				value: bio
+				value: locals.bio,
 			})%>
+
 			<%- include("../partials/input.ejs", {
 				labelText: "Extended information url",
 				name: "url",
-				value: url
+				value: locals.url,
 			})%>
+
 			<button>Update</button>
 		</form>
 	</main>

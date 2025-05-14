@@ -4,27 +4,10 @@ import { recordExists } from '../db/utils.js';
 import { bookUser_db } from '../db/queries/library.js';
 import { lends_db } from '../db/queries/lends.js';
 import { friends_db } from '../db/queries/friends.js';
-import { errorMsg } from './errors.js';
-import { body } from 'express-validator';
+import { errorMsg, loginRules } from './validations.js';
 import { setValidationResult } from './middleware.js';
 
-const inputRules = [
-    body('name')
-        .trim()
-        .notEmpty()
-        .withMessage(`Name ${errorMsg.empty}.`)
-        .isLength({ min: 4, max: 20 })
-        .withMessage(`Name ${errorMsg.length(4, 20)}`),
-    body('email')
-        .trim()
-        .notEmpty()
-        .withMessage(`Email ${errorMsg.empty}.`)
-        .isEmail()
-        .withMessage(errorMsg.email),
-    body('keepLogged'),
-];
-
-export const inputValidation = [inputRules, setValidationResult];
+export const inputValidation = [loginRules, setValidationResult];
 
 export const checkUserLog = (req, res, next) => {
     const token = req.cookies.lend_me_usr;

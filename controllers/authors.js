@@ -1,5 +1,5 @@
 import { authors_db } from '../db/queries/simpleQuerys.js';
-import { authorRules } from './errors.js';
+import { authorRules } from './validations.js';
 import { setValidationResult } from './middleware.js';
 
 export const getAllAuthors = async (req, res, next) => {
@@ -26,6 +26,7 @@ export const updateAuthorData = async (req, res, next) => {
     if (res.errors !== undefined) {
         return next();
     }
+
     const authorUpdatedData = req.body;
     const updatedData = await authors_db.put(authorUpdatedData);
     res.author = updatedData;
