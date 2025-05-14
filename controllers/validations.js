@@ -17,7 +17,8 @@ export const errorMsg = {
     // db
     books: {
         notFound: 'There is no book with the given id',
-        update: 'An unknown error happen when updating re book registe',
+        update: 'An unknown error happen when updating re book register',
+        add: 'An unknown error happen when adding the book register',
     },
 };
 
