@@ -3,7 +3,6 @@ import { body, query } from 'express-validator';
 export const errorMsg = {
     length: (min, max) => `must be between ${min} and ${max} characters`,
     empty: 'cannot be empty',
-    //alpha: 'must only contain letters',
     emailTaken: 'this mail already corresponds to anothe user',
     email: 'Must be a valid email, user@domain.xyz',
     numeric: 'must be a number',
@@ -17,7 +16,7 @@ export const searchInputRules = [
         .withMessage('Search param must be at least 4 characters'),
 ];
 
-export const newBookRules = [
+export const bookRules = [
     body('title')
         .trim()
         .notEmpty()
@@ -66,6 +65,42 @@ export const newBookRules = [
         .trim()
         .isURL()
         .withMessage(`Image ${errorMsg.url}`),
+    body('url')
+        .optional({ checkFalsy: true })
+        .trim()
+        .isURL()
+        .withMessage(`Url ${errorMsg.url}`),
+];
+
+export const authorRules = [
+    body('name')
+        .trim()
+        .notEmpty()
+        .withMessage(`Title ${errorMsg.empty}`)
+        .isLength({ min: 1, max: 120 })
+        .withMessage(`Title ${errorMsg.length(1, 120)}`)
+        .escape(),
+    body('bio')
+        .optional({ checkFalsy: true })
+        .trim()
+        .isLength({ min: 1, max: 1000 })
+        .withMessage(`Bio ${errorMsg.length(1, 1000)}`)
+        .escape(),
+    body('url')
+        .optional({ checkFalsy: true })
+        .trim()
+        .isURL()
+        .withMessage(`Url ${errorMsg.url}`),
+];
+
+export const editorialRules = [
+    body('name')
+        .trim()
+        .notEmpty()
+        .withMessage(`Name ${errorMsg.empty}`)
+        .isLength({ min: 1, max: 120 })
+        .withMessage(`Name ${errorMsg.length(1, 120)}`)
+        .escape(),
     body('url')
         .optional({ checkFalsy: true })
         .trim()

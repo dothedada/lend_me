@@ -5,6 +5,7 @@ import {
     updateBookData,
 } from '../controllers/books.js';
 import {
+    authorValidation,
     getAllAuthors,
     getAuthorData,
     updateAuthorData,
@@ -80,10 +81,22 @@ detailsRoute.get('/:authorId/author/edit', getAuthorData, (req, res) => {
     res.render('details/authorEdit.ejs', authorData);
 });
 
-detailsRoute.post('/:authorId/author/edit', updateAuthorData, (req, res) => {
-    const { authorId } = req.params;
-    res.redirect(`/detail/${authorId}/author`);
-});
+detailsRoute.post(
+    '/:authorId/author/edit',
+    authorValidation,
+    updateAuthorData,
+    (req, res) => {
+        if (res.errors !== undefined) {
+            const userInput = req.body;
+            return res.render('details/authorEdit.ejs', {
+                ...userInput,
+                errors: res.errors,
+            });
+        }
+        const { authorId } = req.params;
+        res.redirect(`/detail/${authorId}/author`);
+    },
+);
 
 // editorial
 detailsRoute.get('/:editorialId/editorial', getEditorialData, (req, res) => {

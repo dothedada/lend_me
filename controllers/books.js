@@ -1,10 +1,10 @@
 import { books_db } from '../db/queries/books.js';
 import { friends_db } from '../db/queries/friends.js';
 import { setValidationResult } from './middleware.js';
-import { searchInputRules, newBookRules } from './errors.js';
+import { searchInputRules, bookRules } from './errors.js';
 
 export const searchInputValidation = [searchInputRules, setValidationResult];
-export const addBookValidation = [newBookRules, setValidationResult];
+export const addBookValidation = [bookRules, setValidationResult];
 
 export const getAllBooks = async (req, res, next) => {
     const books = await books_db.getBooks();

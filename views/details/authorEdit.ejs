@@ -5,15 +5,21 @@
 	<main>
 		<form action="/detail/<%= id %>/author/edit" method="post" autocomplete="off">
 			<input type="hidden" name="id" value="<%= id %>">
-			<label>Name
-				<input type="text" name="name" value="<%= name %>">
-			</label>
-			<label>Bio
-				<textarea name="bio"><%= bio %></textarea>
-			</label>
-			<label>
-				<input type="text" name="url" value="<%= url %>">
-			</label>
+			<%- include("../partials/input.ejs", {
+				labelText: "Name",
+				name: "name",
+				value: name
+			})%>
+			<%- include("../partials/textarea.ejs", {
+				labelText: "Bio",
+				name: "bio",
+				value: bio
+			})%>
+			<%- include("../partials/input.ejs", {
+				labelText: "Extended information url",
+				name: "url",
+				value: url
+			})%>
 			<button>Update</button>
 		</form>
 	</main>
