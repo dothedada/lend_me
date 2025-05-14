@@ -1,7 +1,12 @@
 import { books_db } from '../db/queries/books.js';
 import { friends_db } from '../db/queries/friends.js';
 import { setValidationResult } from './middleware.js';
-import { searchInputRules, bookRules } from './validations.js';
+import {
+    searchInputRules,
+    bookRules,
+    errorMsg,
+    CustomErr,
+} from './validations.js';
 
 export const searchInputValidation = [searchInputRules, setValidationResult];
 export const addBookValidation = [bookRules, setValidationResult];
@@ -16,6 +21,11 @@ export const getAllBooks = async (req, res, next) => {
 export const getBookDetail = async (req, res, next) => {
     const { bookId } = req.params;
     const book = await books_db.getBooks(bookId);
+
+    if (!book) {
+        throw new CustomErr(errorMsg.books.notFound, 404, 'itemNotFound');
+    }
+
     res.book = book;
 
     next();
@@ -65,6 +75,11 @@ export const updateBookData = async (req, res, next) => {
 
     const valuesToUpdate = req.body;
     const updatedBook = await books_db.put(valuesToUpdate);
+
+    if (!updatedBook) {
+        throw new CustomErr(errorMsg.books.update, 500, 'updateUnsuccesfull');
+    }
+
     res.book = updatedBook;
 
     next();
@@ -74,7 +89,6 @@ export const searchWithinFirends = async (req, res, next) => {
     if (res.errors) {
         return next();
     }
-
     const userId = req.user.id;
     const lookFor = req.query.q;
     const friends = await friends_db.getFriends(userId);
@@ -102,6 +116,11 @@ export const addNewBook = async (req, res, next) => {
     }
     const bookData = res.cleanData;
     const book = await books_db.add(bookData);
+
+    if (!book) {
+        throw new CustomErr(errorMsg.books.add, 500, 'cannotWriteNewBook');
+    }
+
     res.book = book;
 
     next();

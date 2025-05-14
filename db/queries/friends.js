@@ -20,10 +20,12 @@ const getAllFriends_db = async (userId) => {
 };
 
 const checkFriendship_db = async (userId, friendId) => {
-    return await recordExists('friends', {
-        user_a: userId,
-        user_b: friendId,
-    });
+    return (
+        (await recordExists('friends', {
+            user_a: userId,
+            user_b: friendId,
+        })) !== undefined
+    );
 };
 
 const addFriend_db = async (userId, friendId) => {

@@ -1,6 +1,8 @@
 import { friends_db } from '../db/queries/friends.js';
 import { users_db } from '../db/queries/simpleQuerys.js';
 import { recordExists } from '../db/utils.js';
+import { setValidationResult } from './middleware.js';
+import { friendRequestRules } from './validations.js';
 
 export const getFriends = async (req, res, next) => {
     const userId = req.user.id;
@@ -13,28 +15,20 @@ export const getFriends = async (req, res, next) => {
     next();
 };
 
+export const friendRequestValidation = [
+    friendRequestRules,
+    setValidationResult,
+];
+
 export const friendRequest = async (req, res, next) => {
+    if (res.errors !== undefined) {
+        return next();
+    }
+
     const userId = req.user.id;
     const { name, email, message } = req.body;
     const friend = await recordExists('users', { name, email });
-
-    if (!friend) {
-        res.friendRequest = {
-            ok: false,
-            message: `No record found with user '${name}' and mail '${email}'`,
-        };
-        return next();
-    }
-    if (await friends_db.friendship(userId, friend.id)) {
-        res.friendRequest = {
-            ok: false,
-            message: `'${req.user.name}' and '${name}' are already friends`,
-        };
-        return next();
-    }
-
-    const response = await friends_db.makeRequest(userId, friend.id, message);
-    res.friendRequest = { ok: true, message: response };
+    await friends_db.makeRequest(userId, friend.id, message);
 
     next();
 };

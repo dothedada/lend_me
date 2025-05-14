@@ -50,15 +50,36 @@
 		<h2>Add friends</h2>
 			<p>You can only add people that you really know, so, the name and the email must be a perfect match.</p>
 			<form action="/friends/add" method="post">
-				<label>Name
-					<input type="text" name="name" placeholder="Elsa Nurmy">
-				</label>
-				<label>Email
-					<input type="email" name="email" placeholder="vampir@example.com">
-				</label>
-				<label>Message
-					<textarea name="message" placeholder="Some message to your friend" rows="5"></textarea>
-				</label>
+				<input type="hidden" name="userId" value="<%= user.id %>">
+				<% if (locals.errors?.form) { %>
+				<ul>
+					<% locals.errors.form.forEach((error) => { %>
+					<li class="input_error"><%= error.msg %></li>
+					<% }) %>
+				</ul>
+				<% } %>
+
+				<%- include("partials/input.ejs", {
+					labelText: "Name",
+					name: "name",
+					value: locals.name,
+					placeholder: "Maila Nurmy",
+				}) %>
+
+				<%- include("partials/input.ejs", {
+					labelText: "Email",
+					name: "email",
+					value: locals.email,
+					placeholder: "vampira@weirdlad.com",
+				}) %>
+
+				<%- include("partials/textarea.ejs", {
+					labelText: "Message",
+					name: "message",
+					placeholder: "Pretty pleaseeee, lets be BFFFFFFFsssss!!!",
+					value: locals.message,
+				}) %>
+
 				<button>Send request</button>
 			</form>
 		</section>

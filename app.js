@@ -41,7 +41,10 @@ app.use('/friends', friendsRoute);
 app.use('/lends', lendsRoute);
 app.use('/me', meRoute);
 
-// TODO: err if no user data
+app.use((err, req, res, next) => {
+    console.log(err, err.statusCode);
+    res.status(err.statusCode || 600).redirect('/');
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

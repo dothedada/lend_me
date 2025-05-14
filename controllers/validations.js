@@ -1,6 +1,9 @@
-import { body, query } from 'express-validator';
+import { body, check, query } from 'express-validator';
+import { recordExists } from '../db/utils.js';
+import { friends_db } from '../db/queries/friends.js';
 
 export const errorMsg = {
+    // middleware
     length: (min, max) => `must be between ${min} and ${max} characters`,
     empty: 'cannot be empty',
     emailTaken: 'this mail already corresponds to anothe user',
@@ -8,7 +11,23 @@ export const errorMsg = {
     numeric: 'must be a number',
     onlyLetters: 'must contain only letters',
     url: 'must be a valid URL',
+    noUser: (name, email) =>
+        `No user called '${name}' with mail '${email}' was found`,
+    areFriends: (name) => `You already are friend with '${name}'`,
+    // db
+    books: {
+        notFound: 'There is no book with the given id',
+        update: 'An unknown error happen when updating re book registe',
+    },
 };
+
+export class CustomErr extends Error {
+    constructor(message, errorCode, name = '') {
+        super(message);
+        this.statusCode = errorCode;
+        this.name = name;
+    }
+}
 
 export const loginRules = [
     body('name')
@@ -131,18 +150,42 @@ export const friendRequestRules = [
         .withMessage(`Name ${errorMsg.empty}`)
         .isLength({ min: 1, max: 120 })
         .withMessage(`Name ${errorMsg.length(1, 120)}`)
+        .bail()
         .escape(),
     body('email')
         .trim()
         .notEmpty()
         .withMessage(`Email ${errorMsg.empty}.`)
         .isEmail()
-        .withMessage(errorMsg.email),
+        .withMessage(errorMsg.email)
+        .bail(),
     body('message')
         .trim()
         .notEmpty()
-        .withMessage(`Email ${errorMsg.empty}.`)
-        .isLength({ min: 120, max: 500 })
-        .withMessage(`Name ${errorMsg.length(120, 500)}`)
+        .withMessage(`Message ${errorMsg.empty}.`)
+        .isLength({ min: 60, max: 500 })
+        .withMessage(`Message ${errorMsg.length(60, 500)}`)
         .escape(),
+    body('form')
+        .custom(async (_, { req }) => {
+            const { name, email } = req.body;
+            const user = await recordExists('users', { name, email });
+            if (!user) {
+                throw new Error(errorMsg.noUser(name, email));
+            }
+            return true;
+        })
+        .custom(async (_, { req }) => {
+            const { userId, name, email } = req.body;
+            const friend = await recordExists('users', { name, email });
+
+            if (!friend) {
+                return true;
+            }
+
+            if (await friends_db.friendship(userId, friend.id)) {
+                throw new Error(errorMsg.areFriends(name));
+            }
+            return true;
+        }),
 ];

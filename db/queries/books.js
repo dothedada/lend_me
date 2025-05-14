@@ -255,7 +255,7 @@ const updateBook_db = async (valuesToUpdate) => {
 
         const { rows } = await client.query(query, value);
         await client.query('COMMIT');
-        return rows;
+        return rows[0];
     } catch (err) {
         await client.query('ROLLBACK');
         throw new Error(`Cannot update the book: ${err.message}`);
