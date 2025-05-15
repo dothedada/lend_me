@@ -21,7 +21,7 @@ export const getAuthorData = asyncWrapper(async (req, res, next) => {
 
     const authorData = await authors_db.get({ id: authorId });
     if (!authorData) {
-        throw new CustomErr(errorMsg.authors.notFound, 404, 'noItemsData');
+        throw new CustomErr(errorMsg.authors.notFound, 404, 'noItemFound');
     }
 
     res.author = authorData;
@@ -39,7 +39,7 @@ export const updateAuthorData = asyncWrapper(async (req, res, next) => {
     const authorUpdatedData = req.body;
     const updatedData = await authors_db.put(authorUpdatedData);
     if (!updatedData) {
-        throw new CustomErr(errorMsg.authors.updateError, 500);
+        throw new CustomErr(errorMsg.authors.update, 500);
     }
 
     res.author = updatedData;

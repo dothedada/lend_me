@@ -27,7 +27,16 @@ export const errorMsg = {
         noIdParam: 'There is no authorId on the params',
         notFound: 'There is no author with the given id',
         noItems: 'No authors where found',
-        updateError: "Unknown error while updatin author's data",
+        update: "An error occur while updating author's data",
+    },
+    categories: {
+        noItems: 'No categories where found',
+    },
+    editorials: {
+        noItems: 'No editorials where found',
+        noIdParam: 'There is no editorialId on the params',
+        notFound: 'There is no editorial with the given id',
+        update: "An error occur while updating editorial's data",
     },
 };
 
