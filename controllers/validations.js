@@ -14,11 +14,20 @@ export const errorMsg = {
     noUser: (name, email) =>
         `No user called '${name}' with mail '${email}' was found`,
     areFriends: (name) => `You already are friend with '${name}'`,
+    noUserIdParam: 'No user id on the params',
     // db
     books: {
+        noIdParam: 'There is no bookId on the params',
         notFound: 'There is no book with the given id',
         update: 'An unknown error happen when updating re book register',
         add: 'An unknown error happen when adding the book register',
+        noItems: 'No books where found',
+    },
+    authors: {
+        noIdParam: 'There is no authorId on the params',
+        notFound: 'There is no author with the given id',
+        noItems: 'No authors where found',
+        updateError: "Unknown error while updatin author's data",
     },
 };
 
