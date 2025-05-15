@@ -11,12 +11,8 @@ import {
 export const searchInputValidation = [searchInputRules, setValidationResult];
 export const addBookValidation = [bookRules, setValidationResult];
 
-export const getAllBooks = asyncWrapper(async (req, res, next) => {
+export const getAllBooks = asyncWrapper(async (_, res, next) => {
     const books = await books_db.getBooks();
-    if (books.lenght === 0) {
-        throw new CustomErr(errorMsg.books.noItems, 404, 'noItemsData');
-    }
-
     res.books = books;
 
     next();
@@ -25,14 +21,14 @@ export const getAllBooks = asyncWrapper(async (req, res, next) => {
 export const getBookDetail = asyncWrapper(async (req, res, next) => {
     const { bookId } = req.params;
     if (!bookId) {
-        throw new CustomErr(errorMsg.books.noIdParam, 404, 'noItemsData');
+        throw new CustomErr(
+            errorMsg.books.noIdParam,
+            404,
+            'missingRequestParam',
+        );
     }
 
     const book = await books_db.getBooks(bookId);
-    if (!book) {
-        throw new CustomErr(errorMsg.books.notFound, 404, 'itemNotFound');
-    }
-
     res.book = book;
 
     next();
@@ -41,7 +37,7 @@ export const getBookDetail = asyncWrapper(async (req, res, next) => {
 export const getOwnedBooks = asyncWrapper(async (req, res, next) => {
     const userId = req.user.id;
     if (!userId) {
-        throw new CustomErr(errorMsg.noUserIdParam, 404, 'userIdNotFound');
+        throw new CustomErr(errorMsg.missingParams, 404, 'missingUserId');
     }
 
     const books = await books_db.getBooksOwnedBy([userId]);
@@ -56,7 +52,7 @@ export const getOwnedBooks = asyncWrapper(async (req, res, next) => {
 export const getFriendsBooks = asyncWrapper(async (req, res, next) => {
     const userId = req.user.id;
     if (!userId) {
-        throw new CustomErr(errorMsg.noUserIdParam, 404, 'userIdNotFound');
+        throw new CustomErr(errorMsg.missingParams, 404, 'missingUserId');
     }
 
     const friends = await friends_db.getFriends(userId);
@@ -89,12 +85,11 @@ export const updateBookData = asyncWrapper(async (req, res, next) => {
     }
 
     const valuesToUpdate = req.body;
-    const updatedBook = await books_db.put(valuesToUpdate);
-
-    if (!updatedBook) {
-        throw new CustomErr(errorMsg.books.update, 500, 'updateUnsuccesfull');
+    if (!valuesToUpdate) {
+        throw new CustomErr(errorMsg.missingBody, 404, 'missingRequestBody');
     }
 
+    const updatedBook = await books_db.put(valuesToUpdate);
     res.book = updatedBook;
 
     next();
@@ -107,7 +102,7 @@ export const searchWithinFirends = asyncWrapper(async (req, res, next) => {
 
     const userId = req.user.id;
     if (!userId) {
-        throw new CustomErr(errorMsg.noUserIdParam, 404, 'userIdNotFound');
+        throw new CustomErr(errorMsg.missingParams, 404, 'missingUserId');
     }
 
     const lookFor = req.query.q;
@@ -120,27 +115,25 @@ export const searchWithinFirends = asyncWrapper(async (req, res, next) => {
 
 export const getBookByTitle = asyncWrapper(async (req, res, next) => {
     const { title } = req.body;
+    if (!title) {
+        throw new CustomErr(errorMsg.missingBody, 404, 'missingRequestBody');
+    }
+
     let books = [];
     if (title !== '') {
         books = await books_db.getBy('title', title);
     }
-
     res.book = books;
 
     next();
 });
 
-export const addNewBook = asyncWrapper(async (req, res, next) => {
+export const addNewBook = asyncWrapper(async (_, res, next) => {
     if (res.errors !== undefined || res.cleanData === undefined) {
         return next();
     }
     const bookData = res.cleanData;
     const book = await books_db.add(bookData);
-
-    if (!book) {
-        throw new CustomErr(errorMsg.books.add, 500, 'cannotWriteNewBook');
-    }
-
     res.book = book;
 
     next();

@@ -14,7 +14,8 @@ export const errorMsg = {
     noUser: (name, email) =>
         `No user called '${name}' with mail '${email}' was found`,
     areFriends: (name) => `You already are friend with '${name}'`,
-    noUserIdParam: 'No user id on the params',
+    missingParams: 'No user id on the params',
+    missingBody: 'Some body request elements are missing',
     // db
     books: {
         noIdParam: 'There is no bookId on the params',

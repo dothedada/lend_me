@@ -4,10 +4,6 @@ import { asyncWrapper, setValidationResult } from './middleware.js';
 
 export const getAllAuthors = asyncWrapper(async (req, res, next) => {
     const authors = await authors_db.get();
-    if (authors.length === 0) {
-        throw new CustomErr(errorMsg.authors.noItems, 404, 'noItemsData');
-    }
-
     res.authors = authors;
 
     next();
