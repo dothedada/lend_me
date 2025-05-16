@@ -2,7 +2,7 @@
     "name": "lend_me",
     "version": "0.0.0",
     "description": "Small system to lend books between friends",
-    "main": "index.js",
+    "main": "app.js",
     "type": "module",
     "scripts": {
         "dev": "MODE=dev node --watch app.js",
