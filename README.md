@@ -15,6 +15,6 @@ A small app to keep track of the books you lend with your friends... It was made
 - ~input validations~
 - ~style the shit up~
 - ~error handling~
-- Error Client page
+- ~Error Client page~
 - real seed
 - notas de aprendizaje (JWT)

@@ -1,83 +1,248 @@
 INSERT INTO authors (name, bio, url) VALUES
-('Gabriel García Márquez', 'Escritor colombiano, Nobel de Literatura 1982', 'garcia-marquez'),
-('J.K. Rowling', 'Escritora británica, creadora de Harry Potter', 'jk-rowling'),
-('George Orwell', 'Escritor británico, autor de 1984', 'george-orwell'),
-('Jane Austen', 'Novelista británica del siglo XIX', 'jane-austen'),
-('J.R.R. Tolkien', 'Escritor británico, autor de El Señor de los Anillos', 'tolkien'),
-('Haruki Murakami', 'Escritor japonés contemporáneo', 'murakami'),
-('Stephen King', 'Escritor estadounidense de terror', 'stephen-king'),
-('Agatha Christie', 'Escritora británica de novelas policíacas', 'agatha-christie');
+('J.K. Rowling', 'British author best known for the Harry Potter series, which has won multiple awards and sold over 500 million copies.', 'https://www.jkrowling.com'),
+('George Orwell', 'English novelist and essayist, famous for "1984" and "Animal Farm," known for his sharp critiques of totalitarianism.', 'https://www.orwellfoundation.com'),
+('Jane Austen', 'English novelist known for her six major novels, including "Pride and Prejudice," which critique British aristocracy.', 'https://www.janeausten.org'),
+('Agatha Christie', 'British writer known as the "Queen of Crime" for her detective novels, including those featuring Hercule Poirot.', 'https://www.agathachristie.com'),
+('Ernest Hemingway', 'American novelist and short-story writer, Nobel Prize winner known for works like "The Old Man and the Sea."', 'https://www.hemingwaysociety.org'),
+('Toni Morrison', 'American novelist and Nobel laureate, famous for "Beloved" and her explorations of Black identity.', 'https://www.tonimorrisonsociety.org'),
+('Mark Twain', 'American humorist and writer, best known for "The Adventures of Tom Sawyer" and "Adventures of Huckleberry Finn."', 'https://www.marktwainhouse.org'),
+('Stephen King', 'Prolific American horror author with over 60 novels, including "The Shining" and "It."', 'https://stephenking.com'),
+('Gabriel García Márquez', 'Colombian Nobel Prize winner known for magical realism, including "One Hundred Years of Solitude."', NULL),
+('Isabel Allende', 'Chilean-American writer famous for "The House of the Spirits," blending realism with magical elements.', 'https://www.isabelallende.com'),
+('Jorge Luis Borges', 'Argentinian short-story writer and poet, known for complex works like "Ficciones."', NULL),
+('Pablo Neruda', 'Chilean poet and Nobel laureate, famous for love poems like "Twenty Love Poems and a Song of Despair."', NULL),
+('Haruki Murakami', 'Japanese writer known for surreal and melancholic novels like "Norwegian Wood" and "Kafka on the Shore."', 'https://www.harukimurakami.com'),
+('Ryu Murakami', 'Japanese author and filmmaker, known for dark, psychological novels like "Coin Locker Babies."', NULL),
+('Arundhati Roy', 'Indian author and activist, Booker Prize winner for "The God of Small Things."', NULL),
+('Kazuo Ishiguro', 'British-Japanese Nobel laureate, author of "The Remains of the Day" and "Never Let Me Go."', 'https://www.kazuoishiguro.com'),
+('Franz Kafka', 'German-speaking Bohemian writer, known for "The Metamorphosis" and "The Trial."', NULL),
+('Leo Tolstoy', 'Russian novelist, philosopher, and author of "War and Peace" and "Anna Karenina."', NULL),
+('Fyodor Dostoevsky', 'Russian novelist famous for psychological depth in works like "Crime and Punishment."', NULL),
+('Albert Camus', 'French-Algerian philosopher and author of "The Stranger" and "The Plague."', NULL),
+('Chinua Achebe', 'Nigerian novelist and poet, best known for "Things Fall Apart," a key African literary work.', NULL),
+('Ngũgĩ wa Thiong''o', 'Kenyan writer and activist, author of "Decolonising the Mind" and "Wizard of the Crow."', NULL),
+('Nadine Gordimer', 'South African Nobel laureate, known for novels about apartheid like "July''s People."', NULL),
+('Margaret Atwood', 'Canadian poet and novelist, famous for "The Handmaid''s Tale" and dystopian fiction.', 'https://margaretatwood.ca'),
+('Neil Gaiman', 'British author of fantasy works like "American Gods" and "The Sandman" graphic novels.', 'https://www.neilgaiman.com'),
+('Ursula K. Le Guin', 'American sci-fi/fantasy writer, known for "The Left Hand of Darkness" and Earthsea series.', NULL),
+('Octavia Butler', 'African-American sci-fi pioneer, author of "Kindred" and the "Parable" series.', NULL),
+('J.R.R. Tolkien', 'British scholar and author of high fantasy classics like "The Lord of the Rings."', 'https://www.tolkienestate.com'),
+('Hermann Hesse', 'German-Swiss poet and novelist, Nobel laureate known for "Siddhartha" and "Steppenwolf."', NULL),
+('Virginia Woolf', 'English modernist writer, famous for "Mrs Dalloway" and feminist essays.', NULL);
 
 INSERT INTO editorials (name, url) VALUES
-('Penguin Random House', 'penguin-random'),
-('Editorial Planeta', 'editorial-planeta'),
-('Bloomsbury', 'bloomsbury'),
-('HarperCollins', 'harpercollins'),
-('Alfaguara', 'alfaguara'),
-('Minotauro', 'minotauro'),
-('Debolsillo', 'debolsillo');
+('Penguin Random House', 'https://www.penguinrandomhouse.com'),
+('HarperCollins', 'https://www.harpercollins.com'),
+('Simon & Schuster', 'https://www.simonandschuster.com'),
+('Macmillan Publishers', 'https://us.macmillan.com'),
+('Hachette Livre', 'https://www.hachette.com'),
+('Scholastic Corporation', 'https://www.scholastic.com'),
+('Oxford University Press', 'https://global.oup.com'),
+('Cambridge University Press', 'https://www.cambridge.org'),
+('Bloomsbury Publishing', 'https://www.bloomsbury.com'),
+('Faber and Faber', 'https://www.faber.co.uk'),
+('Verso Books', 'https://www.versobooks.com'),
+('Graywolf Press', 'https://www.graywolfpress.org'),
+('New Directions Publishing', 'https://www.ndbooks.com'),
+('Europa Editions', 'https://europaeditions.com'),
+('Granta Books', 'https://granta.com'),
+('Editorial Planeta (Spain)', 'https://www.planetadelibros.com'),
+('Éditions Gallimard (France)', 'https://www.gallimard.fr'),
+('Deutscher Taschenbuch Verlag (Germany)', 'https://www.dtv.de'),
+('Editora Schwarcz (Brazil)', 'https://www.companhiadasletras.com.br'),
+('Alfaguara (Latin America)', 'https://www.alfaguara.com'),
+('Iwanami Shoten (Japan)', 'https://www.iwanami.co.jp'),
+('Secker & Warburg (UK)', NULL);
 
 INSERT INTO categories (category) VALUES
-('Ficción'), ('Ciencia Ficción'), ('Fantasía'), ('Terror'), ('Romance'), ('Misterio'), ('Clásico'), ('Distopía');
+('Fiction'),
+('Literary Fiction'),
+('Historical Fiction'),
+('Science Fiction'),
+('Fantasy'),
+('Horror'),
+('Mystery'),
+('Thriller'),
+('Romance'),
+('Adventure'),
+('Biography'),
+('Memoir'),
+('History'),
+('Science'),
+('Philosophy'),
+('Politics'),
+('Self-Help'),
+('Travel'),
+('True Crime'),
+('Poetry'),
+('Drama'),
+('Graphic Novel'),
+('Young Adult'),
+('Children''s Literature'),
+('Classic'),
+('Satire'),
+('Dystopian'),
+('Magical Realism');
 
 INSERT INTO books (title, author_id, editorial_id, year, category_id, sinopsys, url, image) VALUES
-('Cien años de soledad', 1, 5, 1967, 1, 'La saga de la familia Buendía en Macondo', 'cien-anos-soledad', 'cien-anos.jpg'),
-('El amor en los tiempos del cólera', 1, 5, 1985, 5, 'Historia de amor de Florentino Ariza y Fermina Daza', 'amor-tiempos-colera', 'amor-colera.jpg'),
-('Harry Potter y la piedra filosofal', 2, 3, 1997, 3, 'Primer libro de la serie Harry Potter', 'harry-potter-1', 'hp1.jpg'),
-('1984', 3, 1, 1949, 8, 'Novela distópica sobre un régimen totalitario', '1984', '1984.jpg'),
-('Rebelión en la granja', 3, 1, 1945, 8, 'Alegoría política sobre la revolución rusa', 'rebelion-granja', 'rebelion.jpg'),
-('Orgullo y prejuicio', 4, 4, 1813, 5, 'Historia de Elizabeth Bennet y Mr. Darcy', 'orgullo-prejuicio', 'orgullo.jpg'),
-('El Hobbit', 5, 6, 1937, 3, 'Aventuras de Bilbo Bolsón', 'hobbit', 'hobbit.jpg'),
-('El Señor de los Anillos', 5, 6, 1954, 3, 'La guerra por el anillo único', 'senor-anillos', 'lotr.jpg'),
-('Kafka en la orilla', 6, 7, 2002, 1, 'Novela surrealista japonesa', 'kafka-orilla', 'kafka.jpg'),
-('It', 7, 4, 1986, 4, 'Historia de un payaso asesino', 'it', 'it.jpg'),
-('El resplandor', 7, 4, 1977, 4, 'Un escritor y su familia en un hotel maldito', 'resplandor', 'resplandor.jpg'),
-('Asesinato en el Orient Express', 8, 1, 1934, 6, 'Misterio a bordo del famoso tren', 'orient-express', 'orient.jpg'),
-('Crónica de una muerte anunciada', 1, 5, 1981, 1, 'La historia de un asesinato inevitable', 'cronica-muerte', 'cronica.jpg'),
-('Harry Potter y el prisionero de Azkaban', 2, 3, 1999, 3, 'Tercer libro de la serie Harry Potter', 'harry-potter-3', 'hp3.jpg'),
-('Un mundo feliz', 3, 1, 1932, 8, 'Distopía sobre una sociedad futurista', 'mundo-feliz', 'mundo-feliz.jpg'),
-('Emma', 4, 4, 1815, 5, 'Historia de Emma Woodhouse y sus enredos amorosos', 'emma', 'emma.jpg'),
-('El Silmarillion', 5, 6, 1977, 3, 'Historia mitológica de la Tierra Media', 'silmarillion', 'silmarillion.jpg'),
-('1Q84', 6, 7, 2009, 1, 'Novela que mezcla realidad y ficción', '1q84', '1q84.jpg'),
-('Misery', 7, 4, 1987, 4, 'Un escritor cautivo de su fan número uno', 'misery', 'misery.jpg'),
-('Diez negritos', 8, 1, 1939, 6, 'Diez personas atrapadas en una isla', 'diez-negritos', 'negritos.jpg'),
-('El coronel no tiene quien le escriba', 1, 5, 1961, 1, 'Historia de un coronel esperando su pensión', 'coronel', 'coronel.jpg'),
-('Harry Potter y las reliquias de la muerte', 2, 3, 2007, 3, 'Último libro de la serie Harry Potter', 'harry-potter-7', 'hp7.jpg'),
-('Animales fantásticos y dónde encontrarlos', 2, 3, 2001, 3, 'Libro complementario al mundo de Harry Potter', 'animales-fantasticos', 'animales.jpg'),
-('La comunidad del anillo', 5, 6, 1954, 3, 'Primera parte de El Señor de los Anillos', 'comunidad-anillo', 'comunidad.jpg'),
-('Las dos torres', 5, 6, 1954, 3, 'Segunda parte de El Señor de los Anillos', 'dos-torres', 'torres.jpg');
+('1984', 2, 1, 1949, 27, 'In a dystopian future, Winston Smith rebels against the oppressive Party and its leader, Big Brother, in a world of perpetual war, omnipresent surveillance, and manipulated truth. Orwell''s masterpiece explores themes of totalitarianism, censorship, and individualism.', 'https://www.amazon.com/1984-Signet-Classics-George-Orwell/dp/0451524934','https://covers.openlibrary.org/b/isbn/9780451524935-L.jpg'),
+('Pride and Prejudice', 3, 2, 1813, 2, 'Elizabeth Bennet navigates love, class, and societal expectations in Regency England. Her fiery relationship with the proud Mr. Darcy unfolds in Austen''s witty critique of marriage and morality.', 'https://www.penguinrandomhouse.com/books/292927/pride-and-prejudice-by-jane-austen/', 'https://covers.openlibrary.org/b/isbn/9780141439518-L.jpg'),
+('One Hundred Years of Solitude', 9, 15, 1967, 28, 'The Buendía family''s rise and fall in the magical town of Macondo mirrors Latin America''s history. García Márquez blends fantasy and reality in this cornerstone of magical realism.', 'https://www.penguinrandomhouse.com/books/292927/one-hundred-years-of-solitude-by-gabriel-garcia-marquez/', 'https://covers.openlibrary.org/b/isbn/9780060883287-L.jpg'),
+('The Remains of the Day', 16, 1, 1989, 2, 'Stevens, an English butler, reflects on his life of service and missed emotional connections during a postwar road trip. Ishiguro''s novel is a poignant study of duty and regret.', 'https://www.penguinrandomhouse.com/books/291299/the-remains-of-the-day-by-kazuo-ishiguro/', 'https://covers.openlibrary.org/b/isbn/9780571258246-L.jpg'),
+('The Left Hand of Darkness', 26, 10, 1969, 4, 'A human envoy to the androgynous planet of Gethen confronts genderless identity and political intrigue in Le Guin''s groundbreaking exploration of sexuality and culture.', 'https://www.ursulakleguin.com/the-left-hand-of-darkness', 'https://covers.openlibrary.org/b/isbn/9780441478125-L.jpg'),
+('Norwegian Wood', 13, 1, 1987, 2, 'Toru Watanabe reminisces about his 1960s Tokyo youth, torn between two women—Naoko, haunted by tragedy, and Midori, fiercely alive. Murakami''s melancholic coming-of-age tale.', 'https://www.harukimurakami.com/book/norwegian-wood', 'https://covers.openlibrary.org/b/isbn/9780375704024-L.jpg'),
+('The Shining', 8, 1, 1977, 6, 'Jack Torrance becomes the winter caretaker of the haunted Overlook Hotel, descending into madness while his psychic son, Danny, sees terrifying visions. King''s iconic horror.', 'https://stephenking.com/works/novel/shining.html', 'https://covers.openlibrary.org/b/isbn/9780307743657-L.jpg'),
+('The Diary of a Young Girl', 30, 1, 1947, 11, 'Anne Frank''s wartime diary documents her Jewish family''s hiding in Nazi-occupied Amsterdam—a poignant testament to resilience and hope amid horror.', 'https://www.annefrank.org/en/anne-frank/diary/', 'https://covers.openlibrary.org/b/isbn/9780553296983-L.jpg'),
+('Crime and Punishment', 19, 4, 1866, 2, 'Raskolnikov, a destitute student, murders a pawnbroker to test his nihilistic theories, then grapples with guilt and redemption in Dostoevsky''s psychological epic.', NULL, 'https://covers.openlibrary.org/b/isbn/9780679734505-L.jpg'),
+('Beloved', 6, 2, 1987, 2, 'Sethe, an escaped enslaved woman, is haunted by her dead baby''s ghost. Morrison''s Pulitzer-winning novel confronts trauma, memory, and the legacy of slavery.', 'https://www.tonimorrisonsociety.org/novels.html', 'https://covers.openlibrary.org/b/isbn/9781400033416-L.jpg'),
+('The Handmaid''s Tale', 24, 1, 1985, 27, 'In the theocratic dictatorship of Gilead, Offred navigates life as a handmaid forced into reproductive servitude. Atwood''s dystopian feminist classic.', 'https://www.penguinrandomhouse.com/books/295499/the-handmaids-tale-by-margaret-atwood/', 'https://covers.openlibrary.org/b/isbn/9780385490818-L.jpg'),
+('Murder on the Orient Express', 4, 4, 1934, 7, 'Detective Hercule Poirot investigates a murder aboard a snowbound train, uncovering a web of secrets in Christie''s most famous whodunit.', 'https://www.agathachristie.com/stories/murder-on-the-orient-express', 'https://covers.openlibrary.org/b/isbn/9780062073501-L.jpg'),
+('Twenty Love Poems and a Song of Despair', 12, 15, 1924, 20, 'Neruda''s passionate, sensual poems explore love and longing, cementing his reputation as a master of romantic verse.', NULL, 'https://covers.openlibrary.org/b/isbn/9780143039965-L.jpg'),
+('The Hobbit', 28, 1, 1937, 5, 'Bilbo Baggins joins a quest to reclaim a dwarf kingdom from the dragon Smaug, discovering courage and the One Ring in Tolkien''s fantasy adventure.', 'https://www.tolkienestate.com/en/works/the-hobbit.html', 'https://covers.openlibrary.org/b/isbn/9780547928227-L.jpg'),
+('The Stranger', 20, 14, 1942, 2, 'Camus'' existential novel about Meursault, an indifferent man condemned for a senseless murder.', NULL, 'https://covers.openlibrary.org/b/isbn/9780679720201-L.jpg'),
+('Things Fall Apart', 21, 1, 1958, 2, 'Okonkwo''s life in pre-colonial Nigeria clashes with British imperialism in Achebe''s seminal work.', NULL, 'https://covers.openlibrary.org/b/isbn/9780385474542-L.jpg'),
+('American Gods', 25, 2, 2001, 5, 'Ex-con Shadow joins a war between old and new gods in Gaiman''s mythological road trip.', 'https://www.neilgaiman.com/works/Books/American+Gods/', 'https://covers.openlibrary.org/b/isbn/9780062059888-L.jpg'),
+('The Metamorphosis', 17, 16, 1915, 2, 'Gregor Samsa wakes as a giant insect, confronting alienation and family duty in Kafka''s absurdist tale.', NULL, 'https://covers.openlibrary.org/b/isbn/9780553213690-L.jpg'),
+('Kindred', 27, 7, 1979, 4, 'A Black woman time-travels to the antebellum South in Butler''s sci-fi exploration of slavery.', NULL, 'https://covers.openlibrary.org/b/isbn/9780807083697-L.jpg'),
+('The God of Small Things', 15, 1, 1997, 2, 'Twins Rahel and Estha grapple with caste and tragedy in Roy''s lyrical Kerala-set novel.', NULL, 'https://covers.openlibrary.org/b/isbn/9780006550686-L.jpg'),
+('Siddhartha', 29, 16, 1922, 15, 'A spiritual seeker''s journey to enlightenment in Hesse''s philosophical novel.', NULL, 'https://covers.openlibrary.org/b/isbn/9780553208849-L.jpg'),
+('The House of the Spirits', 10, 15, 1982, 28, 'The Trueba family''s saga mirrors Chile''s political turmoil in Allende''s magical realist epic.', NULL, 'https://covers.openlibrary.org/b/isbn/9780553273914-L.jpg'),
+('Ficciones', 11, 16, 1944, 2, 'Borges'' labyrinthine short stories blur reality and fiction, including "The Library of Babel."', NULL, 'https://covers.openlibrary.org/b/isbn/9780802130303-L.jpg'),
+('July''s People', 23, 1, 1981, 2, 'A white family flees apartheid violence to live with their Black servant in Gordimer''s provocative novel.', NULL, 'https://covers.openlibrary.org/b/isbn/9780140061406-L.jpg'),
+('Decolonising the Mind', 22, 18, 1986, 15, 'Thiong''o''s essays argue for African literature in native languages, rejecting colonial legacies.', NULL, 'https://covers.openlibrary.org/b/isbn/9780852555019-L.jpg'),
+('The Adventures of Tom Sawyer', 7, 2, 1876, 10, 'A mischievous boy''s escapades in antebellum Missouri, by Mark Twain.', NULL, 'https://covers.openlibrary.org/b/isbn/9780194230698-L.jpg'),
+('Mrs Dalloway', 30, 10, 1925, 2, 'A day in the life of Clarissa Dalloway, weaving memory and post-WWI trauma in Woolf''s modernist prose.', NULL, 'https://covers.openlibrary.org/b/isbn/9780156628709-L.jpg'),
+('Animal Farm', 2, 1, 1945, 27, 'A satirical allegory of Soviet totalitarianism, where farm animals overthrow humans but end up oppressed by their own leaders, the pigs.', 'https://www.penguinrandomhouse.com/books/292927/animal-farm-by-george-orwell/', 'https://covers.openlibrary.org/b/isbn/9780451526342-L.jpg'),
+('The Casual Vacancy', 1, 2, 2012, 2, 'A small English town erupts in class warfare after the sudden death of a parish council member, exposing hypocrisy and social divides.', 'https://www.hachettebookgroup.com/titles/j-k-rowling/the-casual-vacancy/9780316228534/', 'https://covers.openlibrary.org/b/isbn/9781408704202-L.jpg'),
+('Love in the Time of Cholera', 9, 15, 1985, 2, 'Florentino Ariza waits 51 years to reunite with Fermina Daza, weaving a tale of enduring passion and aging in a Caribbean port city.', 'https://www.penguinrandomhouse.com/books/292927/love-in-the-time-of-cholera-by-gabriel-garcia-marquez/', 'https://covers.openlibrary.org/b/isbn/9780307389732-L.jpg'),
+('Kafka on the Shore', 13, 1, 2002, 5, 'A runaway teenager and an elderly man''s fates intertwine in a surreal journey involving talking cats, fish raining from the sky, and a hidden forest.', 'https://www.harukimurakami.com/book/kafka-on-the-shore', 'https://covers.openlibrary.org/b/isbn/9781400079278-L.jpg'),
+('And Then There Were None', 4, 4, 1939, 7, 'Ten strangers are lured to an island and killed one by one in Christie''s masterpiece of suspense, where no one is innocent.', 'https://www.agathachristie.com/stories/and-then-there-were-none', 'https://covers.openlibrary.org/b/isbn/9780062073488-L.jpg'),
+('Eva Luna', 10, 15, 1987, 2, 'A storyteller''s life intertwines with revolutionaries and actors in a South American country, blending history and magical realism.', NULL, 'https://covers.openlibrary.org/b/isbn/9780553283966-L.jpg'),
+('The Brothers Karamazov', 19, 4, 1880, 2, 'Three brothers grapple with faith, morality, and patricide in Dostoevsky''s philosophical epic about family and redemption.', NULL, 'https://covers.openlibrary.org/b/isbn/9780374528379-L.jpg'),
+('A Wizard of Earthsea', 26, 10, 1968, 5, 'Young wizard Ged battles a shadow creature he unleashed, learning the balance of power and humility in this fantasy classic.', 'https://www.ursulakleguin.com/a-wizard-of-earthsea', 'https://covers.openlibrary.org/b/isbn/9780553383041-L.jpg'),
+('To the Lighthouse', 30, 10, 1927, 2, 'The Ramsay family''s summer home becomes a meditation on time, memory, and artistic ambition in Woolf''s modernist landmark.', NULL, 'https://covers.openlibrary.org/b/isbn/9780156907392-L.jpg'),
+('Labyrinths', 11, 16, 1962, 2, 'A collection of Borges'' mind-bending stories exploring infinite libraries, paradoxical time, and the nature of reality.', NULL, 'https://covers.openlibrary.org/b/isbn/9780811216999-L.jpg'),
+('It', 8, 1, 1986, 6, 'Seven children confront a shape-shifting monster that exploits their fears, then reunite as adults to finish the battle.', 'https://stephenking.com/works/novel/it.html', 'https://covers.openlibrary.org/b/isbn/9780450411434-L.jpg'),
+('Alias Grace', 24, 1, 1996, 2, 'Based on a true story, Grace Marks, a convicted murderer in 1840s Canada, claims amnesia in this psychological historical novel.', 'https://www.penguinrandomhouse.com/books/295499/alias-grace-by-margaret-atwood/', 'https://covers.openlibrary.org/b/isbn/9780385475716-L.jpg'),
+('Steppenwolf', 29, 16, 1927, 15, 'Harry Haller, the "wolf of the steppes," navigates a crisis of identity and bourgeois society in Hesse''s existential novel.', NULL, 'https://covers.openlibrary.org/b/isbn/9780312278670-L.jpg'),
+('Coraline', 25, 2, 2002, 24, 'A girl discovers a parallel world with sinister doppelgängers of her parents in Gaiman''s dark fairy tale.', 'https://www.neilgaiman.com/works/books/Coraline/', 'https://covers.openlibrary.org/b/isbn/9780380977789-L.jpg'),
+('Arrow of God', 21, 1, 1964, 2, 'An Igbo priest clashes with colonial forces and his own community in post-WWI Nigeria, the sequel to "Things Fall Apart."', NULL, 'https://covers.openlibrary.org/b/isbn/9780385020456-L.jpg'),
+('The Fellowship of the Ring', 28, 1, 1954, 5,'Frodo Baggins begins his quest to destroy the One Ring in Tolkien''s epic fantasy, forming the Fellowship to counter Sauron''s darkness.','https://www.tolkienestate.com/en/works/the-lord-of-the-rings.html', 'https://covers.openlibrary.org/b/isbn/9780345339706-L.jpg'),
+('War and Peace', 18, 4, 1869, 3,'Interweaving the lives of aristocratic families with Napoleon''s 1812 invasion, Tolstoy crafts a monumental exploration of history and human nature.',NULL, 'https://covers.openlibrary.org/b/isbn/9780199232765-L.jpg'),
+('The Plague', 20, 14, 1947, 2,'A gripping allegory of human resilience as Dr. Rieux and others combat a deadly plague in Oran, reflecting on solidarity and absurdity.',NULL, 'https://covers.openlibrary.org/b/isbn/9780679720218-L.jpg'),
+('Coin Locker Babies', 14, 1, 1980, 2,'Two abandoned infants bond through trauma in a surreal Tokyo, descending into violence and artistic rebellion in Murakami''s punk-lit classic.',NULL, 'https://covers.openlibrary.org/b/isbn/9784770029876-L.jpg'),
+('The Conservationist', 23, 1, 1974, 2,'A wealthy white South African''s farm becomes a microcosm of apartheid''s contradictions in this Booker Prize-winning novel.',NULL, 'https://covers.openlibrary.org/b/isbn/9780140034844-L.jpg'),
+('Petals of Blood', 22, 1, 1977, 2,'Four suspects in a murder case expose post-colonial Kenya''s corruption and disillusionment in Ngũgĩ''s politically charged masterpiece.',NULL, 'https://covers.openlibrary.org/b/isbn/9780143039174-L.jpg'),
+('The Ministry of Utmost Happiness', 15, 1, 2017, 2,'Interlinked lives in modern India - from transgender activists to Kashmiri rebels - weave a tapestry of love and resistance.','https://www.penguinrandomhouse.com/books/537702/the-ministry-of-utmost-happiness-by-arundhati-roy/', 'https://covers.openlibrary.org/b/isbn/9780670089635-L.jpg'),
+('Canto General', 12, 15, 1950, 20,'Neruda''s epic poem cycles through Latin America''s natural wonders, indigenous histories, and colonial struggles in 15 cantos.',NULL, 'https://covers.openlibrary.org/b/isbn/9789507310059-L.jpg'),
+('The Castle', 17, 16, 1926, 2,'K.''s futile attempts to access the mysterious Castle bureaucracy exemplify Kafka''s themes of alienation and opaque power structures.',NULL, 'https://covers.openlibrary.org/b/isbn/9780805211061-L.jpg'),
+('The Lathe of Heaven', 26, 10, 1971, 4,'A man whose dreams alter reality is exploited by a psychiatrist in Le Guin''s Taoist-inspired sci-fi exploration of power and change.','https://www.ursulakleguin.com/the-lathe-of-heaven', 'https://covers.openlibrary.org/b/isbn/9780684125296-L.jpg'),
+('Neverwhere', 25, 2, 1996, 5,'Richard Mayhew discovers London Below - a dark mirror city of angels, assassins, and floating markets - after helping a mysterious girl.','https://www.neilgaiman.com/works/books/Neverwhere/', 'https://covers.openlibrary.org/b/isbn/9780060557812-L.jpg'),
+('Song of Solomon', 6, 2, 1977, 2,'Milkman Dead''s journey to uncover his family history becomes a lyrical exploration of Black identity and ancestral memory.','https://www.tonimorrisonsociety.org/novels.html', 'https://covers.openlibrary.org/b/isbn/9781400033423-L.jpg'),
+('For Whom the Bell Tolls', 5, 1, 1940, 3,'An American dynamiter joins Spanish partisans in the Civil War, confronting love, duty, and mortality in Hemingway''s sparse prose.',NULL, 'https://covers.openlibrary.org/b/isbn/9780684803357-L.jpg'),
+('A Connecticut Yankee in King Arthur''s Court', 7, 2, 1889, 10,'A 19th-century engineer transported to Camelot satirizes both medieval and modern society through technological anachronisms.',NULL, 'https://covers.openlibrary.org/b/isbn/9780192836295-L.jpg'),
+('The Blind Assassin', 24, 1, 2000, 2,'An elderly woman reveals family secrets through a novel-within-a-novel in this Booker Prize-winning metafictional masterpiece.','https://www.penguinrandomhouse.com/books/295499/the-blind-assassin-by-margaret-atwood/', 'https://covers.openlibrary.org/b/isbn/9780385720953-L.jpg'),
+('Never Let Me Go', 16, 1, 2005, 4,'Students at Hailsham boarding school gradually uncover their sinister purpose in Ishiguro''s haunting dystopian novel.','https://www.penguinrandomhouse.com/books/295499/never-let-me-go-by-kazuo-ishiguro/', 'https://covers.openlibrary.org/b/isbn/9781400078776-L.jpg'),
+('The Aleph', 11, 16, 1949, 2,'Borges'' short stories delve into infinite libraries, immortal beings, and a point containing all space - quintessential philosophical fiction.',NULL, 'https://covers.openlibrary.org/b/isbn/9780142437889-L.jpg'),
+('City of the Beasts', 10, 15, 2002, 10,'A teenage boy''s Amazon expedition uncovers mythical creatures and indigenous wisdom in Allende''s YA adventure series opener.',NULL, 'https://covers.openlibrary.org/b/isbn/9780060509181-L.jpg'),
+('No Longer at Ease', 21, 1, 1960, 2,'Obi Okonkwo returns from British education to face corruption and cultural conflict in post-colonial Nigeria, completing Achebe''s trilogy.',NULL, 'https://covers.openlibrary.org/b/isbn/9780385474542-L.jpg'),
+('Harry Potter and the Philosopher''s Stone', 1, 9, 1997, 5, 'A young boy discovers he''s a wizard and begins his education at Hogwarts School of Witchcraft and Wizardry, uncovering a magical world and his own destiny.', 'https://www.jkrowling.com/book/harry-potter-philosophers-stone/', 'https://covers.openlibrary.org/b/isbn/9780747532743-L.jpg'),
+('The Two Towers', 28, 1, 1954, 5, 'The second part of Tolkien''s epic follows the divided fellowship as Frodo approaches Mordor while war brews in Rohan and Gondor.', NULL, 'https://covers.openlibrary.org/b/isbn/9780345339713-L.jpg'),
+('Death on the Nile', 4, 4, 1937, 7, 'Hercule Poirot investigates a murder during a luxury Nile cruise, where every passenger has a motive and opportunity.', 'https://www.agathachristie.com/stories/death-on-the-nile', 'https://covers.openlibrary.org/b/isbn/9780007119318-L.jpg'),
+('The Old Man and the Sea', 5, 1, 1952, 2, 'An aging Cuban fisherman battles a giant marlin in the Gulf Stream in Hemingway''s Nobel Prize-winning novella.', NULL, 'https://covers.openlibrary.org/b/isbn/9780684801223-L.jpg'),
+('1Q84', 13, 1, 2009, 4, 'A woman notices subtle changes in reality and becomes involved in a mysterious plot involving a cult and a ghostwriter.', 'https://www.harukimurakami.com/book/1q84', 'https://covers.openlibrary.org/b/isbn/9780307593313-L.jpg'),
+('The Stand', 8, 1, 1978, 6, 'After a plague wipes out most of humanity, survivors align in a battle between good and evil in King''s apocalyptic masterpiece.', 'https://stephenking.com/works/novel/stand.html', 'https://covers.openlibrary.org/b/isbn/9780385199575-L.jpg'),
+('Chronicle of a Death Foretold', 9, 15, 1981, 2, 'A man''s murder in a small Colombian town was predicted by everyone, yet no one prevented it in this exploration of honor and fate.', NULL, 'https://covers.openlibrary.org/b/isbn/9781400034710-L.jpg'),
+('The Unbearable Lightness of Being', 20, 1, 1984, 2, 'A love triangle in 1968 Prague explores existential themes against the backdrop of the Soviet invasion.', NULL, 'https://covers.openlibrary.org/b/isbn/9780060932138-L.jpg'),
+('The Satanic Verses', 25, 2, 1988, 5, 'Two Indian actors survive a plane crash and experience miraculous transformations in this magical realist novel that sparked controversy.', NULL, 'https://covers.openlibrary.org/b/isbn/9780670825370-L.jpg'),
+('The Adventures of Huckleberry Finn', 7, 2, 1885, 10, 'Huck Finn and runaway slave Jim journey down the Mississippi River in Twain''s groundbreaking American novel.', NULL, 'https://covers.openlibrary.org/b/isbn/9780486280615-L.jpg'),
+('The Trial', 17, 16, 1925, 2, 'Josef K. is arrested and prosecuted by a remote, inaccessible authority for an unspecified crime in Kafka''s unfinished novel.', NULL, 'https://covers.openlibrary.org/b/isbn/9780805210408-L.jpg'),
+('The Wind-Up Bird Chronicle', 13, 1, 1994, 2, 'A man searches for his missing wife in a Tokyo suburb, encountering strange characters and slipping into alternative realities.', 'https://www.harukimurakami.com/book/the-wind-up-bird-chronicle', 'https://covers.openlibrary.org/b/isbn/9780679775430-L.jpg'),
+('The Picture of Dorian Gray', 3, 1, 1890, 2, 'A beautiful young man remains youthful while his portrait ages and reflects his moral decay in Wilde''s philosophical novel.', NULL, 'https://covers.openlibrary.org/b/isbn/9780141439570-L.jpg'),
+('The Name of the Rose', 11, 16, 1980, 7, 'A Franciscan monk investigates mysterious deaths in a 14th-century Italian monastery in this historical murder mystery.', NULL, 'https://covers.openlibrary.org/b/isbn/9780151446476-L.jpg'),
+('The Sound and the Fury', 6, 2, 1929, 2, 'The decline of a Southern family is told through stream-of-consciousness narratives in Faulkner''s modernist classic.', NULL, 'https://covers.openlibrary.org/b/isbn/9780679732242-L.jpg'),
+('The Master and Margarita', 19, 4, 1967, 5, 'The devil visits Soviet Moscow while Pontius Pilate confronts his role in Christ''s crucifixion in Bulgakov''s satirical fantasy.', NULL, 'https://covers.openlibrary.org/b/isbn/9780679760801-L.jpg'),
+('The Shadow of the Wind', 10, 15, 2001, 7, 'A boy discovers a mysterious book that leads him into a labyrinthine conspiracy in post-war Barcelona.', NULL, 'https://covers.openlibrary.org/b/isbn/9780143034902-L.jpg'),
+('The Road to Wigan Pier', 2, 1, 1937, 13, 'Orwell''s documentary account of working-class life in northern England and his arguments for democratic socialism.', NULL, 'https://covers.openlibrary.org/b/isbn/9780156767507-L.jpg'),
+('The Bone People', 24, 1, 1984, 2, 'An isolated artist, a mute child, and his foster father form an unconventional family in this Booker Prize-winning novel.', NULL, 'https://covers.openlibrary.org/b/isbn/9780860683597-L.jpg'),
+('The Sailor Who Fell from Grace with the Sea', 14, 1, 1963, 2, 'A group of teenage boys observe their widowed mother''s new romance with disturbing consequences in Mishima''s psychological novel.', NULL, 'https://covers.openlibrary.org/b/isbn/9780679752684-L.jpg');
 
-INSERT INTO users (name, email) VALUES
-('Juan Pérez', 'juan@example.com'),
-('María García', 'maria@example.com'),
-('Carlos López', 'carlos@example.com'),
-('Ana Martínez', 'ana@example.com'),
-('Luis Rodríguez', 'luis@example.com'),
-('Sofía Hernández', 'sofia@example.com'),
-('Pedro Díaz', 'pedro@example.com');
+INSERT INTO users (name, email, status) VALUES
+('Juan Pérez', 'juan@example.com', 'alive'),
+('María García', 'maria@example.com', 'alive'),
+('Carlos López', 'carlos@example.com', 'alive'),
+('Ana Martínez', 'ana@example.com', 'alive'),
+('Luisa Rodríguez', 'luisa@example.com', 'alive'),
+('Usuario Control', 'control@example.com', 'alive');
 
-INSERT INTO book_user (book_id, user_id) VALUES
-(1,1), (1,2), (1,3), (2,1), (2,4), (3,2), (3,5), (3,6), (4,3), (4,7),
-(5,1), (5,3), (6,2), (6,4), (7,5), (7,6), (8,3), (8,7), (9,1), (9,4),
-(10,2), (10,5), (11,3), (11,6), (12,4), (12,7), (13,1), (13,3), (14,2),
-(14,5), (15,3), (15,6), (16,4), (16,7), (17,1), (17,3), (18,2), (18,5),
-(19,3), (19,6), (20,4), (20,7), (21,1), (21,2), (22,3), (22,4);
+DO $$
+DECLARE
+    book_id INT;
+    user_count INT;
+    user_ids INT[];
+    i INT;
+    j INT;
+BEGIN
+    FOR book_id IN 1..81 LOOP
+        user_count := 1 + floor(random() * 5)::INT;
+        
+        user_ids := array(
+            SELECT DISTINCT 1 + floor(random() * 5)::INT
+            FROM generate_series(1, user_count)
+        );
+        
+        FOREACH i IN ARRAY user_ids LOOP
+            INSERT INTO book_user (book_id, user_id) VALUES (book_id, i);
+        END LOOP;
+    END LOOP;
+    
+    FOR book_id IN 1..81 LOOP
+        INSERT INTO book_user (book_id, user_id) VALUES (book_id, 6);
+    END LOOP;
+END $$;
+
+INSERT INTO friend_request (from_id, to_id, message) VALUES
+(1, 4, 'Hi Ana, would you like to be friends?'),
+(1, 5, 'Luisa, we met at the library - would you like to connect?'),
+(2, 4, 'Ana, would you accept my friend request?'),
+(4, 1, 'Juan, can we be friends?'),
+(4, 2, 'Maria, would you accept my request?'),
+(5, 3, 'Carlos, would you like to be friends?'),
+(2, 1, 'Juan, friends?'),
+(5, 4, 'Ana, let''s connect');
+
 
 SELECT add_friend(1,2);
 SELECT add_friend(1,3);
-SELECT add_friend(1,4);
 SELECT add_friend(2,3);
 SELECT add_friend(2,5);
 SELECT add_friend(3,4);
-SELECT add_friend(3,6);
+SELECT add_friend(3,5);
 SELECT add_friend(4,5);
-SELECT add_friend(4,7);
-SELECT add_friend(5,6);
-SELECT add_friend(6,7);
 
 INSERT INTO lends (book_id, owner_id, to_id, date_taken, date_returned, status) VALUES
-(1, 1, 2, '2023-01-15', '2023-02-10', 'returned'),
-(3, 2, 1, '2023-03-05', '2023-04-12', 'returned'),
-(5, 3, 4, '2023-05-20', '2023-06-15', 'returned');
-INSERT INTO lends (book_id, owner_id, to_id, date_taken, status) VALUES
-(7, 5, 6, '2023-07-01', 'active');
+(5, 1, 2, '2023-10-05', NULL, 'active'),
+(12, 1, 3, '2023-10-10', NULL, 'active'),
+(28, 2, 4, '2023-09-28', NULL, 'active'),
+(35, 3, 5, '2023-10-15', NULL, 'active'),
+(50, 3, 1, '2023-10-01', NULL, 'active'),
+(65, 4, 2, '2023-09-20', NULL, 'active'),
+(3, 1, 2, '2023-01-05', '2023-02-10', 'returned'),
+(8, 1, 4, '2023-02-12', '2023-03-18', 'returned'),
+(15, 1, 5, '2023-03-20', '2023-04-25', 'returned'),
+(24, 2, 3, '2023-04-01', '2023-05-10', 'returned'),
+(30, 2, 1, '2023-05-12', '2023-06-15', 'returned'),
+(42, 3, 4, '2023-06-20', '2023-07-30', 'returned'),
+(55, 3, 2, '2023-07-05', '2023-08-10', 'returned'),
+(60, 4, 5, '2023-08-15', '2023-09-20', 'returned'),
+(70, 5, 1, '2023-09-01', '2023-10-05', 'returned'),
+(78, 5, 3, '2023-09-10', '2023-10-10', 'returned'),
+(7, 1, 3, CURRENT_DATE, NULL, 'requested'),
+(19, 2, 5, CURRENT_DATE, NULL, 'requested'),
+(33, 3, 1, CURRENT_DATE, NULL, 'requested'),
+(47, 3, 4, CURRENT_DATE, NULL, 'requested'),
+(75, 5, 2, CURRENT_DATE, NULL, 'requested'),
+(10, 1, 2, '2023-08-05', NULL, 'denied'),
+(22, 2, 3, '2023-09-18', NULL, 'denied'),
+(38, 3, 5, '2023-10-01', NULL, 'denied'),
+(63, 4, 1, '2023-09-22', NULL, 'denied');
