@@ -4,8 +4,10 @@
 
 	<main>
 		<p><%= name %></p>
-		<p>go to <a href="<%= url %>" target="_blank"><%= url %></a></p>
-		<a href="/detail/<%= id %>/editorial/edit">edit editorial</a>
+		<p>
+			go to <a href="<%= url %>" target="_blank"><%= url %></a> <br/ >
+			<a class="destructive" href="/detail/<%= id %>/editorial/edit">edit editorial</a>
+		</p>
 	</main>
 
 	<%- include("../partials/footer.html") %>

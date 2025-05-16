@@ -8,6 +8,9 @@
 			<div class="cards_display">
 				<% friendsBooks.forEach((book) => { %>
 				<div class="card">
+					<% if (book.photo) { %>
+					<img src="<%= book.photo %>" alt="<%= book.title %>'s cover">
+					<% } %>
 					<div>
 						<h3><a href="/detail/<%= book.id %>/book"><%= book.title %></a></h3>
 						<div><a href="/detail/<%= book.author_id %>/author"><%= book.author %></a></div>

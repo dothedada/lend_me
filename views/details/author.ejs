@@ -4,8 +4,12 @@
 
 	<main>
 		<p><%= bio %></p>
-		<a href="<%= url %>" target="_blank">read more</a>
-		<a href="/detail/<%= id %>/author/edit">edit author data</a>
+		<p>
+			<% if (locals.url) { %>
+			<a href="<%= url %>" target="_blank">read more</a> <br />
+			<% } %>
+			<a class="destructive" href="/detail/<%= id %>/author/edit">edit author data</a>
+		</p>
 	</main>
 
 	<%- include("../partials/footer.html") %>
