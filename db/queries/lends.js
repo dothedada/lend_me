@@ -1,3 +1,4 @@
+import { CustomErr, errorMsg } from '../../controllers/validations.js';
 import pool from '../pool.cjs';
 import {
     lendsQuery,
@@ -11,7 +12,7 @@ const getAllLends_db = async () => {
         const { rows } = await pool.query(lendsQuery);
         return rows;
     } catch (err) {
-        throw new Error(`Database query to 'lends' failed: ${err.message}`);
+        throw new CustomErr(errorMsg.dbQuery('lends', err));
     }
 };
 
@@ -26,7 +27,7 @@ const getUserTransactions_db = async (userId) => {
         const { rows } = await pool.query(query, [id]);
         return rows;
     } catch (err) {
-        throw new Error(`Database query to 'lends' failed: ${err.message}`);
+        throw new CustomErr(errorMsg.dbQuery('lends', err));
     }
 };
 
@@ -35,10 +36,10 @@ const getLendsBy_db = async (valueObj) => {
     let value = `${rawValue}`.trim();
 
     if (!Object.keys(lendsQueryColumns).includes(key)) {
-        throw new Error(`'${key}' is not a valid column for lends query`);
+        throw new CustomErr(errorMsg.dbNotValidValue(key), 500);
     }
     if (value === '') {
-        throw new Error(`'${value}' is not a valid value`);
+        throw new CustomErr(errorMsg.dbNotValidValue(value), 500);
     }
 
     let whereClause = '';
@@ -57,7 +58,7 @@ const getLendsBy_db = async (valueObj) => {
         const { rows } = await pool.query(query, [value]);
         return rows;
     } catch (err) {
-        throw new Error(`Database query to 'lends' failed: ${err.message}`);
+        throw new CustomErr(errorMsg.dbQuery('lends', err));
     }
 };
 
@@ -74,7 +75,7 @@ const requestLend_db = async (values) => {
         elementExists('books', [cleanBook_id]),
     ]);
     if (elementsExists.some((e) => !e)) {
-        throw new Error('User or book does not exist');
+        throw new CustomErr(errorMsg.dbUserBookNotExist, 404);
     }
 
     const userHasBook = await recordExists('book_user', {
@@ -82,7 +83,7 @@ const requestLend_db = async (values) => {
         user_id: owner_id,
     });
     if (!userHasBook) {
-        throw new Error(`the book is not owned by this user`);
+        throw new CustomErr(errorMsg.dbBookNotOwned, 404);
     }
 
     const bookNotAvailable = await recordExists('lends', {
@@ -92,7 +93,7 @@ const requestLend_db = async (values) => {
     });
 
     if (bookNotAvailable) {
-        throw new Error(`the book '${book_id}' is not available`);
+        throw new CustomErr(errorMsg.dbBookNotAvailable(book_id), 404);
     }
 
     const query = `
@@ -104,7 +105,7 @@ const requestLend_db = async (values) => {
         const { rows } = await pool.query(query, [book_id, owner_id, to_id]);
         return rows;
     } catch (err) {
-        throw new Error(`Database query to 'lends' failed: ${err.message}`);
+        throw new CustomErr(errorMsg.dbQuery('lends', err));
     }
 };
 
@@ -117,13 +118,13 @@ const deleteRequest_db = async (lendId) => {
         const { rows } = await pool.query(query, [id]);
         return rows;
     } catch (err) {
-        throw new Error(`Database query to 'lends' failed: ${err.message}`);
+        throw new CustomErr(errorMsg.dbQuery('lends', err));
     }
 };
 
 const updateLend_db = async (lendId, status) => {
     if (!lendStatus.includes(status)) {
-        throw new Error(`'${status}' is not a valid lend status`);
+        throw new CustomErr(errorMsg.dbParams(status), 404);
     }
     const cleanId = validateId(lendId);
 
@@ -139,11 +140,11 @@ const updateLend_db = async (lendId, status) => {
     try {
         const { rows } = await pool.query(query, [cleanId, status]);
         if (rows.length === 0) {
-            throw new Error(`there is no lends with id ${lendId}`);
+            throw new CustomErr(errorMsg.dbEmptyQuery, 404);
         }
         return rows;
     } catch (err) {
-        throw new Error(`Database query to 'lends' failed: ${err.message}`);
+        throw new CustomErr(errorMsg.dbQuery('lends', err));
     }
 };
 
@@ -160,7 +161,7 @@ const returnAllLends_db = async (userId) => {
         const { rows } = await pool.query(query, [id]);
         return rows;
     } catch (err) {
-        throw new Error(`Database query to 'lends' failed: ${err.message}`);
+        throw new CustomErr(errorMsg.dbQuery('lends', err));
     }
 };
 

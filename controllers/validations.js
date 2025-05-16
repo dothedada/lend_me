@@ -23,6 +23,12 @@ export const errorMsg = {
     dbParams: (parameter) => `Invalid query parameter '${parameter}'`,
     dbMissingParams: 'missing needed params to run the query',
     dbUserNotExist: (user) => `The user with the id '${user}' does not exist`,
+    dbFriendship: 'Friendship already exists',
+    dbNoFriendship: 'The users are not friends',
+    dbNotValidValue: (value) => `${value} is not a valid value for the query`,
+    dbUserBookNotExist: 'User or book does not exist',
+    dbBookNotOwned: 'the book is not owned by this user',
+    dbBookNotAvailable: (book_id) => `the book '${book_id}' is not available`,
 
     books: {
         noIdParam: 'There is no bookId on the params',
