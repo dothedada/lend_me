@@ -22,6 +22,7 @@ export const errorMsg = {
         `Database query to '${table}' failed: ${err.message}`,
     dbParams: (parameter) => `Invalid query parameter '${parameter}'`,
     dbMissingParams: 'missing needed params to run the query',
+    dbUserNotExist: (user) => `The user with the id '${user}' does not exist`,
 
     books: {
         noIdParam: 'There is no bookId on the params',

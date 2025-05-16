@@ -1,21 +1,21 @@
+import { CustomErr, errorMsg } from '../../controllers/validations.js';
 import pool from '../pool.cjs';
 import { elementExists, recordExists, validateId } from '../utils.js';
 
 const getAllFriends_db = async (userId) => {
     const cleanId = validateId(userId);
-
-    const userExist = await elementExists('users', [cleanId]);
-    if (userExist.length === 0) {
-        throw new Error(`The user with the id '${cleanId}' does not exist`);
-    }
-
+    await elementExists('users', [cleanId]);
     const query = `SELECT user_b FROM friends WHERE user_a = $1`;
 
     try {
         const { rows } = await pool.query(query, [cleanId]);
         return rows.map((e) => e.user_b);
     } catch (err) {
-        throw new Error(`Database query to 'friends' failed: ${err.message}`);
+        throw new CustomErr(
+            errorMsg.dbQuery('friends', err),
+            500,
+            'serverError',
+        );
     }
 };
 
@@ -47,13 +47,13 @@ const addFriend_db = async (userId, friendId) => {
     ]);
 
     if (userExist.length === 0) {
-        throw new Error(`The user with the id '${userId}' does not exist`);
+        throw new CustomErr(errorMsg.dbUserNotExist(userExist), 404);
     }
     if (friendExist.length === 0) {
-        throw new Error(`The user with the id '${friendId}' does not exist`);
+        throw new CustomErr(errorMsg.dbUserNotExist(friendExist), 404);
     }
     if (friendshipExists) {
-        throw new Error('Friendship already exists');
+        throw new CustomErr(errorMsg.dbFriendship, 404);
     }
 
     const query = `SELECT add_friend($1, $2)`;
@@ -61,7 +61,11 @@ const addFriend_db = async (userId, friendId) => {
     try {
         await pool.query(query, values);
     } catch (err) {
-        throw new Error(`Database query to 'friends' failed: ${err.message}`);
+        throw new CustomErr(
+            errorMsg.dbQuery('friends', err),
+            500,
+            'serverError',
+        );
     }
 };
 
@@ -70,7 +74,7 @@ const removeFriendship_db = async (userA, userB) => {
     const userB_clean = validateId(userB);
 
     if (!(await checkFriendship_db(userA_clean, userB_clean))) {
-        throw new Error('The users are not friends');
+        throw new CustomErr(errorMsg.dbNoFriendship, 404);
     }
 
     const query = `
@@ -79,7 +83,11 @@ const removeFriendship_db = async (userA, userB) => {
         const { rows } = await pool.query(query, [userA_clean, userB_clean]);
         return rows;
     } catch (err) {
-        throw new Error(`Database query to 'friends' failed: ${err.message}`);
+        throw new CustomErr(
+            errorMsg.dbQuery('friends', err),
+            500,
+            'serverError',
+        );
     }
 };
 
@@ -95,13 +103,17 @@ const removeUser_db = async (userId) => {
         const { rows } = await pool.query(query, [cleanUser]);
         return rows;
     } catch (err) {
-        throw new Error(`Database query to 'friends' failed: ${err.message}`);
+        throw new CustomErr(
+            errorMsg.dbQuery('friends', err),
+            500,
+            'serverError',
+        );
     }
 };
 
 const addRequest_db = async (from, to, message) => {
     if (!from || !to || !message) {
-        throw new Error('Some paramaters are missing');
+        throw new CustomErr(errorMsg.dbMissingParams, 404);
     }
 
     const query = `
@@ -113,16 +125,16 @@ const addRequest_db = async (from, to, message) => {
         const { rows } = pool.query(query, [from, to, message]);
         return rows;
     } catch (err) {
-        throw new Error(
-            `Database query to 'friend_reques' failed: ${err.message}`,
+        throw new CustomErr(
+            errorMsg.dbQuery('friends', err),
+            500,
+            'serverError',
         );
     }
 };
 
 const cancelReques_db = async (requestId) => {
-    if (!requestId || isNaN(requestId)) {
-        throw new Error(`Must provide a valid id: '${requestId}`);
-    }
+    const id = validateId(requestId);
 
     const query = `
 	DELETE FROM friend_request 
@@ -130,18 +142,20 @@ const cancelReques_db = async (requestId) => {
 	RETURNING *`;
 
     try {
-        const { rows } = pool.query(query, [requestId]);
+        const { rows } = pool.query(query, [id]);
         return rows;
     } catch (err) {
-        throw new Error(
-            `Database query to 'friend_reques' failed: ${err.message}`,
+        throw new CustomErr(
+            errorMsg.dbQuery('friends', err),
+            500,
+            'serverError',
         );
     }
 };
 
 const getFriendRequests_db = async (fromOrTo, id) => {
     if (!fromOrTo || !id || isNaN(id)) {
-        throw new Error(`Must provide a valid params, id: '${requestId}`);
+        throw new CustomErr(errorMsg.dbMissingParams, 404);
     }
 
     const filter =
@@ -164,8 +178,10 @@ const getFriendRequests_db = async (fromOrTo, id) => {
         const { rows } = await pool.query(query, [id]);
         return rows;
     } catch (err) {
-        throw new Error(
-            `Database query to 'friend_reques' failed: ${err.message}`,
+        throw new CustomErr(
+            errorMsg.dbQuery('friends', err),
+            500,
+            'serverError',
         );
     }
 };
