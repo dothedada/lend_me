@@ -31,6 +31,10 @@ export const errorMsg = {
     dbUserBookNotExist: 'User or book does not exist',
     dbBookNotOwned: 'the book is not owned by this user',
     dbBookNotAvailable: (book_id) => `the book '${book_id}' is not available`,
+    dbNoColum: (table, field) =>
+        `Table '${table}' does not contain column '${field}'`,
+    dbNoNewRecordValues: (valuesObj) =>
+        `No valid values to update inside '${valuesObj}'`,
 
     books: {
         noIdParam: 'There is no bookId on the params',

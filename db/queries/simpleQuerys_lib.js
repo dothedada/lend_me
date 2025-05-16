@@ -1,3 +1,4 @@
+import { CustomErr, errorMsg } from '../../controllers/validations.js';
 import { tables, SEARCH_LIMIT } from '../query_settings.js';
 import { validateId } from '../utils.js';
 
@@ -6,24 +7,12 @@ export const queryMethods = (
     table,
     methods = ['get', 'find', 'add', 'put', 'remove'],
 ) => {
-    if (!Object.keys(tables).includes(table)) {
-        throw new Error(`Wrong table name '${table}'.`);
-    }
-
-    if (!Array.isArray(methods)) {
-        throw new Error('Methods parameter must be an array');
-    }
-
     const requestedMethods = methods.reduce((requested, method) => {
         if (availableMethods[method]) {
             requested[method] = availableMethods[method](client, table);
         }
         return requested;
     }, {});
-
-    if (Object.keys(requestedMethods).length === 0) {
-        throw new Error(`No valid methods requested.`);
-    }
 
     return requestedMethods;
 };
@@ -40,9 +29,7 @@ const getDataFrom_db = (client, tableName) => {
             const [field, value] = Object.entries(valueObject)[0];
 
             if (!validFields.includes(field)) {
-                throw new Error(
-                    `Table '${tableName}' does not contain column '${field}'`,
-                );
+                throw new CustomErr(errorMsg.dbNoColum(tableName, field), 404);
             }
 
             query += isNaN(value)
@@ -56,7 +43,7 @@ const getDataFrom_db = (client, tableName) => {
             const { rows } = await client.query(query, values);
             return valueObject ? rows[0] : rows;
         } catch (err) {
-            throw new Error(`Database query failed: ${err.message}`);
+            throw new CustomErr(errorMsg.dbQuery(tableName, err));
         }
     };
 };
@@ -82,7 +69,7 @@ const findDataWith_db = (client, tableName) => {
             const { rows } = await client.query(query, [`%${value}%`]);
             return rows;
         } catch (err) {
-            throw new Error(`Database query failed: ${err.message}`);
+            throw new CustomErr(errorMsg.dbQuery(tableName, err));
         }
     };
 };
@@ -108,7 +95,10 @@ const insertDataTo_db = (client, tableName) => {
         }
 
         if (!tableValues.length) {
-            throw new Error(`no value to update inside '${valuesObject}'`);
+            throw new CustomErr(
+                errorMsg.dbNoNewRecordValues(valuesObject),
+                500,
+            );
         }
 
         const query = `
@@ -120,7 +110,7 @@ const insertDataTo_db = (client, tableName) => {
             const { rows } = await client.query(query, cleanValues);
             return rows[0];
         } catch (err) {
-            throw new Error(`Cannot insert ${tableName}: ${err.message}`);
+            throw new CustomErr(errorMsg.dbQuery(tableName, err));
         }
     };
 };
@@ -131,7 +121,7 @@ const updateDataFrom_db = (client, tableName) => {
     return async (valuesObject) => {
         const { id } = valuesObject;
         if (!id) {
-            throw new Error(`Missing ${tableName} id in values to update`);
+            throw new CustomErr(errorMsg.dbMissingParams, 500);
         }
 
         const fieldsToUpdate = [];
@@ -157,14 +147,9 @@ const updateDataFrom_db = (client, tableName) => {
 
         try {
             const { rows } = await client.query(query, values);
-            if (!rows.length) {
-                throw new Error(
-                    `The id '${id}' does not exist in '${tableName}'`,
-                );
-            }
             return rows[0];
         } catch (err) {
-            throw new Error(`Cannot update ${tableName}: ${err.message}`);
+            throw new CustomErr(errorMsg.dbQuery(tableName, err));
         }
     };
 };
@@ -180,14 +165,9 @@ const removeDataFrom_db = (client, table) => {
 
         try {
             const { rows } = await client.query(query, [cleanId]);
-            if (!rows.length) {
-                throw new Error(`The id '${id}' does not exist in '${table}'`);
-            }
             return rows[0];
         } catch (err) {
-            throw new Error(
-                `Failed to delete ${table} id=${id}: ${err.message}`,
-            );
+            throw new CustomErr(errorMsg.dbQuery(tableName, err));
         }
     };
 };

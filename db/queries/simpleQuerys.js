@@ -1,3 +1,4 @@
+import { CustomErr, errorMsg } from '../../controllers/validations.js';
 import pool from '../pool.cjs';
 import { createQueryArrayReferences, validateId } from '../utils.js';
 import { queryMethods } from './simpleQuerys_lib.js';
@@ -23,7 +24,7 @@ export const users_db = {
             const { rows } = await pool.query(query, values);
             return rows;
         } catch (err) {
-            throw new Error(`Cannot make the data request to 'users': ${err}`);
+            throw new CustomErr(errorMsg.dbQuery('users', err));
         }
     },
     kill: async (userId) => {
@@ -39,7 +40,7 @@ export const users_db = {
             const { rows } = await pool.query(query, [id]);
             return rows;
         } catch (err) {
-            throw new Error(`Cannot make the data request to 'users': ${err}`);
+            throw new CustomErr(errorMsg.dbQuery('users', err));
         }
     },
 };
