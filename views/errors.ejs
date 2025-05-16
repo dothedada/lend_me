@@ -1,0 +1,12 @@
+<%- include("partials/head.ejs", { headTitle: `ERROR ${ locals.title }` })%>
+<body>
+	<%- include("partials/header.ejs") %>
+
+	<main>
+	<h2><%= status %></h2>
+	<p><%= message %></p>
+	</main>
+
+	<%- include("partials/footer.html") %>
+</body>
+</html>
