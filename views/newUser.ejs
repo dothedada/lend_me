@@ -9,7 +9,7 @@
 	If you are a new user, <strong>welcome!!!</strong> In order to create your account we need a name and email (this one cannot be from an existing or former user) that will only be used for loggin and friends requests, no shitty spam nor ads nor meanigless communications, only th thing that you care for</p>
 	<form action="/login/new" method="post">
 		<%- include("partials/input.ejs", {
-			labelText: "This will be your user name",
+			labelText: "This will be your user name *",
 			name: "name",
 			value: name || '',
 			placeholder: 'Elsa Nurmy'
@@ -17,7 +17,7 @@
 
 		<%- include(
 			"partials/input.ejs", {
-				labelText: "This will be your email",
+				labelText: "This will be your email *",
 				name: "email",
 				value: email || '',
 				placeholder: 'vampir@example.com'

@@ -27,7 +27,7 @@
 		<form action="/books/new" method="post" autocomplete="off">
 			<%- include(
 				'../partials/input.ejs', { 
-					labelText: 'Title', 
+					labelText: 'Title *', 
 					name: 'title', 
 					value: locals.title,
 				})
@@ -35,7 +35,7 @@
 
 			<%- include(
 				'../partials/inputDatalist.ejs', { 
-					labelText: 'Author', 
+					labelText: 'Author *', 
 					name: 'author', 
 					listName: 'authors',
 					list: locals.authors ?? [],
@@ -45,7 +45,7 @@
 
 			<%- include(
 				'../partials/input.ejs', { 
-					labelText: 'Year', 
+					labelText: 'Year *', 
 					name: 'year', 
 					value: locals.year,
 				})
@@ -53,7 +53,7 @@
 
 			<%- include(
 				'../partials/inputDatalist.ejs', { 
-					labelText: 'Category', 
+					labelText: 'Category *', 
 					name: 'category', 
 					listName: 'categories',
 					list: locals.categories ?? [],
@@ -63,7 +63,7 @@
 
 			<%- include(
 				'../partials/inputDatalist.ejs', { 
-					labelText: 'Editorial', 
+					labelText: 'Editorial *', 
 					name: 'editorial', 
 					listName: 'editorials',
 					list: locals.editorials ?? [],

@@ -39,7 +39,7 @@ booksRoute.get(
 );
 
 booksRoute.post('/add', getBookByTitle, fetchBookData, (req, res) => {
-    const title = req.body.title || 'new book';
+    const title = req.body?.title || 'new book';
     const titleExist = res.book.length > 0;
     const booksData = res.book || [];
     const authors = res.authors.map((author) => author.name);

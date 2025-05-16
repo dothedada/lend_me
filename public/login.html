@@ -6,12 +6,18 @@
         <title>Welcome to Lend_me</title>
     </head>
     <body>
-        <h1>Welcome to Lend_me</h1>
-        <p>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Maiores,
-            vel. Ad quod dicta blanditiis, alias tempore nesciunt facilis illo
-            asperiores.
-        </p>
+		<h1>Welcome to lend_me</h1>
+		<p>A small app to keep track of the books you lend with your friends... It was made to exercise and improve my habillities in express and postgresql, tackling a little of data validation, error handling, cookies, jwt and user flow.</p>
+		<p>A quick exercise of inventory management made in Express and Postgresql</p> 
+		<p>If you ar just curious and want to see the funcionality, log using the following data...</p>
+		<ul>
+			<li>User: 'Juan Pérez', Pass: '<juan@example.com>'</li>
+			<li>User: 'María García', Pass: '<maria@example.com>'</li>
+			<li>User: 'Carlos López', Pass: '<carlos@example.com>'</li>
+			<li>User: 'Ana Martínez', Pass: '<ana@example.com>'</li>
+			<li>User: 'Luisa Rodríguez', Pass: '<luisa@example.com>'</li>
+		</ul>
+
         <h2>log in</h2>
         <div class="log">
             <div class="log-tabs">
@@ -22,7 +28,7 @@
             <div class="log-pane" data-pane="1">
                 <form action="/user/log" method="post">
                     <label>
-                        Name
+                        Name *
                         <input
                             type="text"
                             name="name"
@@ -30,7 +36,7 @@
                         />
                     </label>
                     <label>
-                        Email
+                        Email *
                         <input
                             type="email"
                             name="email"
@@ -43,7 +49,7 @@
             <div class="log-pane" data-pane="2">
                 <form action="/user/create" method="post">
                     <label>
-                        Name
+                        Name *
                         <input
                             type="text"
                             name="name"
@@ -51,7 +57,7 @@
                         />
                     </label>
                     <label>
-                        Email
+                        Email *
                         <input
                             type="email"
                             name="email"

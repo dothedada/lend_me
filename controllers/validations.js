@@ -87,6 +87,13 @@ export const loginRules = [
     body('keepLogged'),
 ];
 
+export const addInputTitle = [
+    body('title')
+        .notEmpty()
+        .withMessage(`Email ${errorMsg.empty}.`)
+        .withMessage(errorMsg.empty),
+];
+
 export const searchInputRules = [
     query('q')
         .isLength({ min: 4 })

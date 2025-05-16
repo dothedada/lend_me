@@ -326,6 +326,10 @@ tr:last-child td {
 }
 
 /* Navigation - updated for sticky high-end app menu */
+.logo {
+    fill: hsl(var(--border));
+    height: 30px;
+}
 nav {
     display: flex;
     align-items: center;
@@ -431,55 +435,6 @@ li {
     margin-bottom: 0.5rem;
 }
 
-/* Badges */
-span.badge {
-    display: inline-flex;
-    align-items: center;
-    border-radius: 9999px;
-    padding: 0.125rem 0.5rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    line-height: 1;
-    background-color: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
-}
-
-span.badge.secondary {
-    background-color: hsl(var(--secondary));
-    color: hsl(var(--secondary-foreground));
-}
-
-span.badge.outline {
-    background-color: transparent;
-    color: hsl(var(--foreground));
-    border: 1px solid hsl(var(--border));
-}
-
-/* Alerts */
-div.alert {
-    border-radius: var(--radius);
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border-left: 4px solid hsl(var(--primary));
-    background-color: hsl(var(--secondary));
-}
-
-div.alert.info {
-    border-left-color: hsl(var(--primary));
-}
-
-div.alert.success {
-    border-left-color: hsl(142.1 76.2% 36.3%);
-}
-
-div.alert.warning {
-    border-left-color: hsl(38 92.7% 50.6%);
-}
-
-div.alert.error {
-    border-left-color: hsl(var(--destructive));
-}
-
 /* Utilities */
 .sr-only {
     position: absolute;
@@ -506,63 +461,4 @@ div.alert.error {
     h3 {
         font-size: 1.25rem;
     }
-}
-
-/* Grid system */
-.grid {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 1rem;
-}
-
-@media (min-width: 640px) {
-    .grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (min-width: 1024px) {
-    .grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-/* Divider */
-hr {
-    height: 1px;
-    background-color: hsl(var(--border));
-    border: none;
-    margin: 1.5rem 0;
-}
-
-/* Code */
-code {
-    font-family: monospace;
-    font-size: 0.875rem;
-    background-color: hsl(var(--muted));
-    padding: 0.2rem 0.4rem;
-    border-radius: calc(var(--radius) - 2px);
-}
-
-pre {
-    background-color: hsl(var(--muted));
-    padding: 1rem;
-    border-radius: var(--radius);
-    overflow-x: auto;
-    margin-bottom: 1rem;
-}
-
-pre code {
-    background-color: transparent;
-    padding: 0;
-}
-
-.sr-only:not(:focus):not(:active) {
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    height: 1px;
-    overflow: hidden;
-    position: absolute;
-    white-space: nowrap;
-    width: 1px;
 }
