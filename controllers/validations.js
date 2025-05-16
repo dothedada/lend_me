@@ -1,4 +1,4 @@
-import { body, check, query } from 'express-validator';
+import { body, query } from 'express-validator';
 import { recordExists } from '../db/utils.js';
 import { friends_db } from '../db/queries/friends.js';
 
@@ -14,10 +14,15 @@ export const errorMsg = {
     noUser: (name, email) =>
         `No user called '${name}' with mail '${email}' was found`,
     areFriends: (name) => `You already are friend with '${name}'`,
-    missingParams: 'Some request params are missing',
-    missingBody: 'Some body request elements are missing',
 
     // db && middleware
+    missingParams: 'Some request params are missing',
+    missingBody: 'Some body request elements are missing',
+    dbQuery: (table, err) =>
+        `Database query to '${table}' failed: ${err.message}`,
+    dbParams: (parameter) => `Invalid query parameter '${parameter}'`,
+    dbMissingParams: 'missing needed params to run the query',
+
     books: {
         noIdParam: 'There is no bookId on the params',
         notFound: 'There is no book with the given id',

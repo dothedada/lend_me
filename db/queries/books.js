@@ -1,3 +1,4 @@
+import { CustomErr, errorMsg } from '../../controllers/validations.js';
 import pool from '../pool.cjs';
 import {
     booksInventoryQuery,
@@ -22,7 +23,7 @@ const getBookId_db = async (id) => {
         const { rows } = await pool.query(query, values);
         return id ? rows[0] : rows;
     } catch (err) {
-        throw new Error(`Database query to 'books' failed: ${err.message}`);
+        throw new CustomErr(errorMsg.dbQuery('books', err), 500, 'serverError');
     }
 };
 
@@ -59,13 +60,13 @@ const getBooksOwnedBy_db = async (ids = [], notInIds = []) => {
         const { rows } = await pool.query(query, queryElements);
         return rows;
     } catch (err) {
-        throw new Error(`Database query to 'books' failed: ${err.message}`);
+        throw new CustomErr(errorMsg.dbQuery('books', err), 500, 'serverError');
     }
 };
 
 const getBooksBy_db = async (parameter, value) => {
     if (!searchParams.includes(parameter)) {
-        throw new Error(`Invalid query parameter '${parameter}'`);
+        throw new CustomErr(errorMsg.dbParams(parameter), 404);
     }
 
     let query = `
@@ -76,14 +77,14 @@ const getBooksBy_db = async (parameter, value) => {
         const { rows } = await pool.query(query, [`%${value}%`]);
         return rows;
     } catch (err) {
-        throw new Error(`Database query to 'books' failed: ${err.message}`);
+        throw new CustomErr(errorMsg.dbQuery('books', err), 500, 'serverError');
     }
 };
 
 const bookSearchWithinFriends_db = async (lookFor, friendsIds, userId) => {
     const search = String(lookFor.trim());
     if (!search || !userId) {
-        throw new Error('Must provide both parameter to do the search');
+        throw new CustomErr(errorMsg.dbMissingParams, 404, 'missingParams');
     }
 
     const fields = [];
@@ -106,7 +107,7 @@ const bookSearchWithinFriends_db = async (lookFor, friendsIds, userId) => {
         const { rows } = await pool.query(query, [`%${search}%`]);
         return rows;
     } catch (err) {
-        throw new Error(`Database query to 'books' failed: ${err.message}`);
+        throw new CustomErr(errorMsg.dbQuery('books', err), 500, 'serverError');
     }
 };
 
@@ -129,7 +130,7 @@ const findBooksWith_db = async (value) => {
         const { rows } = await pool.query(query, [`%${value}%`]);
         return rows;
     } catch (err) {
-        throw new Error(`Database query to 'books' failed: ${err.message}`);
+        throw new CustomErr(errorMsg.dbQuery('books', err), 500, 'serverError');
     }
 };
 
@@ -187,7 +188,7 @@ const insertBook_db = async (values) => {
         return rows[0];
     } catch (err) {
         await client.query('ROLLBACK');
-        throw new Error(`Cannot insert the book: ${err.message}`);
+        throw new CustomErr(errorMsg.dbQuery('books', err), 500, 'serverError');
     } finally {
         client.release();
     }
@@ -196,7 +197,7 @@ const insertBook_db = async (values) => {
 const updateBook_db = async (valuesToUpdate) => {
     const { id } = valuesToUpdate;
     if (id === undefined) {
-        throw new Error(`Missing books id in values to update`);
+        throw new CustomErr(errorMsg.dbMissingParams, 404, 'missingParams');
     }
 
     const client = await pool.connect();
@@ -258,7 +259,7 @@ const updateBook_db = async (valuesToUpdate) => {
         return rows[0];
     } catch (err) {
         await client.query('ROLLBACK');
-        throw new Error(`Cannot update the book: ${err.message}`);
+        throw new CustomErr(errorMsg.dbQuery('books', err), 500, 'serverError');
     } finally {
         client.release();
     }
@@ -274,12 +275,9 @@ const removeBook_db = async (id) => {
 
     try {
         const { rows } = await pool.query(query, [cleanId]);
-        if (!rows.length) {
-            throw new Error(`The id '${id}' does not exist in books`);
-        }
         return rows[0];
     } catch (err) {
-        throw new Error(`Failed to delete book with id=${id}: ${err.message}`);
+        throw new CustomErr(errorMsg.dbQuery('books', err), 500, 'serverError');
     }
 };
 
