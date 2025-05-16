@@ -20,6 +20,14 @@ export const getEditorialData = asyncWrapper(async (req, res, next) => {
     }
 
     const editorialData = await editorials_db.get({ id: editorialId });
+    if (!editorialData) {
+        throw new CustomErr(
+            errorMsg.editorials.notFound,
+            404,
+            'missingRequestParam',
+        );
+    }
+
     res.editorial = editorialData;
 
     next();

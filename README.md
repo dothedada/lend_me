@@ -14,7 +14,7 @@ A small app to keep track of the books you lend with your friends... It was made
 - ~profile (edit profile, remove my account, remove books (users, lends, requests))~
 - ~input validations~
 - ~style the shit up~
-- error handling
+- ~error handling~
+- Error Client page
 - real seed
 - notas de aprendizaje (JWT)
-- make documentation and tests?

@@ -29,6 +29,13 @@ export const getBookDetail = asyncWrapper(async (req, res, next) => {
     }
 
     const book = await books_db.getBooks(bookId);
+    if (!book) {
+        throw new CustomErr(
+            errorMsg.books.notFound,
+            404,
+            'missingRequestParam',
+        );
+    }
     res.book = book;
 
     next();

@@ -42,8 +42,13 @@ app.use('/lends', lendsRoute);
 app.use('/me', meRoute);
 
 app.use((err, req, res, next) => {
-    console.log(err, err.statusCode);
-    res.status(err.statusCode || 600).redirect('/');
+    console.warn(err, err.statusCode);
+    res.status(err.statusCode || 666).render('errors.ejs', {
+        h1: 'UNESPECTED ERROR',
+        title: `${err.statusCode}`,
+        status: err.statusCode || 'undefined',
+        message: err,
+    });
 });
 
 const PORT = process.env.PORT || 3000;

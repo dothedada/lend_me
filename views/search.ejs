@@ -17,8 +17,8 @@
 			</form>
 		</section>
 
-		<% if (foundBooks.length > 0) { %>
 		<section>
+		<% if (foundBooks.length > 0) { %>
 			<h2>Results for "<%= search %>":</h2>
 				<table>
 					<tr>
@@ -52,8 +52,10 @@
 					</tr>
 					<% }) %>
 				</table>
-		</section>
+		<% } else { %>
+			<h2>No books in your friend's libraries that match "<%= search %>":</h2>
 		<% } %>
+		</section>
 
 	<%- include("partials/footer.html") %>
 </body>
