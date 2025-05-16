@@ -1,6 +1,6 @@
 import { books_db } from '../db/queries/books.js';
 import { friends_db } from '../db/queries/friends.js';
-import { setValidationResult } from './middleware.js';
+import { asyncWrapper, setValidationResult } from './middleware.js';
 import {
     searchInputRules,
     bookRules,

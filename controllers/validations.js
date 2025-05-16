@@ -3,7 +3,7 @@ import { recordExists } from '../db/utils.js';
 import { friends_db } from '../db/queries/friends.js';
 
 export const errorMsg = {
-    // middleware
+    // Validation
     length: (min, max) => `must be between ${min} and ${max} characters`,
     empty: 'cannot be empty',
     emailTaken: 'this mail already corresponds to anothe user',
@@ -14,9 +14,10 @@ export const errorMsg = {
     noUser: (name, email) =>
         `No user called '${name}' with mail '${email}' was found`,
     areFriends: (name) => `You already are friend with '${name}'`,
-    missingParams: 'No user id on the params',
+    missingParams: 'Some request params are missing',
     missingBody: 'Some body request elements are missing',
-    // db
+
+    // db && middleware
     books: {
         noIdParam: 'There is no bookId on the params',
         notFound: 'There is no book with the given id',
@@ -38,6 +39,9 @@ export const errorMsg = {
         noIdParam: 'There is no editorialId on the params',
         notFound: 'There is no editorial with the given id',
         update: "An error occur while updating editorial's data",
+    },
+    library: {
+        noData: 'No book data to add to the library',
     },
 };
 

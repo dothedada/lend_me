@@ -4,8 +4,8 @@ import { recordExists } from '../db/utils.js';
 import { bookUser_db } from '../db/queries/library.js';
 import { lends_db } from '../db/queries/lends.js';
 import { friends_db } from '../db/queries/friends.js';
-import { errorMsg, loginRules } from './validations.js';
-import { setValidationResult } from './middleware.js';
+import { CustomErr, errorMsg, loginRules } from './validations.js';
+import { asyncWrapper, setValidationResult } from './middleware.js';
 
 export const inputValidation = [loginRules, setValidationResult];
 
@@ -28,7 +28,7 @@ export const checkUserLog = (req, res, next) => {
     next();
 };
 
-export const logType = async (req, res, next) => {
+export const logType = asyncWrapper(async (_, res, next) => {
     if (res.errors !== undefined) {
         return next();
     }
@@ -43,9 +43,9 @@ export const logType = async (req, res, next) => {
     };
 
     next();
-};
+});
 
-export const createUser = async (_, res, next) => {
+export const createUser = asyncWrapper(async (_, res, next) => {
     if (res.errors !== undefined || res.cookieData?.make) {
         return next();
     }
@@ -64,7 +64,7 @@ export const createUser = async (_, res, next) => {
     res.cookieData.data = newUser;
 
     next();
-};
+});
 
 export const createSessionCookie = (_, res, next) => {
     if (res.errors !== undefined || !res.cookieData?.make) {
@@ -104,11 +104,18 @@ export const removeSessionCookie = (_, res, next) => {
 };
 
 // modify user
-export const updateUser = async (req, res, next) => {
+export const updateUser = asyncWrapper(async (req, res, next) => {
     const id = req.user.id;
-    const { name, email } = req.body;
+    if (!id) {
+        throw new CustomErr(errorMsg.missingParams, 404, 'missingUserId');
+    }
 
-    users_db.put({ id, name, email });
+    const { name, email } = req.body;
+    if (!name || !email) {
+        throw new CustomErr(errorMsg.missingBody, 404, 'missingRequestBody');
+    }
+
+    await users_db.put({ id, name, email });
 
     // prettier-ignore
     const token = jwt.sign(
@@ -126,11 +133,18 @@ export const updateUser = async (req, res, next) => {
     });
 
     next();
-};
+});
 
-export const deleteUser = async (req, _, next) => {
+export const deleteUser = asyncWrapper(async (req, _, next) => {
     const user = req.user;
+    if (!user) {
+        throw new CustomErr(errorMsg.missingParams, 404, 'missingUserData');
+    }
+
     const { confirmation } = req.body;
+    if (!confirmation) {
+        throw new CustomErr(errorMsg.missingBody, 404, 'missingRequestBody');
+    }
 
     if (user.email !== confirmation) {
         return next();
@@ -142,4 +156,4 @@ export const deleteUser = async (req, _, next) => {
     await users_db.kill(user.id);
 
     next();
-};
+});
