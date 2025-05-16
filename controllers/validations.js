@@ -20,9 +20,11 @@ export const errorMsg = {
     missingBody: 'Some body request elements are missing',
     dbQuery: (table, err) =>
         `Database query to '${table}' failed: ${err.message}`,
+    dbEmptyQuery: 'The current query returns empty',
     dbParams: (parameter) => `Invalid query parameter '${parameter}'`,
     dbMissingParams: 'missing needed params to run the query',
     dbUserNotExist: (user) => `The user with the id '${user}' does not exist`,
+    dbBookNotExist: (book) => `The book with the id '${book}' does not exist`,
     dbFriendship: 'Friendship already exists',
     dbNoFriendship: 'The users are not friends',
     dbNotValidValue: (value) => `${value} is not a valid value for the query`,

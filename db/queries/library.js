@@ -1,10 +1,11 @@
+import { CustomErr, errorMsg } from '../../controllers/validations.js';
 import pool from '../pool.cjs';
 import { booksInventoryQuery, bookQueryColumns } from '../query_settings.js';
 import { elementExists, recordExists, validateId } from '../utils.js';
 
 const getBooksFromUsers_db = async (usersIds) => {
     if (usersIds === undefined || !Array.isArray(usersIds)) {
-        throw new Error('Must provide userId to fetch the books');
+        throw new CustomErr(errorMsg.dbMissingParams, 404);
     }
 
     const validIds = elementExists('users', usersIds);
@@ -18,7 +19,7 @@ const getBooksFromUsers_db = async (usersIds) => {
         const { rows } = await pool.query(query, validIds);
         return rows;
     } catch (err) {
-        throw new Error(`Database query failed: ${err.message}`);
+        throw new CustomErr(errorMsg.dbQuery('books', err), 500);
     }
 };
 
@@ -32,10 +33,10 @@ const addBookToUser_db = async (bookId, userId) => {
     ]);
 
     if (!userExist) {
-        throw new Error(`There is no user with id '${userId}'`);
+        throw new CustomErr(errorMsg.dbUserNotExist(userId));
     }
     if (!bookExist) {
-        throw new Error(`There is no book with id '${bookId}'`);
+        throw new CustomErr(errorMsg.dbBookNotExist(userId));
     }
     if (
         await recordExists('book_user', {
@@ -55,7 +56,7 @@ const addBookToUser_db = async (bookId, userId) => {
         const { rows } = await pool.query(query, [cleanBookId, cleanUserId]);
         return rows;
     } catch (err) {
-        throw new Error(`Database query failed: ${err.message}`);
+        throw new CustomErr(errorMsg.dbQuery('book_user', err), 500);
     }
 };
 
@@ -72,21 +73,24 @@ const removeBookFromUser_db = async (bookId, userId) => {
         const { rows } = await pool.query(query, [cleanBookId, cleanUserId]);
         return rows;
     } catch (err) {
-        throw new Error(`Database query failed: ${err.message}`);
+        throw new CustomErr(errorMsg.dbQuery('book_user', err), 500);
     }
 };
 
 const removeAll_db = (attribute) => async (id) => {
     const cleanId = validateId(id);
     if (attribute === undefined || id === undefined) {
-        throw new Error('Must provide attribute and id');
+        throw new CustomErr(errorMsg.dbMissingParams, 404);
     }
     if (!['user', 'book'].includes(attribute)) {
-        throw new Error(`attribute '${attribute}' is not valid`);
+        throw new CustomErr(
+            errorMsg.dbParams(`user: ${user}, book: ${book}`),
+            404,
+        );
     }
 
     if ((await elementExists(`${attribute}s`, [cleanId])).length === 0) {
-        throw new Error(`${attribute} with the id '${id}' does not exist`);
+        throw new CustomErr(errorMsg.dbEmptyQuery, 500);
     }
 
     const query = `
@@ -98,7 +102,7 @@ const removeAll_db = (attribute) => async (id) => {
         const { rows } = await pool.query(query, [cleanId]);
         return rows;
     } catch (err) {
-        throw new Error(`Database query failed: ${err.message}`);
+        throw new CustomErr(errorMsg.dbQuery('book_user', err), 500);
     }
 };
 
