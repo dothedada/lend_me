@@ -146,7 +146,7 @@ export const deleteUser = asyncWrapper(async (req, _, next) => {
         throw new CustomErr(errorMsg.missingBody, 404, 'missingRequestBody');
     }
 
-    if (user.email !== confirmation) {
+    if (`${user.email}!666` !== confirmation) {
         return next();
     }
 
